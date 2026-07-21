@@ -312,7 +312,7 @@ export default function App() {
 
   return (
     <div 
-      className="min-h-screen bg-zinc-950 flex justify-center items-center font-sans selection:bg-orange-500 selection:text-black"
+      className="w-full h-[100dvh] bg-black flex justify-center items-start overflow-hidden font-sans selection:bg-orange-500 selection:text-black"
       onClick={handleGlobalClick}
     >
       <audio 
@@ -330,7 +330,7 @@ export default function App() {
       />
       
       {/* Mobile Frame Container */}
-      <div className="w-full h-[100dvh] max-w-md bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden">
+      <div className="w-full h-full max-w-md bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden">
         
         {appState === "LOGIN" && (
           <MobileLogin onLogin={handleLogin} />

@@ -19,7 +19,7 @@ export default function MobileMenu({ lines, onPlay, onBack }: Props) {
 
   return (
     <div 
-      className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto bg-zinc-950 relative font-sans pt-16 pb-24"
+      className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto bg-zinc-950 relative font-sans pt-4 pb-24"
     >
       <div className="absolute inset-0 vhs-overlay z-0" />
 
