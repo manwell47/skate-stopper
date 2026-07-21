@@ -39,6 +39,17 @@ Permite importar partes de vídeo de YouTube (o rondas completas de skate), cata
 
 ---
 
+## 🤝 Biblioteca Comunitaria & Compartir Clips
+
+El juego viene precargado por defecto con **3 cintas de demostración iniciales** (*Johnny Wertuy*, *Yuto Horigome* y *Dan Murphy*), listas para jugar nada más abrir la web.
+
+Cualquier usuario puede colaborar para expandir la biblioteca:
+1. Crea o catalogar una nueva cinta o ronda en la app.
+2. Entra en **Footy Stash** -> haz clic en los 3 puntos de la cinta -> **`🔗 COMPARTIR CLIP`** (o en **`EXPORTAR`** para enviar todo el alijo).
+3. Envía ese texto a cualquier compañero para que lo agregue en su app mediante **`IMPORTAR`**, o compártelo para integrarlo en la lista global oficial.
+
+---
+
 ## 🚀 Cómo Ejecutar en Local
 
 ### Requisitos Previos

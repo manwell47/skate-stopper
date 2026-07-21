@@ -37,6 +37,111 @@ const playlist = [
   "/Vivo.mp3"
 ];
 
+const DEFAULT_LINES: LineData[] = [
+  {
+    "videoId": "MGA5NrdyrpI",
+    "skater": "johnny wertuy",
+    "videoPart": "PLEASE NO CRUST",
+    "lineName": "4piece",
+    "title": "johnny wertuy - PLEASE NO CRUST - 4piece",
+    "videoType": "Ronda",
+    "trickCount": 4,
+    "clipStartTime": 138.46325485313415,
+    "clipEndTime": 158.08328703051754,
+    "markers": [
+      {
+        "id": "1784588220844",
+        "pauseTime": 139.46325485313415,
+        "correctTrick": "Kickflip to BS 5-0",
+        "falseTricks": ["kickflip bs nosegrind", "kickflip bs krooked", "kickflip bs melon"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784588321653",
+        "pauseTime": 146.84925302098083,
+        "correctTrick": "Nollie Heelflip",
+        "falseTricks": ["nollie flip", "nollie hardflip", "nollie fs heelflip"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784588361909",
+        "pauseTime": 152.49168820599365,
+        "correctTrick": "BS Tailslide out BS 180 Kickflip",
+        "falseTricks": ["bs tailslide bs heelflip out", "bs tailslide bs pop shove-it out", "bs tailslide fs heelflip out"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784588454478",
+        "pauseTime": 156.5351190286102,
+        "correctTrick": "Switch Tre Flip",
+        "falseTricks": ["switch 360 shove it", "switch varial kickflip", "switch hadflip"],
+        "isCustomText": false
+      }
+    ]
+  },
+  {
+    "videoId": "fJhqj5fo35Y",
+    "skater": "yuto puto horigome",
+    "videoPart": "New Balance Numeric | Southerly",
+    "lineName": "3 piece",
+    "title": "yuto puto horigome - New Balance Numeric | Southerly - 3 piece",
+    "videoType": "Ronda",
+    "trickCount": 3,
+    "clipStartTime": 46.71387408964538,
+    "clipEndTime": 61.09999193896484,
+    "markers": [
+      {
+        "id": "1784646742552",
+        "pauseTime": 47.14743408964538,
+        "correctTrick": "Slappy FS Crooked out Nollie BS 180",
+        "falseTricks": ["slappy nose to bs 180 out", "slappy 5-0  shoe-it", "slappy noseblunt"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784646952968",
+        "pauseTime": 52.68495897138977,
+        "correctTrick": "Fakie BS Crooked",
+        "falseTricks": ["fakie tailslide", "fakie heelflip tailslide", "fakie ollie bs noseblunt"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784647017296",
+        "pauseTime": 58.0836670629425,
+        "correctTrick": "Fakie Heelflip FS Tailslide",
+        "falseTricks": ["half cab heelflip nose", "fakie heelflip sw fs crooked", "fakie fs shove-it to switch 5-0"],
+        "isCustomText": false
+      }
+    ]
+  },
+  {
+    "videoId": "CztI5CLgb7k",
+    "skater": "dan murphy",
+    "videoPart": "Mystery Skateboards 2026",
+    "lineName": "fast feet",
+    "title": "dan murphy - Mystery Skateboards 2026 - fast feet",
+    "videoType": "Ronda",
+    "trickCount": 2,
+    "clipStartTime": 35.36857609536742,
+    "clipEndTime": 40.90067292561341,
+    "markers": [
+      {
+        "id": "1784648789321",
+        "pauseTime": 35.604931045776375,
+        "correctTrick": "Ollie Manual",
+        "falseTricks": ["Noseslide", "Ollie BS", "kickflip"],
+        "isCustomText": false
+      },
+      {
+        "id": "1784648945120",
+        "pauseTime": 38.6043310457764,
+        "correctTrick": "Nollie BS Tailslide out BS Bigspin to Fakie",
+        "falseTricks": ["BS Tailslide out BS Bigspin to Fakie", "Nollie FS Tailslide out BS Bigspin to Fakie", "Nollie BS Crooked out BS Bigspin to Fakie"],
+        "isCustomText": false
+      }
+    ]
+  }
+];
+
 export default function App() {
   const [appState, setAppState] = useState<"LOGIN" | "HOME" | "MENU" | "SETUP" | "EDITOR" | "PLAYER" | "RANKING" | "STASH">("LOGIN");
   const [justLoggedIn, setJustLoggedIn] = useState(false);
@@ -51,12 +156,13 @@ export default function App() {
     const saved = localStorage.getItem("skate_stopper_lines");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       } catch (e) {
-        return [];
+        // fallback
       }
     }
-    return [];
+    return DEFAULT_LINES;
   });
 
   const [currentLineData, setCurrentLineData] = useState<LineData | null>(null);
