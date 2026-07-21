@@ -3,7 +3,26 @@
 <div align="center">
   <img src="public/skate_cover.png" width="400" alt="Skate Stopper Cover" />
   <p><em>90s VHS Tape & Skate Zine Trivia Experience</em></p>
+
+  <br />
+
+  <a href="https://manwell47.github.io/skate-stopper/">
+    <img src="https://img.shields.io/badge/PLAY_ONLINE-JUGAR_AHORA-red?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Play Online" />
+  </a>
 </div>
+
+---
+
+## 🌐 ¿Cómo Jugar en Cualquier Navegador? (Cero Instalación)
+
+Cualquier usuario o tester puede jugar al instante sin instalar nada ni requerir cuentas:
+
+👉 **[https://manwell47.github.io/skate-stopper/](https://manwell47.github.io/skate-stopper/)**
+
+### 📱 Instalar como App Móvil (PWA):
+Puedes instalar **Skate Stopper** como una aplicación nativa a pantalla completa en tu teléfono:
+- **iPhone (Safari)**: Toca el botón **Compartir** (icono de la caja con flecha) y selecciona **"Añadir a la pantalla de inicio"**.
+- **Android (Chrome)**: Toca los **3 puntos** del navegador y selecciona **"Instalar aplicación"** o **"Añadir a pantalla de inicio"**.
 
 ---
 
@@ -26,31 +45,32 @@ Permite importar partes de vídeo de YouTube (o rondas completas de skate), cata
 - **🎮 Modo Juego & Juicio (Play Mode)**:
   - Partidas multijugador locales (o modo solitario).
   - Reproducción a velocidad reducida (**0.5X** y **0.25X**) con efecto visual CRT static.
-  - memes y frases de reacción skate aleatorias durante la votación ("*What the hell is he trying?*", "*Shit look at those shoulders*", etc.).
+  - Memes y frases de reacción skate aleatorias durante la votación ("*What the hell is he trying?*", "*Shit look at those shoulders*", etc.).
   - Sistema de retos y votos (*Rebatir Voto*).
 
 - **🏆 Podios por Vídeo & Footy Stash**:
   - Clasificación propia guardada para cada cinta/vídeo en `localStorage`.
-  - Botón **`🏆 PODIUM`** en el menú de juego para consultar la tabla de líderes de cada cinta en cualquier momento.
-  - Gestión completa en el **Footy Stash** (Exportar/Importar biblioteca en JSON, editar tapes, limpiar rankings individuales o eliminar clips).
+  - Botón **`🏆 PODIUM`** en el menú de selección de cinta para consultar la tabla de líderes en cualquier momento.
+  - Borrado de rankings de vídeo exclusivo desde la zona de gestión **Footy Stash**.
 
 - **🔊 Sonidos y Estética VHS 90s**:
-  - Efecto de cinta rebobinando, sonido de cambio de menú (`skid.wav`), animaciones CRT, insignias de pegatina rasgada y tipografía retro pixel (`VT323`).
+  - Banda sonora noventera integrada con cambio aleatorio.
+  - Sonidos retro (`skid.wav`, `tictac.wav`), animaciones CRT, insignias de pegatina rasgada y tipografía retro pixel (`VT323`).
 
 ---
 
 ## 🤝 Biblioteca Comunitaria & Compartir Clips
 
-El juego viene precargado por defecto con **3 cintas de demostración iniciales** (*Johnny Wertuy*, *Yuto Horigome* y *Dan Murphy*), listas para jugar nada más abrir la web.
+El juego viene precargado por defecto con **cintas de demostración iniciales** (*Yuto Horigome* y *Dan Murphy*), listas para jugar nada más abrir la web.
 
 Cualquier usuario puede colaborar para expandir la biblioteca:
-1. Crea o catalogar una nueva cinta o ronda en la app.
+1. Crea o cataloga una nueva cinta o ronda en la app.
 2. Entra en **Footy Stash** -> haz clic en los 3 puntos de la cinta -> **`🔗 COMPARTIR CLIP`** (o en **`EXPORTAR`** para enviar todo el alijo).
 3. Envía ese texto a cualquier compañero para que lo agregue en su app mediante **`IMPORTAR`**, o compártelo para integrarlo en la lista global oficial.
 
 ---
 
-## 🚀 Cómo Ejecutar en Local
+## 🚀 Cómo Ejecutar en Local (Desarrolladores)
 
 ### Requisitos Previos
 - **Node.js** (v18 o superior)
