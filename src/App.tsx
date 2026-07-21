@@ -9,32 +9,34 @@ import MobileStash from "./components/MobileStash";
 import MobileLogin from "./components/MobileLogin";
 import { LineData, Player, GameState, Challenge } from "./types";
 
+const baseUrl = import.meta.env.BASE_URL;
+
 const playlist = [
-  "./1980s.mp3",
-  "./aaron kyro - sample.mp3",
-  "./Akita.wav",
-  "./alegre v2.wav",
-  "./Baby.wav",
-  "./baseRap_sinNotoriousBIG.mp3",
-  "./Color.mp3",
-  "./crepitar instru.wav",
-  "./Gameboy.mp3",
-  "./instru arcade soul 20251226.wav",
-  "./Intro.wav",
-  "./Life.wav",
-  "./Mist.mp3",
-  "./Nightmares.mp3",
-  "./Omino.mp3",
-  "./Please don't go.mp3",
-  "./prueba high gain long v2 knockedloose denzelcurry-01.mp3",
-  "./sample 2 - japanese.mp3",
-  "./Schoolyard.wav",
-  "./Stab.mp3",
-  "./Sus.wav",
-  "./Tandem.mp3",
-  "./Ten.mp3",
-  "./The way it is.mp3",
-  "./Vivo.mp3"
+  `${baseUrl}1980s.mp3`,
+  `${baseUrl}aaron kyro - sample.mp3`,
+  `${baseUrl}Akita.wav`,
+  `${baseUrl}alegre v2.wav`,
+  `${baseUrl}Baby.wav`,
+  `${baseUrl}baseRap_sinNotoriousBIG.mp3`,
+  `${baseUrl}Color.mp3`,
+  `${baseUrl}crepitar instru.wav`,
+  `${baseUrl}Gameboy.mp3`,
+  `${baseUrl}instru arcade soul 20251226.wav`,
+  `${baseUrl}Intro.wav`,
+  `${baseUrl}Life.wav`,
+  `${baseUrl}Mist.mp3`,
+  `${baseUrl}Nightmares.mp3`,
+  `${baseUrl}Omino.mp3`,
+  `${baseUrl}Please don't go.mp3`,
+  `${baseUrl}prueba high gain long v2 knockedloose denzelcurry-01.mp3`,
+  `${baseUrl}sample 2 - japanese.mp3`,
+  `${baseUrl}Schoolyard.wav`,
+  `${baseUrl}Stab.mp3`,
+  `${baseUrl}Sus.wav`,
+  `${baseUrl}Tandem.mp3`,
+  `${baseUrl}Ten.mp3`,
+  `${baseUrl}The way it is.mp3`,
+  `${baseUrl}Vivo.mp3`
 ];
 
 const DEFAULT_LINES: LineData[] = [
@@ -205,6 +207,22 @@ export default function App() {
 
 
 
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.volume = 0.1;
+        audioRef.current.play().catch(() => {});
+      }
+    };
+
+    window.addEventListener("pointerdown", unlockAudio, { once: true });
+    window.addEventListener("touchstart", unlockAudio, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+    };
+  }, []);
+
   const handleLogin = (alias: string) => {
     setJustLoggedIn(true);
     setAppState("HOME");
@@ -229,7 +247,7 @@ export default function App() {
     const target = e.target as HTMLElement;
     const btn = target.closest('button');
     if (btn && !btn.classList.contains('no-skid')) {
-      const audio = new Audio("./skid.wav");
+      const audio = new Audio(`${baseUrl}skid.wav`);
       audio.volume = 0.35;
       audio.preservesPitch = false;
       // Provide a random pitch between 0.8x and 1.2x
@@ -293,7 +311,7 @@ export default function App() {
       />
       <audio 
         ref={tictacRef} 
-        src="./tictac.wav" 
+        src={`${baseUrl}tictac.wav`} 
         loop
         preload="auto"
       />

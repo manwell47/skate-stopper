@@ -63,9 +63,10 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
         className="absolute inset-0 z-20 flex flex-col"
       >
         {/* Magazine Background Cover */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center z-0 filter contrast-125 brightness-75"
-          style={{ backgroundImage: 'url("./skate_cover.png")' }}
+        <img 
+          src={`${import.meta.env.BASE_URL}skate_cover.png`} 
+          alt="Skate Cover" 
+          className="absolute inset-0 w-full h-full object-cover z-0 filter contrast-125 brightness-75 pointer-events-none"
         />
 
         {/* Grunge Vignette/Gradient overlay for readability */}
