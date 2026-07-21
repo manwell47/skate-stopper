@@ -133,15 +133,28 @@ export default function App() {
     localStorage.setItem("skate_stopper_lines", JSON.stringify(lines));
   }, [lines]);
 
+  const [isMuted, setIsMuted] = useState(false);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => {
+      const next = !prev;
+      if (audioRef.current) {
+        audioRef.current.muted = next;
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     if (audioRef.current) {
       // Set preservesPitch for the turntable effect
       (audioRef.current as any).preservesPitch = false;
       (audioRef.current as any).mozPreservesPitch = false;
       (audioRef.current as any).webkitPreservesPitch = false;
+      audioRef.current.muted = isMuted;
       
       const musicStates = ["LOGIN", "HOME", "MENU", "RANKING", "SETUP", "EDITOR", "STASH"];
-      if (musicStates.includes(appState)) {
+      if (musicStates.includes(appState) && !isMuted) {
         audioRef.current.volume = 0.1;
         audioRef.current.play().catch(() => {});
       } else {
@@ -157,7 +170,7 @@ export default function App() {
         tictacRef.current.pause();
       }
     }
-  }, [appState, currentSongIndex]);
+  }, [appState, currentSongIndex, isMuted]);
 
   const pitchDownMusic = () => {
     if (!audioRef.current) return;
@@ -338,6 +351,8 @@ export default function App() {
             }}
             onRanking={() => setAppState("RANKING")}
             onStash={() => setAppState("STASH")}
+            isMuted={isMuted}
+            onToggleMute={toggleMute}
           />
         )}
 

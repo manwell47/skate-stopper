@@ -437,42 +437,11 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 font-sans relative">
-      <div className="absolute inset-0 z-50 pointer-events-none fisheye-container border-[10px] border-black/90">
-        <div className="absolute top-2 right-4 text-white font-bold text-lg font-sans drop-shadow-md flex flex-col items-end">
-          <div className="flex gap-1 mb-1 animate-battery-blink">
-            <div className="w-2 h-3 border border-white" />
-            <div className="w-6 h-3 border border-white bg-white" />
-          </div>
-        </div>
-        {gameState === "playing_to_pause" && (
-          <div className="absolute top-2 left-4 text-red-500 font-bold text-lg flex items-center gap-2 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-rec-blink" />
-            REC
-          </div>
-        )}
-        {(gameState === "guessing" || gameState === "feedback_paused") && (
-          <div className="absolute top-2 left-4 text-white font-bold text-lg flex items-center gap-2 drop-shadow-md">
-            PAUSE
-          </div>
-        )}
-      </div>
+      <div className="absolute inset-0 vhs-overlay z-40 pointer-events-none" />
 
-      <div className="absolute inset-0 vhs-overlay z-40" />
-
-      <div className="p-4 bg-black flex items-center justify-between shrink-0 relative z-30 border-b-2 border-white/10">
-        <button onClick={onBack} className="text-white hover:text-red-500 transition-colors">
-          <ChevronLeft className="w-8 h-8" strokeWidth={3} />
-        </button>
-        <div className="text-center">
-          <h2 className="text-2xl font-display text-white tracking-widest uppercase">{lineData.skater}</h2>
-        </div>
-        <div className="w-8"></div>
-      </div>
-
-      <div className="relative aspect-video w-full bg-black shrink-0 z-50 fisheye-container">
+      {/* Video Container with Integrated HUD (Back Button & Skater Name Overlay) */}
+      <div className="relative w-full h-44 sm:h-52 bg-black shrink-0 z-50 fisheye-container border-b-2 border-white/20">
         <div className={`w-full h-full transition-all duration-300 relative ${gameState === 'guessing' && loopSpeed > 0 ? 'filter contrast-150 saturate-50 sepia-[.3] blur-[0.5px]' : ''}`}>
-          <div className="absolute inset-0 z-10 pointer-events-none" />
-          
           <YouTube
             videoId={lineData.videoId}
             opts={opts}
@@ -483,6 +452,42 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           />
           {gameState === 'guessing' && loopSpeed > 0 && <div className="absolute inset-0 crt-static z-20" />}
         </div>
+
+        {/* Video Top HUD Overlay (Back Button & Skater Name) */}
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-30 pointer-events-auto">
+          <button 
+            onClick={onBack} 
+            className="bg-black/70 border border-white/40 text-white hover:text-red-500 p-1.5 backdrop-blur-md active:scale-95 transition-all shadow-[2px_2px_0px_#000]"
+          >
+            <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+          </button>
+          
+          <div className="bg-black/70 border border-white/40 px-3 py-1 backdrop-blur-md shadow-[2px_2px_0px_#000]">
+            <h2 className="text-sm font-display text-white tracking-widest uppercase truncate max-w-[180px]">{lineData.skater}</h2>
+          </div>
+
+          <div className="flex gap-1 items-center bg-black/70 border border-white/40 px-2 py-1 backdrop-blur-md shadow-[2px_2px_0px_#000]">
+            <div className="w-1.5 h-2.5 border border-white" />
+            <div className="w-4 h-2.5 border border-white bg-white" />
+          </div>
+        </div>
+
+        {/* Status REC / PAUSE Badge */}
+        <div className="absolute bottom-2 left-2 z-30 pointer-events-none">
+          {gameState === "playing_to_pause" && (
+            <div className="bg-black/80 border border-red-600 px-2 py-0.5 text-red-500 font-bold text-xs flex items-center gap-1.5">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-rec-blink" />
+              REC
+            </div>
+          )}
+          {(gameState === "guessing" || gameState === "feedback_paused") && (
+            <div className="bg-black/80 border border-white/40 px-2 py-0.5 text-white font-bold text-xs flex items-center gap-1.5">
+              PAUSE
+            </div>
+          )}
+        </div>
+
+        {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 h-1 bg-white/20 w-full z-20">
           <div 
             className="h-full bg-red-600 transition-all duration-300 relative" 
@@ -507,7 +512,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 flex flex-col justify-between space-y-2">
+          <div className="flex-1 flex flex-col justify-start space-y-2">
             {/* Player Name + Slow Mo Controls Row */}
             <div className="flex items-center justify-between bg-black/60 border border-white/20 px-3 py-1.5">
               <span className="text-xl font-display text-white tracking-widest uppercase glitch-text truncate max-w-[160px]" data-text={players[currentPlayerGuessingIndex].name}>
@@ -587,7 +592,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             )}
           </div>
         ) : gameState === "feedback_paused" ? (
-          <div className="space-y-2 flex-1 flex flex-col justify-between">
+          <div className="space-y-2 flex-1 flex flex-col justify-start">
              <div className="text-center">
                <p className="text-[10px] font-sans font-bold text-white/50 mb-0.5 uppercase tracking-widest">IT WAS A...</p>
                <p className="text-2xl sm:text-3xl font-display text-white glitch-text tracking-widest uppercase" data-text={marker.correctTrick.toUpperCase()}>{marker.correctTrick.toUpperCase()}</p>
