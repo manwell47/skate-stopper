@@ -238,11 +238,12 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
       if (t === "Grind/Slide" && g2 !== "None") { parts.push("to"); parts.push(g2); }
       if (t === "Manual" && m2 !== "None") { parts.push("to"); parts.push(m2); }
       if (fo !== "None" || so !== "Normal" || doOut !== "None" || ro !== "None") { 
-        parts.push("out"); 
+        parts.push("to"); 
         if (so !== "Normal") parts.push(so);
+        if (doOut !== "None") parts.push(doOut);
         if (ro !== "None") parts.push(ro);
         if (fo !== "None") parts.push(fo); 
-        if (doOut !== "None") parts.push(doOut);
+        parts.push("out");
       }
     }
     
@@ -268,9 +269,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     const walls = ["Wallride", "Wallie", "No-Comply", "Boneless", "Fastplant"];
     const dirs = ["None", "FS", "BS"];
 
-    for (const s of stances) {
-      if (s !== stance) options.add(buildTrick(s, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
-    }
+    // Trick variants with the same stance to be credible
     for (const f of flips) {
       if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
     }
@@ -340,9 +339,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
       const walls = ["Wallride", "Wallie", "No-Comply", "Boneless", "Fastplant"];
       const dirs = ["None", "FS", "BS"];
 
-      for (const s of stances) {
-        if (s !== stance) options.add(buildTrick(s, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
-      }
+      // Trick variants with the same stance to be credible
       for (const f of flips) {
         if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }

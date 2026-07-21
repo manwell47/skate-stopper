@@ -125,10 +125,10 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               }}
               className="w-full text-left group"
             >
-              <div className="bg-white/90 backdrop-blur-sm text-black font-sans font-black text-3xl sm:text-4xl uppercase px-4 py-2 border-l-8 border-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white inline-block">
+              <div className="bg-white/90 backdrop-blur-sm text-black font-sans font-black text-4xl sm:text-5xl uppercase px-5 py-3 border-l-8 border-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white inline-block">
                 PLAY THE TAPE
               </div>
-              <div className="bg-black/80 text-white font-sans font-bold text-[11px] px-3 py-0.5 block w-max uppercase tracking-widest mt-0.5">
+              <div className="bg-black/80 text-white font-sans font-bold text-[13px] px-4 py-1 block w-max uppercase tracking-widest mt-0.5">
                 Can you guess the trick?
               </div>
             </button>
@@ -140,10 +140,10 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               }}
               className="w-full text-right group flex flex-col items-end"
             >
-              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-2xl sm:text-3xl uppercase px-4 py-1.5 border-r-8 border-yellow-500 transition-colors group-hover:bg-yellow-500 group-hover:text-black inline-block">
+              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-3xl sm:text-4xl uppercase px-5 py-2 border-r-8 border-yellow-500 transition-colors group-hover:bg-yellow-500 group-hover:text-black inline-block">
                 SEND YOUR TAPE
               </div>
-              <div className="bg-white/90 text-black font-sans font-bold text-[10px] px-3 py-0.5 inline-block uppercase tracking-widest mt-0.5">
+              <div className="bg-white/90 text-black font-sans font-bold text-[12px] px-4 py-1 inline-block uppercase tracking-widest mt-0.5">
                 The OG will judge you
               </div>
             </button>
@@ -155,10 +155,10 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               }}
               className="w-full text-left group"
             >
-              <div className="text-white font-sans font-black text-3xl sm:text-4xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none mb-1 group-hover:text-yellow-400 transition-colors">
+              <div className="text-white font-sans font-black text-4xl sm:text-5xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none mb-1.5 group-hover:text-yellow-400 transition-colors">
                 LOCAL HEROES<br/>REVEALED
               </div>
-              <div className="bg-red-600/90 text-white font-sans font-bold text-[10px] px-2.5 py-0.5 inline-block uppercase tracking-widest">
+              <div className="bg-red-600/90 text-white font-sans font-bold text-[12px] px-3 py-1 inline-block uppercase tracking-widest">
                 Who runs the plaza?
               </div>
             </button>
@@ -170,10 +170,10 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               }}
               className="w-full text-right group flex flex-col items-end"
             >
-              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-xl sm:text-2xl uppercase px-3 py-1.5 border-r-8 border-green-500 transition-colors group-hover:bg-green-500 group-hover:text-black inline-block">
+              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-2xl sm:text-3xl uppercase px-4 py-2 border-r-8 border-green-500 transition-colors group-hover:bg-green-500 group-hover:text-black inline-block">
                 FOOTY MANAGEMENT
               </div>
-              <div className="bg-white/90 text-black font-sans font-bold text-[10px] px-3 py-0.5 inline-block uppercase tracking-widest mt-0.5">
+              <div className="bg-white/90 text-black font-sans font-bold text-[12px] px-4 py-1 inline-block uppercase tracking-widest mt-0.5">
                 Edit & Export Stash
               </div>
             </button>
@@ -197,9 +197,11 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1 h-full bg-black"></div>
             </div>
-            <span className="text-[8px] font-mono text-black font-bold tracking-[0.08em] leading-none mt-0.5 text-center">
-              4 7 0 1 4 6 6 6
-            </span>
+            <div className="flex w-full justify-between px-0.5 text-[8px] font-mono text-black font-bold leading-none mt-0.5">
+              <span>4</span>
+              <span className="tracking-[0.15em]">7014</span>
+              <span>666</span>
+            </div>
           </div>
 
         </div>
