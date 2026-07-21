@@ -317,7 +317,7 @@ export default function App() {
       />
       
       {/* Mobile Frame Container */}
-      <div className="w-full h-screen max-w-md bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden">
+      <div className="w-full h-[100dvh] max-w-md bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden">
         
         {appState === "LOGIN" && (
           <MobileLogin onLogin={handleLogin} />

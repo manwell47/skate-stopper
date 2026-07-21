@@ -491,10 +491,10 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-4 overflow-y-auto relative z-30">
+      <div className="flex-1 flex flex-col p-3 overflow-y-auto relative z-30 space-y-2">
         {lineData.markers.length > 1 && (
-          <div className="text-center mb-2">
-            <span className="text-sm font-sans font-bold text-white/50 tracking-widest uppercase">
+          <div className="text-center mb-1">
+            <span className="text-xs font-sans font-bold text-white/50 tracking-widest uppercase">
               TRICK {currentMarkerIndex + 1} / {lineData.markers.length}
             </span>
           </div>
@@ -502,16 +502,19 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
         {gameState === "ready" ? (
           <div className="flex-1 flex flex-col items-center justify-center relative">
-            <p className="text-3xl font-display text-white text-center tracking-widest animate-pulse">
-              PRESS <Play className="inline w-8 h-8 mx-1 fill-white" /> TO ROLL
+            <p className="text-2xl font-display text-white text-center tracking-widest animate-pulse">
+              PRESS <Play className="inline w-7 h-7 mx-1 fill-white" /> TO ROLL
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="space-y-2 flex-1 flex flex-col justify-between overflow-y-auto">
-            <div className="flex flex-col items-center justify-center gap-1 mb-1">
-              <h3 className="text-3xl font-display text-white text-center tracking-widest glitch-text uppercase" data-text={players[currentPlayerGuessingIndex].name}>{players[currentPlayerGuessingIndex].name}</h3>
+          <div className="flex-1 flex flex-col justify-between space-y-2">
+            {/* Player Name + Slow Mo Controls Row */}
+            <div className="flex items-center justify-between bg-black/60 border border-white/20 px-3 py-1.5">
+              <span className="text-xl font-display text-white tracking-widest uppercase glitch-text truncate max-w-[160px]" data-text={players[currentPlayerGuessingIndex].name}>
+                {players[currentPlayerGuessingIndex].name}
+              </span>
               
-              <div className="flex gap-2 justify-center w-full mt-1">
+              <div className="flex gap-1.5">
                 {[0.5, 0.25].map(speed => (
                   <button 
                     key={speed}
@@ -530,49 +533,51 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           playerRef.current.pauseVideo();
                        }
                     }}
-                    className={`flex items-center justify-center gap-1 px-2.5 py-1 border-2 border-white text-xs font-sans font-bold uppercase tracking-widest transition-all shadow-[2px_2px_0_0_rgba(255,255,255,1)] ${loopSpeed === speed ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
+                    className={`flex items-center justify-center gap-1 px-2 py-1 border border-white text-[11px] font-sans font-bold uppercase tracking-wider transition-all ${loopSpeed === speed ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
                   >
-                    <RotateCcw className={`w-3.5 h-3.5 ${loopSpeed === speed ? 'animate-spin' : ''}`} />
+                    <RotateCcw className={`w-3 h-3 ${loopSpeed === speed ? 'animate-spin' : ''}`} />
                     {speed}X
                   </button>
                 ))}
               </div>
             </div>
-            
-            <p className="text-xs sm:text-sm font-sans font-bold text-green-400 text-center uppercase tracking-wider italic opacity-80 my-1">
+
+            {/* Meme Quote */}
+            <p className="text-[11px] font-sans font-bold text-green-400 text-center uppercase tracking-wider italic opacity-80 py-0.5">
               "{currentMeme}"
             </p>
 
+            {/* Trick Options */}
             {marker.isCustomText ? (
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-2">
                 <input 
                   type="text"
                   value={textGuess}
                   onChange={(e) => setTextGuess(e.target.value)}
                   placeholder="Escribe el truco..."
-                  className="zine-input text-xl text-center uppercase py-2"
+                  className="zine-input text-lg text-center uppercase py-2"
                 />
                 <button
                   disabled={!textGuess.trim()}
                   onClick={() => handleGuess(textGuess)}
-                  className="w-full sticker-button bg-white px-1.5 py-1.5 torn-edge group disabled:opacity-50"
+                  className="w-full sticker-button bg-white p-1 torn-edge group disabled:opacity-50"
                 >
-                  <div className="bg-black text-white font-display text-2xl px-2 py-3 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
+                  <div className="bg-black text-white font-display text-xl py-2 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
                     COMPROBAR
                   </div>
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2 my-1 px-1">
+              <div className="grid grid-cols-2 gap-2">
                 {shuffledOptions.map((opt, i) => {
                   return (
                     <button
                       key={i}
                       disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                       onClick={() => handleGuess(opt)}
-                      className={`w-full sticker-button bg-white p-1 torn-edge group transform transition-transform hover:scale-105 active:scale-95`}
+                      className="w-full sticker-button bg-white p-1 torn-edge group transform transition-transform hover:scale-105 active:scale-95"
                     >
-                      <div className="bg-black text-white font-display text-sm sm:text-base px-2 py-2 tracking-wider group-hover:bg-red-600 uppercase flex items-center justify-center min-h-[3.2rem] text-center leading-tight">
+                      <div className="bg-black text-white font-display text-xs sm:text-sm px-1.5 py-1.5 tracking-wider group-hover:bg-red-600 uppercase flex items-center justify-center min-h-[2.6rem] text-center leading-tight">
                         {opt}
                       </div>
                     </button>
@@ -582,28 +587,28 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             )}
           </div>
         ) : gameState === "feedback_paused" ? (
-          <div className="space-y-3 flex-1 flex flex-col justify-between overflow-y-auto">
+          <div className="space-y-2 flex-1 flex flex-col justify-between">
              <div className="text-center">
-               <p className="text-xs font-sans font-bold text-white/50 mb-0.5 uppercase tracking-widest">IT WAS A...</p>
-               <p className="text-3xl font-display text-white glitch-text tracking-widest uppercase" data-text={marker.correctTrick.toUpperCase()}>{marker.correctTrick.toUpperCase()}</p>
+               <p className="text-[10px] font-sans font-bold text-white/50 mb-0.5 uppercase tracking-widest">IT WAS A...</p>
+               <p className="text-2xl sm:text-3xl font-display text-white glitch-text tracking-widest uppercase" data-text={marker.correctTrick.toUpperCase()}>{marker.correctTrick.toUpperCase()}</p>
              </div>
              
-             <div className="space-y-2 max-h-40 overflow-y-auto">
+             <div className="space-y-1.5 max-h-36 overflow-y-auto">
                {players.map((p, i) => {
                  const guess = currentTrickGuesses[i];
                  const isCorrect = marker && checkTrickMatch(guess, marker.correctTrick);
                  const hasChallenged = challenges.some(c => c.playerIndex === i && c.trickIndex === currentMarkerIndex);
                  return (
-                   <div key={i} className={`p-2 flex justify-between items-center border-l-4 ${isCorrect ? 'border-green-400 bg-green-400/10' : hasChallenged ? 'border-yellow-400 bg-yellow-400/10' : 'border-red-500 bg-red-500/10'}`}>
+                   <div key={i} className={`p-1.5 flex justify-between items-center border-l-4 ${isCorrect ? 'border-green-400 bg-green-400/10' : hasChallenged ? 'border-yellow-400 bg-yellow-400/10' : 'border-red-500 bg-red-500/10'}`}>
                      <div className="flex flex-col">
-                       <span className="font-display text-lg text-white tracking-widest uppercase truncate max-w-[130px]">{p.name}</span>
+                       <span className="font-display text-base text-white tracking-widest uppercase truncate max-w-[130px]">{p.name}</span>
                        {!isCorrect && !hasChallenged && players.length > 1 && (
-                          <button onClick={() => handleChallenge(i)} className="text-[10px] font-sans text-red-400 font-bold uppercase underline mt-0.5 text-left hover:text-red-300">
+                          <button onClick={() => handleChallenge(i)} className="text-[10px] font-sans text-red-400 font-bold uppercase underline text-left hover:text-red-300">
                              REBATIR VOTO
                           </button>
                        )}
                        {hasChallenged && (
-                          <span className="text-[10px] font-sans text-yellow-400 font-bold uppercase mt-0.5">EN DISPUTA ⚖️</span>
+                          <span className="text-[10px] font-sans text-yellow-400 font-bold uppercase">EN DISPUTA ⚖️</span>
                        )}
                      </div>
                      <div className="flex flex-col items-end">
@@ -615,23 +620,23 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                })}
              </div>
              
-             <div className="flex flex-col gap-2 mt-2">
+             <div className="flex flex-col gap-1.5">
                {/* Replay Controls Row */}
                <div className="flex gap-2 w-full">
                  <button 
                    onClick={handleReplayTrick}
-                   className="flex-1 sticker-button p-1 bg-white torn-edge group"
+                   className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
                  >
-                   <div className="bg-black text-white font-sans font-bold text-xs py-2 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
+                   <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
                      <RotateCcw className="w-3.5 h-3.5" /> REPLAY TRICK
                    </div>
                  </button>
                  {lineData.markers.length > 1 && (
                    <button 
                      onClick={handleReplayWhole}
-                     className="flex-1 sticker-button p-1 bg-white torn-edge group"
+                     className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
                    >
-                     <div className="bg-black text-white font-sans font-bold text-xs py-2 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
+                     <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
                        <RotateCcw className="w-3.5 h-3.5" /> REPLAY WHOLE
                      </div>
                    </button>
@@ -641,9 +646,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                {/* Next Trick / Results Button */}
                <button 
                  onClick={handleNextMarker}
-                 className="w-full sticker-button p-1.5 bg-white torn-edge group"
+                 className="w-full sticker-button p-1 bg-white torn-edge group"
                >
-                 <div className="bg-black text-white font-display text-2xl py-2.5 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
+                 <div className="bg-black text-white font-display text-xl py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
                    {currentMarkerIndex === lineData.markers.length - 1 ? "VER RESULTADOS" : <><Play className="w-5 h-5 fill-white" /> NEXT TRICK</>}
                  </div>
                </button>
