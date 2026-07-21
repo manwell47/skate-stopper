@@ -115,20 +115,20 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
             </p>
           </div>
           
-          {/* Interactive Headlines (Buttons) - Clean Editorial Layout */}
-          <div className="flex-1 relative mt-10">
+          {/* Interactive Headlines (Buttons) - Fluid Responsive Editorial Layout */}
+          <div className="flex-1 flex flex-col justify-between py-3 my-1 relative z-30">
             
             {/* Main Article (Play Tape) */}
             <button 
               onClick={() => {
                 onPlayClips();
               }}
-              className="absolute top-4 left-0 w-full text-left group"
+              className="w-full text-left group"
             >
-              <div className="bg-white/90 backdrop-blur-sm text-black font-sans font-black text-4xl uppercase px-4 py-2 border-l-8 border-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white">
+              <div className="bg-white/90 backdrop-blur-sm text-black font-sans font-black text-3xl sm:text-4xl uppercase px-4 py-2 border-l-8 border-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white inline-block">
                 PLAY THE TAPE
               </div>
-              <div className="bg-black/80 text-white font-sans font-bold text-xs px-4 py-1 inline-block uppercase tracking-widest">
+              <div className="bg-black/80 text-white font-sans font-bold text-[11px] px-3 py-0.5 block w-max uppercase tracking-widest mt-0.5">
                 Can you guess the trick?
               </div>
             </button>
@@ -138,12 +138,12 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onCreateClip();
               }}
-              className="absolute top-36 right-0 w-11/12 text-right group flex flex-col items-end"
+              className="w-full text-right group flex flex-col items-end"
             >
-              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-3xl uppercase px-4 py-2 border-r-8 border-yellow-500 transition-colors group-hover:bg-yellow-500 group-hover:text-black">
+              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-2xl sm:text-3xl uppercase px-4 py-1.5 border-r-8 border-yellow-500 transition-colors group-hover:bg-yellow-500 group-hover:text-black inline-block">
                 SEND YOUR TAPE
               </div>
-              <div className="bg-white/90 text-black font-sans font-bold text-xs px-4 py-1 inline-block uppercase tracking-widest">
+              <div className="bg-white/90 text-black font-sans font-bold text-[10px] px-3 py-0.5 inline-block uppercase tracking-widest mt-0.5">
                 The OG will judge you
               </div>
             </button>
@@ -153,12 +153,12 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onRanking();
               }}
-              className="absolute top-[270px] left-0 w-full text-left group"
+              className="w-full text-left group"
             >
-              <div className="text-white font-sans font-black text-4xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-none mb-1 group-hover:text-yellow-400 transition-colors">
+              <div className="text-white font-sans font-black text-3xl sm:text-4xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none mb-1 group-hover:text-yellow-400 transition-colors">
                 LOCAL HEROES<br/>REVEALED
               </div>
-              <div className="bg-red-600/90 text-white font-sans font-bold text-xs px-3 py-1 inline-block uppercase tracking-widest">
+              <div className="bg-red-600/90 text-white font-sans font-bold text-[10px] px-2.5 py-0.5 inline-block uppercase tracking-widest">
                 Who runs the plaza?
               </div>
             </button>
@@ -168,36 +168,36 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onStash();
               }}
-              className="absolute top-[385px] right-0 w-11/12 text-right group flex flex-col items-end"
+              className="w-full text-right group flex flex-col items-end"
             >
-              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-2xl uppercase px-4 py-2 border-r-8 border-green-500 transition-colors group-hover:bg-green-500 group-hover:text-black">
+              <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-xl sm:text-2xl uppercase px-3 py-1.5 border-r-8 border-green-500 transition-colors group-hover:bg-green-500 group-hover:text-black inline-block">
                 FOOTY MANAGEMENT
               </div>
-              <div className="bg-white/90 text-black font-sans font-bold text-xs px-4 py-1 inline-block uppercase tracking-widest">
+              <div className="bg-white/90 text-black font-sans font-bold text-[10px] px-3 py-0.5 inline-block uppercase tracking-widest mt-0.5">
                 Edit & Export Stash
               </div>
             </button>
             
           </div>
           
-          {/* Magazine Barcode (Lower Left - Tight Frame & Exact Number Alignment) */}
-          <div className="absolute bottom-3 left-3 bg-white px-1.5 py-1 flex flex-col items-center border border-black z-40 shadow-[2px_2px_0px_#000]">
+          {/* Magazine Barcode (Lower Left - Vintage Print Overlay & Precise Digit Alignment) */}
+          <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm p-1 border border-black/80 z-40 shadow-[1px_1px_0px_#000] flex flex-col items-center">
             {/* Fake Barcode */}
-            <div className="flex h-7 items-end gap-[1.5px] px-0.5">
+            <div className="flex h-6 items-end gap-[1.5px] px-1">
               <div className="w-1 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1.5 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1 h-full bg-black"></div>
-              <div className="w-0.5 h-5 bg-black"></div>
-              <div className="w-2 h-full bg-black"></div>
+              <div className="w-0.5 h-4 bg-black"></div>
+              <div className="w-1.5 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
-              <div className="w-1 h-5 bg-black"></div>
+              <div className="w-1 h-4 bg-black"></div>
               <div className="w-1.5 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1 h-full bg-black"></div>
             </div>
-            <span className="text-[8.5px] font-mono text-black font-bold tracking-[0.14em] leading-none mt-0.5">
+            <span className="text-[8px] font-mono text-black font-bold tracking-[0.08em] leading-none mt-0.5 text-center">
               4 7 0 1 4 6 6 6
             </span>
           </div>
