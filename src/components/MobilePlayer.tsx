@@ -439,8 +439,25 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
     <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 font-sans relative">
       <div className="absolute inset-0 vhs-overlay z-40 pointer-events-none" />
 
-      {/* Video Container with Integrated HUD (Back Button & Skater Name Overlay) */}
-      <div className="relative w-full h-44 sm:h-52 bg-black shrink-0 z-50 fisheye-container border-b-2 border-white/20">
+      {/* Dedicated Top Header Bar (100% Reliable Back Arrow) */}
+      <div className="p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b-2 border-white/20">
+        <button 
+          onClick={onBack} 
+          className="text-white hover:text-red-500 transition-colors p-1.5 active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]"
+        >
+          <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+        </button>
+        <div className="text-center">
+          <h2 className="text-xl font-display text-white tracking-widest uppercase truncate max-w-[200px]">{lineData.skater}</h2>
+        </div>
+        <div className="flex gap-1 items-center">
+          <div className="w-1.5 h-2.5 border border-white" />
+          <div className="w-4 h-2.5 border border-white bg-white" />
+        </div>
+      </div>
+
+      {/* Video Container (Proportional 16:9 Aspect Video) */}
+      <div className="relative aspect-video w-full bg-black shrink-0 z-40 fisheye-container">
         <div className={`w-full h-full transition-all duration-300 relative ${gameState === 'guessing' && loopSpeed > 0 ? 'filter contrast-150 saturate-50 sepia-[.3] blur-[0.5px]' : ''}`}>
           <YouTube
             videoId={lineData.videoId}
@@ -451,25 +468,6 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             iframeClassName="w-full h-full pointer-events-none"
           />
           {gameState === 'guessing' && loopSpeed > 0 && <div className="absolute inset-0 crt-static z-20" />}
-        </div>
-
-        {/* Video Top HUD Overlay (Back Button & Skater Name) */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-30 pointer-events-auto">
-          <button 
-            onClick={onBack} 
-            className="bg-black/70 border border-white/40 text-white hover:text-red-500 p-1.5 backdrop-blur-md active:scale-95 transition-all shadow-[2px_2px_0px_#000]"
-          >
-            <ChevronLeft className="w-6 h-6" strokeWidth={3} />
-          </button>
-          
-          <div className="bg-black/70 border border-white/40 px-3 py-1 backdrop-blur-md shadow-[2px_2px_0px_#000]">
-            <h2 className="text-sm font-display text-white tracking-widest uppercase truncate max-w-[180px]">{lineData.skater}</h2>
-          </div>
-
-          <div className="flex gap-1 items-center bg-black/70 border border-white/40 px-2 py-1 backdrop-blur-md shadow-[2px_2px_0px_#000]">
-            <div className="w-1.5 h-2.5 border border-white" />
-            <div className="w-4 h-2.5 border border-white bg-white" />
-          </div>
         </div>
 
         {/* Status REC / PAUSE Badge */}
@@ -496,7 +494,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-3 overflow-y-auto relative z-30 space-y-2">
+      {/* Lower Controls Area (Balanced Vertical Distribution) */}
+      <div className="flex-1 flex flex-col p-4 overflow-y-auto relative z-30 justify-around">
         {lineData.markers.length > 1 && (
           <div className="text-center mb-1">
             <span className="text-xs font-sans font-bold text-white/50 tracking-widest uppercase">
@@ -507,19 +506,19 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
         {gameState === "ready" ? (
           <div className="flex-1 flex flex-col items-center justify-center relative">
-            <p className="text-2xl font-display text-white text-center tracking-widest animate-pulse">
-              PRESS <Play className="inline w-7 h-7 mx-1 fill-white" /> TO ROLL
+            <p className="text-3xl font-display text-white text-center tracking-widest animate-pulse">
+              PRESS <Play className="inline w-8 h-8 mx-1 fill-white" /> TO ROLL
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 flex flex-col justify-start space-y-2">
+          <div className="flex-1 flex flex-col justify-around py-2">
             {/* Player Name + Slow Mo Controls Row */}
-            <div className="flex items-center justify-between bg-black/60 border border-white/20 px-3 py-1.5">
-              <span className="text-xl font-display text-white tracking-widest uppercase glitch-text truncate max-w-[160px]" data-text={players[currentPlayerGuessingIndex].name}>
+            <div className="flex items-center justify-between bg-black/80 border-2 border-white px-3 py-2 shadow-[3px_3px_0px_#000]">
+              <span className="text-2xl font-display text-white tracking-widest uppercase glitch-text truncate max-w-[170px]" data-text={players[currentPlayerGuessingIndex].name}>
                 {players[currentPlayerGuessingIndex].name}
               </span>
               
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {[0.5, 0.25].map(speed => (
                   <button 
                     key={speed}
@@ -538,9 +537,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           playerRef.current.pauseVideo();
                        }
                     }}
-                    className={`flex items-center justify-center gap-1 px-2 py-1 border border-white text-[11px] font-sans font-bold uppercase tracking-wider transition-all ${loopSpeed === speed ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
+                    className={`flex items-center justify-center gap-1 px-2.5 py-1 border border-white text-xs font-sans font-bold uppercase tracking-wider transition-all shadow-[2px_2px_0px_#000] ${loopSpeed === speed ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
                   >
-                    <RotateCcw className={`w-3 h-3 ${loopSpeed === speed ? 'animate-spin' : ''}`} />
+                    <RotateCcw className={`w-3.5 h-3.5 ${loopSpeed === speed ? 'animate-spin' : ''}`} />
                     {speed}X
                   </button>
                 ))}
@@ -548,41 +547,41 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </div>
 
             {/* Meme Quote */}
-            <p className="text-[11px] font-sans font-bold text-green-400 text-center uppercase tracking-wider italic opacity-80 py-0.5">
+            <p className="text-xs sm:text-sm font-sans font-bold text-green-400 text-center uppercase tracking-wider italic opacity-80 my-1">
               "{currentMeme}"
             </p>
 
             {/* Trick Options */}
             {marker.isCustomText ? (
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col space-y-3">
                 <input 
                   type="text"
                   value={textGuess}
                   onChange={(e) => setTextGuess(e.target.value)}
                   placeholder="Escribe el truco..."
-                  className="zine-input text-lg text-center uppercase py-2"
+                  className="zine-input text-xl text-center uppercase py-3"
                 />
                 <button
                   disabled={!textGuess.trim()}
                   onClick={() => handleGuess(textGuess)}
-                  className="w-full sticker-button bg-white p-1 torn-edge group disabled:opacity-50"
+                  className="w-full sticker-button bg-white p-1.5 torn-edge group disabled:opacity-50"
                 >
-                  <div className="bg-black text-white font-display text-xl py-2 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
+                  <div className="bg-black text-white font-display text-2xl py-3 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
                     COMPROBAR
                   </div>
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3 my-2">
                 {shuffledOptions.map((opt, i) => {
                   return (
                     <button
                       key={i}
                       disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                       onClick={() => handleGuess(opt)}
-                      className="w-full sticker-button bg-white p-1 torn-edge group transform transition-transform hover:scale-105 active:scale-95"
+                      className="w-full sticker-button bg-white p-1.5 torn-edge group transform transition-transform hover:scale-105 active:scale-95"
                     >
-                      <div className="bg-black text-white font-display text-xs sm:text-sm px-1.5 py-1.5 tracking-wider group-hover:bg-red-600 uppercase flex items-center justify-center min-h-[2.6rem] text-center leading-tight">
+                      <div className="bg-black text-white font-display text-sm sm:text-base px-2 py-3 tracking-wider group-hover:bg-red-600 uppercase flex items-center justify-center min-h-[3.8rem] text-center leading-tight">
                         {opt}
                       </div>
                     </button>

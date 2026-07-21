@@ -123,7 +123,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onPlayClips();
               }}
-              className="absolute top-2 left-0 w-full text-left group"
+              className="absolute top-4 left-0 w-full text-left group"
             >
               <div className="bg-white/90 backdrop-blur-sm text-black font-sans font-black text-4xl uppercase px-4 py-2 border-l-8 border-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white">
                 PLAY THE TAPE
@@ -138,7 +138,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onCreateClip();
               }}
-              className="absolute top-28 right-0 w-11/12 text-right group flex flex-col items-end"
+              className="absolute top-36 right-0 w-11/12 text-right group flex flex-col items-end"
             >
               <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-3xl uppercase px-4 py-2 border-r-8 border-yellow-500 transition-colors group-hover:bg-yellow-500 group-hover:text-black">
                 SEND YOUR TAPE
@@ -153,9 +153,9 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onRanking();
               }}
-              className="absolute top-[210px] left-0 w-full text-left group"
+              className="absolute top-[270px] left-0 w-full text-left group"
             >
-              <div className="text-white font-sans font-black text-3xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-none mb-1 group-hover:text-yellow-400 transition-colors">
+              <div className="text-white font-sans font-black text-4xl uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-none mb-1 group-hover:text-yellow-400 transition-colors">
                 LOCAL HEROES<br/>REVEALED
               </div>
               <div className="bg-red-600/90 text-white font-sans font-bold text-xs px-3 py-1 inline-block uppercase tracking-widest">
@@ -168,7 +168,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onClick={() => {
                 onStash();
               }}
-              className="absolute top-[295px] right-0 w-11/12 text-right group flex flex-col items-end"
+              className="absolute top-[385px] right-0 w-11/12 text-right group flex flex-col items-end"
             >
               <div className="bg-black/90 backdrop-blur-sm text-white font-sans font-black text-2xl uppercase px-4 py-2 border-r-8 border-green-500 transition-colors group-hover:bg-green-500 group-hover:text-black">
                 FOOTY MANAGEMENT
@@ -180,8 +180,8 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
             
           </div>
           
-          {/* Magazine Barcode & Footer details (Lower Left) */}
-          <div className="absolute bottom-2 left-2 bg-white p-1.5 flex flex-col items-center border-2 border-black z-40 shadow-[2px_2px_0px_#000]">
+          {/* Magazine Barcode & Footer details (Classic Lower Right) */}
+          <div className="absolute bottom-3 right-3 bg-white p-1.5 flex flex-col items-center border-2 border-black z-40 shadow-[3px_3px_0px_#000]">
             {/* Fake Barcode */}
             <div className="flex h-8 items-end gap-[1.5px]">
               <div className="w-1 h-full bg-black"></div>
