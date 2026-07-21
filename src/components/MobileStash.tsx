@@ -85,7 +85,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
           lines.map((line, i) => {
             const ranking = getVideoRanking(line);
             return (
-              <div key={i} className="bg-black/80 border-4 border-zinc-500 p-4 flex flex-col justify-between relative group transform transition-transform hover:-translate-y-1">
+              <div key={i} className={`bg-black/80 border-4 border-zinc-500 p-4 flex flex-col justify-between relative group transform transition-transform hover:-translate-y-1 ${menuOpen === i ? "z-30" : "z-0"}`}>
                 
                 {/* Header Action Controls */}
                 <div className="absolute top-3 right-3 z-10">
@@ -100,7 +100,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                   </button>
 
                   {menuOpen === i && (
-                    <div className="absolute right-0 mt-1 w-44 bg-zinc-900 border-2 border-white shadow-[4px_4px_0_0_rgba(255,0,0,0.8)] z-20 flex flex-col">
+                    <div className="absolute right-0 mt-1 w-48 bg-zinc-950 border-2 border-white shadow-[6px_6px_0_0_rgba(255,0,0,0.9)] z-50 flex flex-col overflow-hidden">
                       <button
                         onClick={(e) => { e.stopPropagation(); setMenuOpen(null); onEdit(i); }}
                         className="flex items-center gap-2 px-3 py-2.5 text-xs text-white hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest border-b border-white/20"

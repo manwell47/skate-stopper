@@ -65,7 +65,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
         {/* Magazine Background Cover */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0 filter contrast-125 brightness-75"
-          style={{ backgroundImage: 'url("/skate_cover.png")' }}
+          style={{ backgroundImage: 'url("./skate_cover.png")' }}
         />
 
         {/* Grunge Vignette/Gradient overlay for readability */}

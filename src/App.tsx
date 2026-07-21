@@ -10,75 +10,34 @@ import MobileLogin from "./components/MobileLogin";
 import { LineData, Player, GameState, Challenge } from "./types";
 
 const playlist = [
-  "/1980s.mp3",
-  "/aaron kyro - sample.mp3",
-  "/Akita.wav",
-  "/alegre v2.wav",
-  "/Baby.wav",
-  "/baseRap_sinNotoriousBIG.mp3",
-  "/Color.mp3",
-  "/crepitar instru.wav",
-  "/Gameboy.mp3",
-  "/instru arcade soul 20251226.wav",
-  "/Intro.wav",
-  "/Life.wav",
-  "/Mist.mp3",
-  "/Nightmares.mp3",
-  "/Omino.mp3",
-  "/Please don't go.mp3",
-  "/prueba high gain long v2 knockedloose denzelcurry-01.mp3",
-  "/sample 2 - japanese.mp3",
-  "/Schoolyard.wav",
-  "/Stab.mp3",
-  "/Sus.wav",
-  "/Tandem.mp3",
-  "/Ten.mp3",
-  "/The way it is.mp3",
-  "/Vivo.mp3"
+  "./1980s.mp3",
+  "./aaron kyro - sample.mp3",
+  "./Akita.wav",
+  "./alegre v2.wav",
+  "./Baby.wav",
+  "./baseRap_sinNotoriousBIG.mp3",
+  "./Color.mp3",
+  "./crepitar instru.wav",
+  "./Gameboy.mp3",
+  "./instru arcade soul 20251226.wav",
+  "./Intro.wav",
+  "./Life.wav",
+  "./Mist.mp3",
+  "./Nightmares.mp3",
+  "./Omino.mp3",
+  "./Please don't go.mp3",
+  "./prueba high gain long v2 knockedloose denzelcurry-01.mp3",
+  "./sample 2 - japanese.mp3",
+  "./Schoolyard.wav",
+  "./Stab.mp3",
+  "./Sus.wav",
+  "./Tandem.mp3",
+  "./Ten.mp3",
+  "./The way it is.mp3",
+  "./Vivo.mp3"
 ];
 
 const DEFAULT_LINES: LineData[] = [
-  {
-    "videoId": "MGA5NrdyrpI",
-    "skater": "johnny wertuy",
-    "videoPart": "PLEASE NO CRUST",
-    "lineName": "4piece",
-    "title": "johnny wertuy - PLEASE NO CRUST - 4piece",
-    "videoType": "Ronda",
-    "trickCount": 4,
-    "clipStartTime": 138.46325485313415,
-    "clipEndTime": 158.08328703051754,
-    "markers": [
-      {
-        "id": "1784588220844",
-        "pauseTime": 139.46325485313415,
-        "correctTrick": "Kickflip to BS 5-0",
-        "falseTricks": ["kickflip bs nosegrind", "kickflip bs krooked", "kickflip bs melon"],
-        "isCustomText": false
-      },
-      {
-        "id": "1784588321653",
-        "pauseTime": 146.84925302098083,
-        "correctTrick": "Nollie Heelflip",
-        "falseTricks": ["nollie flip", "nollie hardflip", "nollie fs heelflip"],
-        "isCustomText": false
-      },
-      {
-        "id": "1784588361909",
-        "pauseTime": 152.49168820599365,
-        "correctTrick": "BS Tailslide out BS 180 Kickflip",
-        "falseTricks": ["bs tailslide bs heelflip out", "bs tailslide bs pop shove-it out", "bs tailslide fs heelflip out"],
-        "isCustomText": false
-      },
-      {
-        "id": "1784588454478",
-        "pauseTime": 156.5351190286102,
-        "correctTrick": "Switch Tre Flip",
-        "falseTricks": ["switch 360 shove it", "switch varial kickflip", "switch hadflip"],
-        "isCustomText": false
-      }
-    ]
-  },
   {
     "videoId": "fJhqj5fo35Y",
     "skater": "yuto puto horigome",
@@ -270,7 +229,7 @@ export default function App() {
     const target = e.target as HTMLElement;
     const btn = target.closest('button');
     if (btn && !btn.classList.contains('no-skid')) {
-      const audio = new Audio("/skid.wav");
+      const audio = new Audio("./skid.wav");
       audio.volume = 0.35;
       audio.preservesPitch = false;
       // Provide a random pitch between 0.8x and 1.2x
@@ -334,7 +293,7 @@ export default function App() {
       />
       <audio 
         ref={tictacRef} 
-        src="/tictac.wav" 
+        src="./tictac.wav" 
         loop
         preload="auto"
       />
