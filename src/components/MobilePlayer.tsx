@@ -436,66 +436,69 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 font-sans relative">
+    <div className="flex-1 flex flex-col landscape:flex-row overflow-hidden bg-zinc-950 font-sans relative">
       <div className="absolute inset-0 vhs-overlay z-40 pointer-events-none" />
 
-      {/* Dedicated Top Header Bar (100% Reliable Back Arrow) */}
-      <div className="p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b-2 border-white/20">
-        <button 
-          onClick={onBack} 
-          className="text-white hover:text-red-500 transition-colors p-1.5 active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]"
-        >
-          <ChevronLeft className="w-6 h-6" strokeWidth={3} />
-        </button>
-        <div className="text-center">
-          <h2 className="text-xl font-display text-white tracking-widest uppercase truncate max-w-[200px]">{lineData.skater}</h2>
+      {/* Video & Header Column (Top in Portrait, Left in Landscape) */}
+      <div className="w-full landscape:w-1/2 flex flex-col shrink-0 relative z-40 border-b-2 landscape:border-b-0 landscape:border-r-2 border-white/20">
+        {/* Dedicated Top Header Bar (100% Reliable Back Arrow) */}
+        <div className="p-2.5 sm:p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b border-white/20">
+          <button 
+            onClick={onBack} 
+            className="text-white hover:text-red-500 transition-colors p-1.5 active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
+          </button>
+          <div className="text-center">
+            <h2 className="text-lg sm:text-xl font-display text-white tracking-widest uppercase truncate max-w-[180px]">{lineData.skater}</h2>
+          </div>
+          <div className="flex gap-1 items-center">
+            <div className="w-1.5 h-2.5 border border-white" />
+            <div className="w-4 h-2.5 border border-white bg-white" />
+          </div>
         </div>
-        <div className="flex gap-1 items-center">
-          <div className="w-1.5 h-2.5 border border-white" />
-          <div className="w-4 h-2.5 border border-white bg-white" />
+
+        {/* Video Container (Proportional 16:9 Aspect Video) */}
+        <div className="relative aspect-video w-full bg-black shrink-0 z-40 fisheye-container flex-1">
+          <div className={`w-full h-full transition-all duration-300 relative ${gameState === 'guessing' && loopSpeed > 0 ? 'filter contrast-150 saturate-50 sepia-[.3] blur-[0.5px]' : ''}`}>
+            <YouTube
+              videoId={lineData.videoId}
+              opts={opts}
+              onReady={onReady}
+              onStateChange={onStateChange}
+              className="w-full h-full pointer-events-none"
+              iframeClassName="w-full h-full pointer-events-none"
+            />
+            {gameState === 'guessing' && loopSpeed > 0 && <div className="absolute inset-0 crt-static z-20" />}
+          </div>
+
+          {/* Status REC / PAUSE Badge */}
+          <div className="absolute bottom-2 left-2 z-30 pointer-events-none">
+            {gameState === "playing_to_pause" && (
+              <div className="bg-black/80 border border-red-600 px-2 py-0.5 text-red-500 font-bold text-xs flex items-center gap-1.5">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-rec-blink" />
+                REC
+              </div>
+            )}
+            {(gameState === "guessing" || gameState === "feedback_paused") && (
+              <div className="bg-black/80 border border-white/40 px-2 py-0.5 text-white font-bold text-xs flex items-center gap-1.5">
+                PAUSE
+              </div>
+            )}
+          </div>
+
+          {/* Progress Bar */}
+          <div className="absolute bottom-0 left-0 h-1 bg-white/20 w-full z-20">
+            <div 
+              className="h-full bg-red-600 transition-all duration-300 relative" 
+              style={{ width: `${((currentMarkerIndex) / lineData.markers.length) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Video Container (Proportional 16:9 Aspect Video) */}
-      <div className="relative aspect-video w-full bg-black shrink-0 z-40 fisheye-container">
-        <div className={`w-full h-full transition-all duration-300 relative ${gameState === 'guessing' && loopSpeed > 0 ? 'filter contrast-150 saturate-50 sepia-[.3] blur-[0.5px]' : ''}`}>
-          <YouTube
-            videoId={lineData.videoId}
-            opts={opts}
-            onReady={onReady}
-            onStateChange={onStateChange}
-            className="w-full h-full pointer-events-none"
-            iframeClassName="w-full h-full pointer-events-none"
-          />
-          {gameState === 'guessing' && loopSpeed > 0 && <div className="absolute inset-0 crt-static z-20" />}
-        </div>
-
-        {/* Status REC / PAUSE Badge */}
-        <div className="absolute bottom-2 left-2 z-30 pointer-events-none">
-          {gameState === "playing_to_pause" && (
-            <div className="bg-black/80 border border-red-600 px-2 py-0.5 text-red-500 font-bold text-xs flex items-center gap-1.5">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-rec-blink" />
-              REC
-            </div>
-          )}
-          {(gameState === "guessing" || gameState === "feedback_paused") && (
-            <div className="bg-black/80 border border-white/40 px-2 py-0.5 text-white font-bold text-xs flex items-center gap-1.5">
-              PAUSE
-            </div>
-          )}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="absolute bottom-0 left-0 h-1 bg-white/20 w-full z-20">
-          <div 
-            className="h-full bg-red-600 transition-all duration-300 relative" 
-            style={{ width: `${((currentMarkerIndex) / lineData.markers.length) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Lower Controls Area (Balanced Vertical Distribution) */}
-      <div className="flex-1 flex flex-col p-4 overflow-y-auto relative z-30 justify-around">
+      {/* Controls Column (Bottom in Portrait, Right in Landscape) */}
+      <div className="flex-1 w-full landscape:w-1/2 flex flex-col p-3 sm:p-4 overflow-y-auto relative z-30 justify-around">
         {lineData.markers.length > 1 && (
           <div className="text-center mb-1">
             <span className="text-xs font-sans font-bold text-white/50 tracking-widest uppercase">

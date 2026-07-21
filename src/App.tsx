@@ -329,8 +329,8 @@ export default function App() {
         preload="auto"
       />
       
-      {/* Mobile Frame Container */}
-      <div className="w-full h-full max-w-md bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden">
+      {/* Mobile Frame Container (Supports Portrait & Landscape Tablet View) */}
+      <div className="w-full h-full max-w-md landscape:max-w-4xl bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden transition-all duration-300">
         
         {appState === "LOGIN" && (
           <MobileLogin onLogin={handleLogin} />

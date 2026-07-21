@@ -180,24 +180,24 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
             
           </div>
           
-          {/* Magazine Barcode & Footer details (Classic Lower Right) */}
-          <div className="absolute bottom-3 right-3 bg-white p-1.5 flex flex-col items-center border-2 border-black z-40 shadow-[3px_3px_0px_#000]">
+          {/* Magazine Barcode (Lower Left - Tight Frame & Exact Number Alignment) */}
+          <div className="absolute bottom-3 left-3 bg-white px-1.5 py-1 flex flex-col items-center border border-black z-40 shadow-[2px_2px_0px_#000]">
             {/* Fake Barcode */}
-            <div className="flex h-8 items-end gap-[1.5px]">
+            <div className="flex h-7 items-end gap-[1.5px] px-0.5">
               <div className="w-1 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1.5 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1 h-full bg-black"></div>
-              <div className="w-0.5 h-6 bg-black"></div>
+              <div className="w-0.5 h-5 bg-black"></div>
               <div className="w-2 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
-              <div className="w-1 h-6 bg-black"></div>
+              <div className="w-1 h-5 bg-black"></div>
               <div className="w-1.5 h-full bg-black"></div>
               <div className="w-0.5 h-full bg-black"></div>
               <div className="w-1 h-full bg-black"></div>
             </div>
-            <span className="text-[9px] font-mono text-black font-bold tracking-widest mt-0.5">
+            <span className="text-[8.5px] font-mono text-black font-bold tracking-[0.14em] leading-none mt-0.5">
               4 7 0 1 4 6 6 6
             </span>
           </div>
