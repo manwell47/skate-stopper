@@ -22,7 +22,7 @@ Cualquier usuario o tester puede jugar al instante sin instalar nada ni requerir
 ### 📱 Instalar como App Móvil (PWA):
 Puedes instalar **Skate Stopper** como una aplicación nativa a pantalla completa en tu teléfono:
 - **iPhone (Safari)**: Toca el botón **Compartir** (icono de la caja con flecha) y selecciona **"Añadir a la pantalla de inicio"**.
-- **Android (Chrome)**: Toca los **3 puntos** del navegador y selecciona **"Instalar aplicación"** o **"Añadir a pantalla de inicio"**.
+- **Android (Chrome / Brave)**: Toca los **3 puntos** del navegador y selecciona **"Instalar aplicación"** o **"Añadir a pantalla de inicio"**.
 
 ---
 
@@ -47,15 +47,20 @@ Permite importar partes de vídeo de YouTube (o rondas completas de skate), cata
   - Reproducción a velocidad reducida (**0.5X** y **0.25X**) con efecto visual CRT static.
   - Memes y frases de reacción skate aleatorias durante la votación ("*What the hell is he trying?*", "*Shit look at those shoulders*", etc.).
   - Sistema de retos y votos (*Rebatir Voto*).
+  - **↩️ Navegación Infalible**: Barra superior dedicada para retornar al alijo o menú principal en cualquier momento.
+
+- **📱 Maquetación Fluida & Modo Tablet / Horizontal (Landscape)**:
+  - **Diseño Adaptativo**: Titulares en portada adaptables automáticamente a la altura disponible en navegadores móviles (iOS Safari, Android Chrome, Brave con barra inferior).
+  - **Modo Tablet / Horizontal**: Vista automática en **2 columnas paralelas** (vídeo a la izquierda, trucos y controles a la derecha) ideal para jugar en grupo apoyando la tablet o el teléfono.
 
 - **🏆 Podios por Vídeo & Footy Stash**:
   - Clasificación propia guardada para cada cinta/vídeo en `localStorage`.
   - Botón **`🏆 PODIUM`** en el menú de selección de cinta para consultar la tabla de líderes en cualquier momento.
   - Borrado de rankings de vídeo exclusivo desde la zona de gestión **Footy Stash**.
 
-- **🔊 Sonidos y Estética VHS 90s**:
-  - Banda sonora noventera integrada con cambio aleatorio.
-  - Sonidos retro (`skid.wav`, `tictac.wav`), animaciones CRT, insignias de pegatina rasgada y tipografía retro pixel (`VT323`).
+- **🔊 Sonidos, Estética VHS 90s & Botón Mute**:
+  - Botón **`🔊 MUSIC` / `🔇 MUTED`** en la portada para activar o silenciar la música noventera en cualquier momento.
+  - Sonidos retro (`skid.wav`, `tictac.wav`), animaciones CRT, insignias de pegatina rasgada, código de barras vintage (`4 7 0 1 4 6 6 6`) y tipografía retro pixel (`VT323`).
 
 ---
 
