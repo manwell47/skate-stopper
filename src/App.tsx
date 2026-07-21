@@ -184,18 +184,29 @@ export default function App() {
   };
 
   const handleImportStash = () => {
-    const text = prompt("Pega aquí el código del Tape Stash que quieres importar:");
+    const text = prompt("Pega aquí el código del Tape Stash o clip que quieres importar:");
     if (!text) return;
     try {
-      const importedLines = JSON.parse(text) as LineData[];
-      if (Array.isArray(importedLines)) {
-        setLines((prev) => [...prev, ...importedLines]);
-        alert(`¡${importedLines.length} vídeos importados con éxito!`);
+      let raw = JSON.parse(text);
+      if (!Array.isArray(raw)) raw = [raw];
+      const importedLines = raw as LineData[];
+      if (importedLines.length > 0 && importedLines[0].videoId) {
+        setLines((prev) => {
+          const newUnique = importedLines.filter(
+            imp => !prev.some(p => p.videoId === imp.videoId && p.clipStartTime === imp.clipStartTime)
+          );
+          if (newUnique.length === 0) {
+            alert("Los clips importados ya existen en tu alijo.");
+            return prev;
+          }
+          alert(`¡${newUnique.length} clip(s) añadido(s) a tu alijo con éxito!`);
+          return [...prev, ...newUnique];
+        });
       } else {
         throw new Error("Invalid format");
       }
     } catch (e) {
-      alert("Error al importar. Asegúrate de haber pegado un Stash válido.");
+      alert("Error al importar. Asegúrate de haber pegado un código de clip válido.");
     }
   };
 

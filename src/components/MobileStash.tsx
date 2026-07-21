@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LineData } from "../types";
-import { Trash2, MoreVertical, Edit2, ChevronLeft, Video, Download, Upload, Trophy, X } from "lucide-react";
+import { Trash2, MoreVertical, Edit2, ChevronLeft, Video, Download, Upload, Trophy, X, Share2 } from "lucide-react";
 
 interface Props {
   lines: LineData[];
@@ -14,6 +14,16 @@ interface Props {
 export default function MobileStash({ lines, onEdit, onDelete, onExportStash, onImportStash, onBack }: Props) {
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
   const [activeRankingLine, setActiveRankingLine] = useState<LineData | null>(null);
+
+  const handleExportSingleLine = async (line: LineData) => {
+    const dataStr = JSON.stringify([line]);
+    try {
+      await navigator.clipboard.writeText(dataStr);
+      alert(`¡Clip "${line.lineName}" copiado al portapapeles! Envíale este texto a tu amigo.`);
+    } catch (e) {
+      prompt("Copia el código de este clip:", dataStr);
+    }
+  };
 
   const getVideoRanking = (line: LineData): {name: string, score: number}[] => {
     const key = `skate_stopper_ranking_${line.videoId}_${line.clipStartTime}`;
@@ -96,6 +106,16 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                         className="flex items-center gap-2 px-3 py-2.5 text-xs text-white hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest border-b border-white/20"
                       >
                         <Edit2 className="w-3.5 h-3.5" /> EDITAR
+                      </button>
+                      <button
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          setMenuOpen(null); 
+                          handleExportSingleLine(line);
+                        }}
+                        className="flex items-center gap-2 px-3 py-2.5 text-xs text-green-400 hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest border-b border-white/20"
+                      >
+                        <Share2 className="w-3.5 h-3.5" /> COMPARTIR CLIP
                       </button>
                       <button
                         onClick={(e) => { 
