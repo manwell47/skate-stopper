@@ -1,0 +1,6 @@
+{
+  "name": "Skate Stopper",
+  "description": "Aplicación gamificada de trivia sobre skateboarding con análisis biomecánico de trucos y Árbitro Técnico impulsado por IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
