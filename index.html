@@ -1,13 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>skate stopper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>SKATE STOPPER - The Pure Skateboarding Game</title>
+    
+    <!-- PWA & Mobile Web App Meta -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SkateStopper" />
+    
+    <!-- Favicon & Manifest -->
+    <link rel="icon" type="image/png" href="/skate_cover.png" />
+    <link rel="apple-touch-icon" href="/skate_cover.png" />
+    <link rel="manifest" href="/manifest.json" />
   </head>
-  <body>
+  <body class="bg-black overflow-hidden select-none">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

@@ -1,0 +1,16 @@
+{
+  "name": "Skate Stopper",
+  "short_name": "SkateStopper",
+  "description": "90s VHS Skate Video & Trick Trivia Game",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "./skate_cover.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
