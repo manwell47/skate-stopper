@@ -31,7 +31,7 @@ export default function MobileRanking({ onBack }: Props) {
     <div className="flex-1 flex flex-col p-6 items-center justify-start space-y-6 bg-zinc-950 overflow-y-auto relative font-sans pt-4">
       <div className="absolute inset-0 vhs-overlay z-0" />
       
-      <button onClick={onBack} className="absolute top-4 left-4 z-10 text-white hover:text-red-500 transition-colors p-2">
+      <button onClick={onBack} className="absolute top-1 left-1 z-10 text-white hover:text-red-500 transition-colors p-5">
         <ChevronLeft className="w-8 h-8" strokeWidth={3} />
       </button>
 

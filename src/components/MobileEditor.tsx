@@ -140,8 +140,11 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
       setData({ ...data, [field]: newVal });
       setCurrentTime(newVal);
       if (playerRef.current) {
+        playerRef.current.playVideo();
         playerRef.current.seekTo(newVal, true);
-        playerRef.current.pauseVideo();
+        setTimeout(() => {
+          if (playerRef.current) playerRef.current.pauseVideo();
+        }, 150);
       }
     } else {
       const current = editingTrick[field] !== undefined ? editingTrick[field] : currentTime;
@@ -202,8 +205,11 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     setEditingTrick(prev => ({ ...prev, pauseTime: targetTime }));
     
     if (playerRef.current) {
+      playerRef.current.playVideo();
       playerRef.current.seekTo(targetTime, true);
-      playerRef.current.pauseVideo();
+      setTimeout(() => {
+        if (playerRef.current) playerRef.current.pauseVideo();
+      }, 150);
     }
   };
 
@@ -261,7 +267,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     const options = new Set<string>();
 
     const stances = ["Normal", "Switch", "Nollie", "Fakie"];
-    const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin"];
+    const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip"];
     const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Boardslide"];
     const grabs = ["Indy", "Melon", "Mute", "Tailgrab", "Nosegrab"];
     const stalls = ["Rock to Fakie", "Disaster", "Blunt Stall", "Noseblunt Stall"];
@@ -331,7 +337,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
     if (options.size < 3) {
       const stances = ["Normal", "Switch", "Nollie", "Fakie"];
-      const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip"];
+      const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip"];
       const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Boardslide"];
       const grabs = ["Indy", "Melon", "Mute", "Tailgrab", "Nosegrab"];
       const stalls = ["Rock to Fakie", "Disaster", "Blunt Stall", "Noseblunt Stall"];
@@ -460,7 +466,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     <div className="flex-1 flex flex-col overflow-hidden bg-black font-sans relative">
       {/* Header */}
       <div className="p-4 border-b-2 border-white bg-black z-10 flex items-center justify-between shrink-0  z-10">
-        <button onClick={handleBack} className="text-white hover:text-red-600 transition-colors">
+        <button onClick={handleBack} className="text-white hover:text-red-600 transition-colors p-4 -ml-4 -my-4">
           <ChevronLeft className="w-8 h-8" strokeWidth={3} />
         </button>
         <div className="text-center ">
@@ -692,7 +698,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 <div className="space-y-0.5">
                   <label className="zine-badge-red mb-1">Flip</label>
                   <select value={flip} onChange={e => setFlip(e.target.value)} className="zine-select">
-                    <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option>
+                    <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                   </select>
                 </div>
               )}
@@ -712,7 +718,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                     <div className="w-1/2">
                       <label className="zine-badge-red mb-1">Flip In</label>
                       <select value={flipIn} onChange={e => setFlipIn(e.target.value)} className="zine-select">
-                        <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option>
+                        <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                       </select>
                     </div>
                     {trickType === "Grind/Slide" && (
@@ -757,7 +763,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                         <div className="w-full">
                           <label className="text-[9px] font-sans font-bold text-red-400">Flip Mid</label>
                           <select value={flipMid} onChange={e => setFlipMid(e.target.value)} className="zine-select">
-                            <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option>
+                            <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                           </select>
                         </div>
                       </div>
@@ -804,7 +810,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                       <div className="w-full">
                         <label className="text-[9px] font-sans font-bold text-red-400">Flip Out</label>
                         <select value={flipOut} onChange={e => setFlipOut(e.target.value)} className="zine-select">
-                          <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option>
+                          <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                         </select>
                       </div>
                     </div>

@@ -90,8 +90,10 @@ export default function MobileSetup({ initialData, onVideoPlay, onVideoPause, on
       </div>
       <div className="absolute inset-0 vhs-overlay z-0 pointer-events-none opacity-50" />
 
-      <button onClick={handleBack} className="absolute top-6 left-6 z-20 text-white hover:text-red-500 transition-colors bg-black p-2 border-2 border-white shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
-        <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+      <button onClick={handleBack} className="absolute top-4 left-4 z-20 text-white hover:text-red-500 transition-colors p-4 group">
+        <div className="bg-black p-2 border-2 border-white shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
+          <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+        </div>
       </button>
 
       <div className="z-20 space-y-2 mt-4 text-center w-full max-w-sm">

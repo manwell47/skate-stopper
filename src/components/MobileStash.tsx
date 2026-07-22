@@ -46,7 +46,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
     >
       <div className="absolute inset-0 vhs-overlay z-0" />
 
-      <button onClick={onBack} className="absolute top-4 left-4 z-10 text-white hover:text-red-500 transition-colors p-2">
+      <button onClick={onBack} className="absolute top-1 left-1 z-10 text-white hover:text-red-500 transition-colors p-5">
         <ChevronLeft className="w-8 h-8" strokeWidth={3} />
       </button>
 

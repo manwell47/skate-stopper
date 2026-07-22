@@ -340,7 +340,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
     return (
       <div className="flex-1 flex flex-col p-6 items-center justify-start space-y-6 bg-zinc-950 relative overflow-y-auto pt-16 font-sans">
         <div className="absolute inset-0 vhs-overlay z-0" />
-        <button onClick={onBack} className="absolute top-4 left-4 z-10 text-white hover:text-red-500 transition-colors p-2">
+        <button onClick={onBack} className="absolute top-1 left-1 z-10 text-white hover:text-red-500 transition-colors p-5">
           <ChevronLeft className="w-8 h-8" strokeWidth={3} />
         </button>
         <div className="text-center space-y-2 relative z-10">
@@ -445,9 +445,11 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
         <div className="p-2.5 sm:p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b border-white/20">
           <button 
             onClick={onBack} 
-            className="text-white hover:text-red-500 transition-colors p-1.5 active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]"
+            className="p-3 -ml-3 -my-3 group"
           >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
+            <div className="text-white group-hover:text-red-500 transition-colors p-1.5 group-active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]">
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
+            </div>
           </button>
           <div className="text-center">
             <h2 className="text-lg sm:text-xl font-display text-white tracking-widest uppercase truncate max-w-[180px]">{lineData.skater}</h2>
