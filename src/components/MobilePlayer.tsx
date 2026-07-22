@@ -647,29 +647,37 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs with breathing room under axle while covering the Gemini logo on the bottom-right wood:
-                          const rowShiftClass = i < 2 ? "mt-[225px]" : "mt-[375px]";
+                          // 4 clean 2x2 rectangular vinyl sticker designs with generous breathing room under axle while covering the Gemini logo on the bottom-right wood:
+                          const rowShiftClass = i < 2 ? "mt-[300px]" : "mt-[440px]";
 
                           const stickerConfigs = [
-                            // Sticker 0 (Top-Left): Classic White Slap Tag
+                            // Sticker 0 (Top-Left): Classic "HELLO MY NAME IS" Slap Tag
                             {
-                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-marker text-[54px] sm:text-[62px] md:text-[70px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[14px_14px_30px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] p-4 w-full flex flex-col items-center justify-between min-h-[225px] relative overflow-hidden",
+                              header: <div className="w-full bg-red-600 text-white font-sans text-xs sm:text-sm font-black uppercase tracking-widest py-1 px-2 rounded-t text-center shadow-inner">HELLO MY NAME IS</div>,
+                              footer: null,
+                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-zinc-950 text-center leading-[1.12] tracking-wide break-words w-full my-auto"
                             },
-                            // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker
+                            // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker with Warning Strip
                             {
-                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-graffiti text-[56px] sm:text-[64px] md:text-[72px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
+                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[14px_14px_30px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] p-4 w-full flex flex-col items-center justify-between min-h-[225px] relative overflow-hidden",
+                              header: <div className="w-full bg-black text-yellow-400 font-sans text-[11px] sm:text-xs font-black uppercase tracking-widest py-1 px-2 text-center border-b-2 border-yellow-400 flex justify-between items-center"><span className="text-red-500">⚠</span><span>SKATE HAZARD</span><span className="text-red-500">⚠</span></div>,
+                              footer: null,
+                              inner: "font-graffiti text-[54px] sm:text-[62px] md:text-[70px] text-black text-center leading-[1.12] tracking-tight break-words w-full my-auto"
                             },
-                            // Sticker 2 (Bottom-Left): Red Thrasher Box Sticker
+                            // Sticker 2 (Bottom-Left): Red Thrasher Box Sticker with Zine Stamp
                             {
-                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-rock text-[46px] sm:text-[52px] md:text-[58px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
+                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[14px_14px_30px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] p-4 w-full flex flex-col items-center justify-between min-h-[225px] relative overflow-hidden",
+                              header: <div className="w-full text-white/90 font-sans text-[11px] sm:text-xs font-black uppercase tracking-widest text-center border-b border-dashed border-white/40 pb-1">★ SKATE OR DIE ★</div>,
+                              footer: null,
+                              inner: "font-rock text-[44px] sm:text-[50px] md:text-[56px] text-white text-center leading-[1.12] tracking-normal break-words w-full my-auto"
                             },
-                            // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag (Stealthily covers the Gemini logo on the wood)
+                            // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag with Barcode (Stealthily covers Gemini logo)
                             {
-                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-marker text-[54px] sm:text-[62px] md:text-[70px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[14px_14px_30px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] p-4 w-full flex flex-col items-center justify-between min-h-[225px] relative overflow-hidden",
+                              header: null,
+                              footer: <div className="w-full text-yellow-400/80 font-mono text-[11px] sm:text-xs font-bold tracking-[0.3em] text-center border-t border-zinc-800 pt-1">|||||| |||| | |||||| ||</div>,
+                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-yellow-300 text-center leading-[1.12] tracking-wide break-words w-full my-auto"
                             }
                           ];
 
@@ -688,6 +696,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                                   ${!!selectedOption ? 'opacity-90' : ''}
                                 `}
                               >
+                                {cfg.header}
                                 <div className={`
                                   flex items-center justify-center text-center uppercase transition-colors
                                   ${cfg.inner}
@@ -697,6 +706,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                                 `}>
                                   {opt}
                                 </div>
+                                {cfg.footer}
                               </button>
                             </div>
                           );
