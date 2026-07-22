@@ -622,9 +622,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Enlarged foreignObject container starting at y=1400 so rotation/hover borders are never clipped */}
-                <foreignObject x="30" y="1400" width="1636" height="1100" style={{ overflow: 'visible' }}>
-                  <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2 pt-12 overflow-visible">
+                {/* Trick Options Sticker Layer - Positioned at y=1350 so top row of answers has exact W/2 (360px) distance from the end of the axle */}
+                <foreignObject x="30" y="1350" width="1636" height="1170" style={{ overflow: 'visible' }}>
+                  <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2 overflow-visible">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-8 pt-20">
                         <input
@@ -647,10 +647,10 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs with precise downward shifts using layout margin-top (prevents GPU transform clipping inside SVG foreignObject):
-                          // Top row (i=0,1): shifted down by 180px (W/4, half of bottom shift)
-                          // Bottom row (i=2,3): shifted down by 360px (W/2, half of option width)
-                          const rowShiftClass = i < 2 ? "mt-[180px]" : "mt-[360px]";
+                          // 4 clean 2x2 rectangular vinyl sticker designs with precise downward shifts using layout margin-top:
+                          // Top row (i=0,1): shifted down by 360px (W/2, leaving 360px distance from the end of the axle)
+                          // Bottom row (i=2,3): shifted down by 540px
+                          const rowShiftClass = i < 2 ? "mt-[360px]" : "mt-[540px]";
 
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
