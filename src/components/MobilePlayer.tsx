@@ -622,8 +622,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Positioned at y=1350 so top row of answers has exact W/2 (360px) distance from the end of the axle */}
-                <foreignObject x="30" y="1350" width="1636" height="1170" style={{ overflow: 'visible' }}>
+                {/* Trick Options Sticker Layer - Positioned at y=1400 so bottom-right sticker stealthily covers the Gemini logo on the wood graphic */}
+                <foreignObject x="30" y="1400" width="1636" height="1050" style={{ overflow: 'visible' }}>
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2 overflow-visible">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-8 pt-20">
@@ -647,29 +647,29 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs with 50% enlarged sticker box heights (extending top row downwards and bottom row upwards):
-                          const rowShiftClass = i < 2 ? "mt-[360px]" : "mt-[450px]";
+                          // 4 clean 2x2 rectangular vinyl sticker designs positioned robustly to cover the Gemini logo on the bottom-right wood:
+                          const rowShiftClass = i < 2 ? "mt-[160px]" : "mt-[350px]";
 
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
                             {
-                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
-                              inner: "font-marker text-[58px] sm:text-[66px] md:text-[74px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
+                              inner: "font-marker text-[54px] sm:text-[62px] md:text-[70px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
                             },
                             // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker
                             {
-                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
-                              inner: "font-graffiti text-[60px] sm:text-[68px] md:text-[76px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
+                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
+                              inner: "font-graffiti text-[56px] sm:text-[64px] md:text-[72px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
                             },
                             // Sticker 2 (Bottom-Left): Red Thrasher Box Sticker
                             {
-                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
-                              inner: "font-rock text-[48px] sm:text-[54px] md:text-[62px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
+                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
+                              inner: "font-rock text-[46px] sm:text-[52px] md:text-[58px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
                             },
-                            // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag
+                            // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag (Stealthily covers the Gemini logo on the wood)
                             {
-                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
-                              inner: "font-marker text-[58px] sm:text-[66px] md:text-[74px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-5 py-4 w-full flex items-center justify-center min-h-[195px]",
+                              inner: "font-marker text-[54px] sm:text-[62px] md:text-[70px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
                             }
                           ];
 
