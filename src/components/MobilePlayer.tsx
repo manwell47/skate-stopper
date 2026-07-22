@@ -544,7 +544,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                 <circle cx="120" cy="170" r="2" fill="#222" />
 
                 {/* Pro Model Text */}
-                <text fill="#111" fontSize="24" fontWeight="900" fontFamily="sans-serif" letterSpacing="1">
+                <text fill="#111" fontSize={Math.max(12, 24 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 1.2)} fontWeight="900" fontFamily="sans-serif" letterSpacing="1">
                   <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                     {players[currentPlayerGuessingIndex].name.toUpperCase()}
                   </textPath>

@@ -75,20 +75,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
         {/* Grunge Vignette/Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 z-10 pointer-events-none" />
 
-        {/* Mute/Unmute Music Toggle */}
-        {onToggleMute && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleMute();
-            }}
-            className="absolute top-3 right-3 z-50 p-2 bg-black/90 border-2 border-white text-white hover:bg-white hover:text-black transition-transform active:scale-95 shadow-[3px_3px_0px_#000] flex items-center justify-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider cursor-pointer"
-            title={isMuted ? "Enable music" : "Disable music"}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4 text-green-400" />}
-            <span>{isMuted ? "MUTED" : "MUSIC"}</span>
-          </button>
-        )}
+
 
         {/* Magazine Content Layer */}
         <div className="z-30 w-full h-full flex flex-col justify-between p-4 relative">

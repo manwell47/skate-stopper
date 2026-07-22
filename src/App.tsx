@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Volume2, VolumeX } from "lucide-react";
+import LZString from "lz-string";
 import MobileSetup from "./components/MobileSetup";
 import MobileEditor from "./components/MobileEditor";
 import MobilePlayer from "./components/MobilePlayer";
@@ -100,6 +102,96 @@ const DEFAULT_LINES: LineData[] = [
         "isCustomText": false
       }
     ]
+  },
+  {
+    "videoId": "6XzLF39Q55I",
+    "skater": "Pj ladd",
+    "videoPart": "Classics: PJ Ladd's \"Wonderful, Horrible, Life\" part",
+    "lineName": "Start",
+    "title": "Pj ladd - Classics: PJ Ladd's \"Wonderful, Horrible, Life\" part - Start",
+    "videoType": "Ronda",
+    "trickCount": 7,
+    "clipStartTime": 82.05230200190735,
+    "clipEndTime": 103.28700900000001,
+    "markers": [
+      {
+        "id": "1784727226979",
+        "pauseTime": 83.757433,
+        "correctTrick": "Nollie BS Shifty Heelflip",
+        "falseTricks": [
+          "Nollie BS Shifty Bigspin Heelflip",
+          "Nollie Heelflip",
+          "Nollie BS Shifty BS Bigspin"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727476371",
+        "pauseTime": 85.873853,
+        "correctTrick": "Tre Flip",
+        "falseTricks": [
+          "Kickflip",
+          "Heelflip",
+          "Shove-it"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727533971",
+        "pauseTime": 90.01226710108948,
+        "correctTrick": "Nollie Kickflip",
+        "falseTricks": [
+          "Nollie Heelflip",
+          "Nollie Tre Flip",
+          "Nollie Shove-it"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727549256",
+        "pauseTime": 94.479214,
+        "correctTrick": "FS 180 Kickflip",
+        "falseTricks": [
+          "FS 180 Heelflip",
+          "FS 180 Tre Flip",
+          "FS 180 Shove-it"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727582742",
+        "pauseTime": 96.33084107629395,
+        "correctTrick": "Half Cab Kickflip",
+        "falseTricks": [
+          "Half Cab Heelflip",
+          "Half Cab Hardflip",
+          "Fakie Kickflip"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727628570",
+        "pauseTime": 98.47123003814697,
+        "correctTrick": "Nollie FS 360 Kickflip",
+        "falseTricks": [
+          "Nollie FS 360 Heelflip",
+          "Nollie FS 360 Tre Flip",
+          "Nollie FS 360 Shove-it"
+        ],
+        "isCustomText": false
+      },
+      {
+        "id": "1784727652410",
+        "pauseTime": 101.93674700190735,
+        "correctTrick": "Crooked",
+        "falseTricks": [
+          "Noseblunt",
+          "FS Impossible Crooked",
+          "FS Bigspin Crooked"
+        ],
+        "isCustomText": false
+      }
+    ]
   }
 ];
 
@@ -114,7 +206,7 @@ export default function App() {
   const pitchAnimRef = useRef<number | null>(null);
 
   const [lines, setLines] = useState<LineData[]>(() => {
-    const saved = localStorage.getItem("skate_stopper_lines_v2");
+    const saved = localStorage.getItem("skate_stopper_lines_v3");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -130,7 +222,7 @@ export default function App() {
   const [editingLineIndex, setEditingLineIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("skate_stopper_lines_v2", JSON.stringify(lines));
+    localStorage.setItem("skate_stopper_lines_v3", JSON.stringify(lines));
   }, [lines]);
 
   const [isMuted, setIsMuted] = useState(false);
@@ -272,10 +364,13 @@ export default function App() {
   const handleExportStash = async () => {
     try {
       const dataStr = JSON.stringify(lines);
-      await navigator.clipboard.writeText(dataStr);
+      const compressed = LZString.compressToBase64(dataStr);
+      await navigator.clipboard.writeText(compressed);
       alert("Tape Stash copied to clipboard. Paste it to share it!");
     } catch (e) {
-      prompt("Copy this Stash code:", JSON.stringify(lines));
+      const dataStr = JSON.stringify(lines);
+      const compressed = LZString.compressToBase64(dataStr);
+      prompt("Copy this Stash code:", compressed);
     }
   };
 
@@ -283,7 +378,13 @@ export default function App() {
     const text = prompt("Paste the Tape Stash or clip code you want to import here:");
     if (!text) return;
     try {
-      let raw = JSON.parse(text);
+      // Check if it's compressed or legacy uncompressed JSON
+      let dataStr = text;
+      if (!text.trim().startsWith("[") && !text.trim().startsWith("{")) {
+        const decompressed = LZString.decompressFromBase64(text.trim());
+        if (decompressed) dataStr = decompressed;
+      }
+      let raw = JSON.parse(dataStr);
       if (!Array.isArray(raw)) raw = [raw];
       const importedLines = raw as LineData[];
       if (importedLines.length > 0 && importedLines[0].videoId) {
@@ -335,6 +436,19 @@ export default function App() {
       
       {/* Mobile Frame Container (Supports Portrait & Landscape Tablet View) */}
       <div className="w-full h-full max-w-md landscape:max-w-4xl bg-[#050505] shadow-2xl border-x border-zinc-900 flex flex-col relative overflow-hidden transition-all duration-300">
+        
+        {/* Global Mute Toggle */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleMute();
+          }}
+          className="absolute top-3 right-3 z-50 p-2 bg-black/90 border-2 border-white text-white hover:bg-white hover:text-black transition-transform active:scale-95 shadow-[3px_3px_0px_#000] flex items-center justify-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider cursor-pointer"
+          title={isMuted ? "Enable music" : "Disable music"}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4 text-green-400" />}
+          <span className="hidden sm:inline">{isMuted ? "MUTED" : "MUSIC"}</span>
+        </button>
         
         {appState === "LOGIN" && (
           <MobileLogin onLogin={handleLogin} />
