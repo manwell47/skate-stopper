@@ -123,19 +123,21 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
   }, []);
 
   const setTimeFor = (field: "clipStartTime" | "clipEndTime" | "pauseTime") => {
+    const actualCurrentTime = playerRef.current?.getCurrentTime() || currentTime;
     if (field === "clipStartTime" || field === "clipEndTime") {
-      setData({ ...data, [field]: currentTime });
+      setData({ ...data, [field]: actualCurrentTime });
     } else {
-      setEditingTrick({ ...editingTrick, [field]: currentTime });
+      setEditingTrick({ ...editingTrick, [field]: actualCurrentTime });
       if (playerRef.current) playerRef.current.pauseVideo();
     }
   };
 
   const adjustTime = (field: "clipStartTime" | "clipEndTime" | "pauseTime", frames: number) => {
+    const actualCurrentTime = playerRef.current?.getCurrentTime() || currentTime;
     const f = 0.01666; // approx 1 frame at 60fps
     const seconds = frames * f;
     if (field === "clipStartTime" || field === "clipEndTime") {
-      const current = data[field] !== undefined ? data[field] : currentTime;
+      const current = data[field] !== undefined ? data[field] : actualCurrentTime;
       const newVal = Math.max(0, current + seconds);
       setData({ ...data, [field]: newVal });
       setCurrentTime(newVal);
@@ -147,13 +149,16 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         }, 150);
       }
     } else {
-      const current = editingTrick[field] !== undefined ? editingTrick[field] : currentTime;
+      const current = editingTrick[field] !== undefined ? editingTrick[field] : actualCurrentTime;
       const newVal = Math.max(0, current + seconds);
       setEditingTrick({ ...editingTrick, [field]: newVal });
       setCurrentTime(newVal);
       if (playerRef.current) {
+        playerRef.current.playVideo();
         playerRef.current.seekTo(newVal, true);
-        playerRef.current.pauseVideo();
+        setTimeout(() => {
+          if (playerRef.current) playerRef.current.pauseVideo();
+        }, 150);
       }
     }
   };
