@@ -516,37 +516,50 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-zinc-900 custom-scrollbar flex flex-col relative">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#12100e] custom-scrollbar flex flex-col items-center justify-start p-2">
             
-            {/* The container that scales correctly with the SVG aspect ratio */}
-            <div className="relative w-full max-w-[700px] mx-auto drop-shadow-2xl">
+            {/* The container that holds the skateboard SVG */}
+            <div className="relative w-full max-w-[650px] mx-auto drop-shadow-2xl">
               
               {/* Skateboard Background Graphic */}
               <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
                 <defs>
-                  {/* Curve moved slightly higher to make room for the meme quote */}
-                  <path id="noseCurve" d="M 350,700 Q 848,500 1346,700" fill="transparent" />
+                  {/* Curve for nose text */}
+                  <path id="noseCurve" d="M 300,680 Q 848,480 1396,680" fill="transparent" />
+                  <path id="memeCurve" d="M 300,920 Q 848,760 1396,920" fill="transparent" />
                   
                   {/* Rough marker filter effect */}
                   <filter id="markerBleed" x="-20%" y="-20%" width="140%" height="140%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+                    <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" result="noise" />
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
                   </filter>
                 </defs>
                 
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
-                {/* Player Name Text with Marker Font & Drop Shadow Layer */}
-                <text fill="#000" opacity="0.3" transform="translate(6, 8)" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2">
+                {/* Decorative Skatepunk Accents on Nose */}
+                <text x="848" y="430" textAnchor="middle" fill="#1a1a1a" fontSize="70" fontFamily="'Permanent Marker', cursive" opacity="0.6">
+                  ★ PRO MODEL ★
+                </text>
+
+                {/* Player Name Drop Shadow Layer */}
+                <text fill="#000" opacity="0.35" transform="translate(8, 10)" fontSize={Math.max(130, 210 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 14)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="4">
                   <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                     {players[currentPlayerGuessingIndex].name.toUpperCase()}
                   </textPath>
                 </text>
                 
                 {/* Main Player Name */}
-                <text fill="#1a1a1a" filter="url(#markerBleed)" stroke="#1a1a1a" strokeWidth="4" strokeLinejoin="round" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2" opacity="0.9">
+                <text fill="#111111" filter="url(#markerBleed)" stroke="#111111" strokeWidth="6" strokeLinejoin="round" fontSize={Math.max(130, 210 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 14)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="4">
                   <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                     {players[currentPlayerGuessingIndex].name.toUpperCase()}
+                  </textPath>
+                </text>
+
+                {/* Meme Quote Written on the Nose Wood */}
+                <text fill="#2b2622" fontSize="75" fontFamily="'Permanent Marker', cursive" opacity="0.85" fontStyle="italic">
+                  <textPath href="#memeCurve" startOffset="50%" textAnchor="middle">
+                    "{currentMeme}"
                   </textPath>
                 </text>
 
@@ -604,77 +617,65 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                 >
                   <title>Replay x0.25</title>
                 </rect>
+
+                {/* Trick Options Sticker Layer - Embedded directly in SVG space (y=1420 to y=2420) */}
+                <foreignObject x="120" y="1420" width="1456" height="1050">
+                  <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2">
+                    {marker.isCustomText ? (
+                      <div className="flex flex-col w-full space-y-6">
+                        <input 
+                          type="text"
+                          value={textGuess}
+                          onChange={(e) => setTextGuess(e.target.value)}
+                          placeholder="Escribe el truco..."
+                          className="zine-input text-5xl font-marker text-center py-6 rotate-[-1deg] shadow-[10px_10px_30px_rgba(0,0,0,0.6)] w-full text-black bg-zinc-100 border-none"
+                        />
+                        <button
+                          disabled={!textGuess.trim()}
+                          onClick={() => handleGuess(textGuess)}
+                          className="w-full sticker-button bg-black p-3 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[10px_10px_30px_rgba(0,0,0,0.6)]"
+                        >
+                          <div className="bg-red-600 text-white font-rock text-5xl py-6 tracking-widest group-hover:bg-red-500 transition-colors uppercase text-center border-4 border-dashed border-white/50">
+                            COMPROBAR
+                          </div>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-8 w-full">
+                        {shuffledOptions.map((opt, i) => {
+                          const rotateClass = i % 2 === 0 ? "rotate-[-3deg] hover:rotate-[1deg]" : "rotate-[3deg] hover:rotate-[-1deg]";
+                          
+                          return (
+                            <button
+                              key={i}
+                              disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
+                              onClick={() => handleGuess(opt)}
+                              className={`
+                                bg-zinc-100 p-3 torn-edge group transition-transform shadow-[8px_8px_20px_rgba(0,0,0,0.7)]
+                                ${rotateClass}
+                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
+                                ${!!selectedOption ? 'opacity-90' : ''}
+                                border-[4px] border-black bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')]
+                              `}
+                            >
+                              <div className={`
+                                h-full w-full bg-black text-zinc-100 p-5 font-marker tracking-wide text-3xl md:text-4xl flex items-center justify-center text-center uppercase transition-colors min-h-[160px]
+                                border-2 border-zinc-800 leading-tight
+                                ${!selectedOption ? 'group-hover:bg-zinc-900 group-hover:text-white' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-black border-black' : ''}
+                              `}>
+                                {opt}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </foreignObject>
               </svg>
-
-              {/* Meme Overlay: positioned directly under the player name on the nose. 
-                  Curve is around y=500-700. 750 / 2528 = ~29.6% */}
-              <div className="absolute inset-x-0 pointer-events-none flex flex-col items-center px-12" style={{ top: '30%' }}>
-                <p className="text-xl sm:text-2xl md:text-3xl font-marker text-zinc-900 opacity-80 rotate-[-3deg] text-center max-w-[85%] leading-tight drop-shadow-[1px_1px_0px_rgba(255,255,255,0.2)]">
-                  "{currentMeme}"
-                </p>
-              </div>
-
-              {/* Absolute HTML Overlay for trick options.
-                  1352 / 2528 = 53.5% from top 
-                  We position it at 55% to start just slightly below the truck. */}
-              <div className="absolute inset-x-0 bottom-0 pointer-events-none flex flex-col items-center px-4 sm:px-8 pb-4" style={{ top: '55%' }}>
-                
-                {/* Trick Options */}
-                <div className="w-full max-w-lg pointer-events-auto">
-                  {marker.isCustomText ? (
-                    <div className="flex flex-col space-y-4">
-                      <input 
-                        type="text"
-                        value={textGuess}
-                        onChange={(e) => setTextGuess(e.target.value)}
-                        placeholder="Escribe el truco..."
-                        className="zine-input text-2xl sm:text-3xl font-marker text-center py-4 rotate-[-1deg] shadow-[5px_5px_15px_rgba(0,0,0,0.6)] w-full text-black bg-zinc-100 placeholder:text-zinc-400 border-none"
-                      />
-                      <button
-                        disabled={!textGuess.trim()}
-                        onClick={() => handleGuess(textGuess)}
-                        className="w-full sticker-button bg-black p-2 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
-                      >
-                        <div className="bg-red-600 text-white font-rock text-3xl sm:text-4xl py-4 group-hover:bg-red-500 transition-colors uppercase text-center border-2 border-dashed border-white/50">
-                          COMPROBAR
-                        </div>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      {shuffledOptions.map((opt, i) => {
-                        const rotateClass = i % 2 === 0 ? "rotate-[-3deg] hover:rotate-[1deg]" : "rotate-[3deg] hover:rotate-[-1deg]";
-                        
-                        return (
-                          <button
-                            key={i}
-                            disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
-                            onClick={() => handleGuess(opt)}
-                            className={`
-                              bg-zinc-100 p-1.5 sm:p-2 torn-edge group transition-transform shadow-[4px_4px_10px_rgba(0,0,0,0.7)]
-                              ${rotateClass}
-                              ${selectedOption && opt === marker.correctTrick ? 'ring-4 ring-green-500 scale-105' : ''}
-                              ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-4 ring-red-500 opacity-60' : ''}
-                              ${!!selectedOption ? 'opacity-90' : ''}
-                              border-[3px] border-black bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')]
-                            `}
-                          >
-                            <div className={`
-                              h-full w-full bg-black text-zinc-100 p-2 sm:p-3 font-marker tracking-wide text-xs sm:text-sm md:text-base flex items-center justify-center text-center uppercase transition-colors min-h-[3.5rem] sm:min-h-[4.5rem]
-                              border border-zinc-800 leading-tight
-                              ${!selectedOption ? 'group-hover:bg-zinc-900 group-hover:text-white' : ''}
-                              ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
-                              ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-black border-black' : ''}
-                            `}>
-                              {opt}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
         ) : gameState === "feedback_paused" ? (
