@@ -32,6 +32,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
   const [pressure, setPressure] = useState("None");
   const [trickType, setTrickType] = useState("Fliptrick");
   const [flip, setFlip] = useState("None");
+  const [lateFlip, setLateFlip] = useState("None");
   const [grind, setGrind] = useState("None");
   const [grind2, setGrind2] = useState("None");
   const [manual, setManual] = useState("None");
@@ -62,6 +63,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     setPressure("None");
     setTrickType("Fliptrick");
     setFlip("None");
+    setLateFlip("None");
     setGrind("None");
     setGrind2("None");
     setManual("None");
@@ -218,17 +220,27 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     }
   };
 
-  const buildTrick = (s: string, d: string, r: string, t: string, pr: string, f: string, g: string, g2: string, m: string, m2: string, gr: string, st: string, w: string, fi: string, sm: string, dm: string, rm: string, fm: string, so: string, doOut: string, ro: string, fo: string, en: string) => {
+  const buildTrick = (s: string, d: string, r: string, t: string, pr: string, f: string, lf: string, g: string, g2: string, m: string, m2: string, gr: string, st: string, w: string, fi: string, sm: string, dm: string, rm: string, fm: string, so: string, doOut: string, ro: string, fo: string, en: string) => {
+    let effectiveStance = s;
+    let effectiveRot = r;
+
+    if (effectiveStance === "Fakie") {
+      if (effectiveRot === "BS 360") { effectiveStance = "Normal"; effectiveRot = "Caballerial"; }
+      else if (effectiveRot === "BS 180") { effectiveStance = "Normal"; effectiveRot = "Half Cab"; }
+      else if (effectiveRot === "FS 180") { effectiveStance = "Normal"; effectiveRot = "FS Half Cab"; }
+    }
+
     const parts: string[] = [];
-    if (s !== "Normal") parts.push(s);
+    if (effectiveStance !== "Normal") parts.push(effectiveStance);
     
     if (t === "Fliptrick" || t === "Stall" || t === "Grab" || t === "Wallride/Other") {
       if (d !== "None") parts.push(d);
-      if (r !== "None") parts.push(r);
+      if (effectiveRot !== "None") parts.push(effectiveRot);
       
       if (t === "Fliptrick" || t === "Stall") {
         if (pr !== "None") parts.push("Pressure");
         if (f !== "None") parts.push(f);
+        if (lf !== "None") { parts.push("Late"); parts.push(lf); }
       }
       if (t === "Stall" && st !== "None") parts.push(st);
       if (t === "Grab" && gr !== "None") parts.push(gr);
@@ -238,7 +250,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     if (t === "Grind/Slide") {
       if (fi !== "None") parts.push(fi);
       if (d !== "None") parts.push(d);
-      if (r !== "None") parts.push(r);
+      if (effectiveRot !== "None") parts.push(effectiveRot);
       if (g !== "None") parts.push(g);
       
       if (fm !== "None" || sm !== "Normal" || dm !== "None" || rm !== "None") { 
@@ -261,15 +273,24 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
     }
     
     if (t === "Manual") {
+      let landingStance = s;
+      const has180 = r.includes("180") || fi.includes("Bigspin") || fi.includes("Biggerspin");
+      if (has180) {
+        if (s === "Normal") landingStance = "Switch";
+        else if (s === "Switch") landingStance = "Normal";
+        else if (s === "Fakie") landingStance = "Normal";
+        else if (s === "Nollie") landingStance = "Fakie";
+      }
+
       const entryParts = [];
-      if (d !== "None" && (r !== "None" || fi !== "None")) entryParts.push(d);
-      if (r !== "None") entryParts.push(r);
+      if (d !== "None" && (effectiveRot !== "None" || fi !== "None")) entryParts.push(d);
+      if (effectiveRot !== "None") entryParts.push(effectiveRot);
       if (fi !== "None") entryParts.push(fi);
       
       if (entryParts.length > 0) {
         parts.push(...entryParts);
         parts.push("to");
-        if (s !== "Normal") parts.push(s);
+        if (landingStance !== "Normal") parts.push(landingStance);
       }
       if (m !== "None") parts.push(m);
       
@@ -299,56 +320,56 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
   };
 
   const autoGenerateFalseTricks = () => {
-    const correctTrick = customTrick.trim() || buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending);
+    const correctTrick = customTrick.trim() || buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending);
     const options = new Set<string>();
 
     const stances = ["Normal", "Switch", "Nollie", "Fakie"];
-    const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip"];
-    const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Boardslide"];
+    const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip", "Impossible", "FS Impossible"];
+    const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Overcrook", "Feeble", "Smith", "Boardslide", "Lipslide", "Noseslide", "Tailslide", "Bluntslide", "Noseblunt", "Darkslide"];
     const grabs = ["Indy", "Melon", "Mute", "Tailgrab", "Nosegrab"];
-    const stalls = ["Rock to Fakie", "Disaster", "Blunt Stall", "Noseblunt Stall"];
+    const stalls = ["Rock to Fakie", "Rock and Roll", "Axle Stall", "Disaster", "Blunt Stall", "Noseblunt Stall"];
     const manuals = ["Manual", "Nose Manual", "Casper", "Primo"];
     const walls = ["Wallride", "Wallie", "No-Comply", "Boneless", "Fastplant"];
     const dirs = ["None", "FS", "BS"];
 
     // Trick variants with the same stance to be credible
     for (const f of flips) {
-      if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
     }
     if (trickType === "Grind/Slide") {
       for (const g of grinds) {
-        if (g !== grind && grind !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, g, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (g !== grind && grind !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, g, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }
     }
     if (trickType === "Manual") {
       for (const m of manuals) {
-        if (m !== manual && manual !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, m, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (m !== manual && manual !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, m, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }
     }
     if (trickType === "Grab") {
       for (const gr of grabs) {
-        if (gr !== grab && grab !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, gr, stall, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+        if (gr !== grab && grab !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, gr, stall, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
       }
     }
     if (trickType === "Stall") {
       for (const st of stalls) {
-        if (st !== stall && stall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, st, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+        if (st !== stall && stall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, st, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
       }
     }
     if (trickType === "Wallride/Other") {
       for (const w of walls) {
-        if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+        if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
       }
     }
     if (trickType !== "Manual") {
       for (const d of dirs) {
-        if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }
     }
     if (trickType === "Fliptrick") {
       const rots = ["None", "180", "360"];
       for (const r of rots) {
-        if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }
     }
 
@@ -374,59 +395,59 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
   };
 
   const saveTrick = () => {
-    const correctTrick = customTrick.trim() || buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending);
+    const correctTrick = customTrick.trim() || buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending);
 
     const providedFalseTricks = [false1, false2, false3].map(t => t.trim()).filter(Boolean);
     const options = new Set<string>(providedFalseTricks);
 
     if (options.size < 3) {
       const stances = ["Normal", "Switch", "Nollie", "Fakie"];
-      const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip"];
-      const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Boardslide"];
+      const flips = ["Kickflip", "Heelflip", "Tre Flip", "Shove-it", "Hardflip", "BS Bigspin", "FS Bigspin", "Bigspin Flip", "Bigspin Heelflip", "Biggerspin Flip", "Biggerspin Heelflip", "Impossible", "FS Impossible"];
+      const grinds = ["50-50", "5-0", "Nosegrind", "Crooked", "Overcrook", "Feeble", "Smith", "Boardslide", "Lipslide", "Noseslide", "Tailslide", "Bluntslide", "Noseblunt", "Darkslide"];
       const grabs = ["Indy", "Melon", "Mute", "Tailgrab", "Nosegrab"];
-      const stalls = ["Rock to Fakie", "Disaster", "Blunt Stall", "Noseblunt Stall"];
-      const manuals = ["Manual", "Nose Manual"];
+      const stalls = ["Rock to Fakie", "Rock and Roll", "Axle Stall", "Disaster", "Blunt Stall", "Noseblunt Stall"];
+      const manuals = ["Manual", "Nose Manual", "Casper", "Primo"];
       const walls = ["Wallride", "Wallie", "No-Comply", "Boneless", "Fastplant"];
       const dirs = ["None", "FS", "BS"];
 
       // Trick variants with the same stance to be credible
       for (const f of flips) {
-        if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
       }
       if (trickType === "Grind/Slide") {
         for (const g of grinds) {
-          if (g !== grind && grind !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, g, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+          if (g !== grind && grind !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, g, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
         }
       }
       if (trickType === "Manual") {
         for (const m of manuals) {
-          if (m !== manual && manual !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, m, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+          if (m !== manual && manual !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, m, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
         }
       }
       if (trickType === "Grab") {
         for (const gr of grabs) {
-          if (gr !== grab && grab !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, gr, stall, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+          if (gr !== grab && grab !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, gr, stall, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
         }
       }
       if (trickType === "Stall") {
         for (const st of stalls) {
-          if (st !== stall && stall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, st, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+          if (st !== stall && stall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, st, wall, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
         }
       }
       if (trickType === "Wallride/Other") {
         for (const w of walls) {
-          if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
+          if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
         }
       }
       if (trickType !== "Manual") {
         for (const d of dirs) {
-          if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+          if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
         }
       }
       if (trickType === "Fliptrick") {
         const rots = ["None", "180", "360"];
         for (const r of rots) {
-          if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+          if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
         }
       }
       
@@ -726,7 +747,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               <div className="space-y-0.5">
                 <label className="zine-badge-red mb-1">Rotación</label>
                 <select value={rotation} onChange={e => setRotation(e.target.value)} className="zine-select">
-                  <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option>
+                  <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option><option>FS 540</option><option>BS 540</option><option>FS 720</option><option>FS Shifty</option><option>BS Shifty</option>
                 </select>
               </div>
 
@@ -747,12 +768,20 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               </div>
 
               {(trickType === "Fliptrick" || trickType === "Stall") && (
-                <div className="space-y-0.5">
-                  <label className="zine-badge-red mb-1">Flip</label>
-                  <select value={flip} onChange={e => setFlip(e.target.value)} className="zine-select">
-                    <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
-                  </select>
-                </div>
+                <>
+                  <div className="space-y-0.5">
+                    <label className="zine-badge-red mb-1">Flip</label>
+                    <select value={flip} onChange={e => setFlip(e.target.value)} className="zine-select">
+                      <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>Impossible</option><option>FS Impossible</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
+                    </select>
+                  </div>
+                  <div className="space-y-0.5 mt-1">
+                    <label className="zine-badge-red mb-1">Late Flip</label>
+                    <select value={lateFlip} onChange={e => setLateFlip(e.target.value)} className="zine-select">
+                      <option>None</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>Impossible</option><option>FS Impossible</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
+                    </select>
+                  </div>
+                </>
               )}
 
               {trickType === "Grab" && (
@@ -770,7 +799,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                     <div className="w-1/2">
                       <label className="zine-badge-red mb-1">Flip In</label>
                       <select value={flipIn} onChange={e => setFlipIn(e.target.value)} className="zine-select">
-                        <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
+                        <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>Impossible</option><option>FS Impossible</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                       </select>
                     </div>
                     {trickType === "Grind/Slide" && (
@@ -809,13 +838,13 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                         <div className="w-full">
                           <label className="text-[9px] font-sans font-bold text-red-400">Rot Mid</label>
                           <select value={rotMid} onChange={e => setRotMid(e.target.value)} className="zine-select">
-                            <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option>
+                            <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option><option>FS 540</option><option>BS 540</option><option>FS 720</option><option>FS Shifty</option><option>BS Shifty</option>
                           </select>
                         </div>
                         <div className="w-full">
                           <label className="text-[9px] font-sans font-bold text-red-400">Flip Mid</label>
                           <select value={flipMid} onChange={e => setFlipMid(e.target.value)} className="zine-select">
-                            <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
+                            <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>Impossible</option><option>FS Impossible</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                           </select>
                         </div>
                       </div>
@@ -856,13 +885,13 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                       <div className="w-full">
                         <label className="text-[9px] font-sans font-bold text-red-400">Rot Out</label>
                         <select value={rotOut} onChange={e => setRotOut(e.target.value)} className="zine-select">
-                          <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option>
+                          <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option><option>FS 540</option><option>BS 540</option><option>FS 720</option><option>FS Shifty</option><option>BS Shifty</option>
                         </select>
                       </div>
                       <div className="w-full">
                         <label className="text-[9px] font-sans font-bold text-red-400">Flip Out</label>
                         <select value={flipOut} onChange={e => setFlipOut(e.target.value)} className="zine-select">
-                          <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
+                          <option>None</option><option>Ollie</option><option>No-Comply</option><option>Slappy</option><option>Hippy Jump</option><option>Boneless</option><option>Beanplant</option><option>Kickflip</option><option>Heelflip</option><option>Tre Flip</option><option>Shove-it</option><option>FS Shove-it</option><option>Hardflip</option><option>Inward Heelflip</option><option>Varial Kickflip</option><option>Varial Heelflip</option><option>Lazer Flip</option><option>Impossible</option><option>FS Impossible</option><option>BS Bigspin</option><option>FS Bigspin</option><option>Bigspin Flip</option><option>Bigspin Heelflip</option><option>Biggerspin Flip</option><option>Biggerspin Heelflip</option>
                         </select>
                       </div>
                     </div>
@@ -871,18 +900,18 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               )}
 
               {trickType === "Stall" && (
-                <div className="space-y-0.5 ">
-                  <label className="text-[9px] font-sans font-bold text-white bg-red-600 px-1 uppercase tracking-widest bg-black px-1 rounded-none">Manual / Stall</label>
-                  <select value={stall} onChange={e => setStall(e.target.value)} className="w-full bg-black/90 border-2 border-white border-2 border-black px-1 text-[10px] text-white focus:outline-none font-display  rounded-none">
-                    <option>None</option><option>Manual</option><option>Nose Manual</option><option>Rock to Fakie</option><option>Rock and Roll</option><option>Axle Stall</option><option>Disaster</option><option>Blunt Stall</option>
+                <div className="space-y-0.5">
+                  <label className="zine-badge-red mb-1">Stall</label>
+                  <select value={stall} onChange={e => setStall(e.target.value)} className="zine-select">
+                    <option>None</option><option>Rock to Fakie</option><option>Rock and Roll</option><option>Axle Stall</option><option>Disaster</option><option>Blunt Stall</option><option>Noseblunt Stall</option>
                   </select>
                 </div>
               )}
 
               {trickType === "Wallride/Other" && (
-                <div className="space-y-0.5 ">
-                  <label className="text-[9px] font-sans font-bold text-white bg-red-600 px-1 uppercase tracking-widest bg-black px-1 rounded-none">Truco</label>
-                  <select value={wall} onChange={e => setWall(e.target.value)} className="w-full bg-black/90 border-2 border-white border-2 border-black px-1 text-[10px] text-white focus:outline-none font-display  rounded-none">
+                <div className="space-y-0.5">
+                  <label className="zine-badge-red mb-1">Truco</label>
+                  <select value={wall} onChange={e => setWall(e.target.value)} className="zine-select">
                     <option>None</option><option>Wallride</option><option>Wallie</option><option>No-Comply</option><option>Boneless</option><option>Fastplant</option>
                   </select>
                 </div>
