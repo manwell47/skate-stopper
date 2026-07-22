@@ -521,8 +521,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             <div className="flex justify-center mb-1 mt-0 relative">
               <svg viewBox="0 0 1696 2528" className="w-[180px] h-auto drop-shadow-2xl overflow-visible">
                 <defs>
-                  {/* Curve for the nose text based on 1696x2528 */}
-                  <path id="noseCurve" d="M 300,500 Q 848,200 1396,500" fill="transparent" />
+                  {/* Curve for the nose text. 
+                      To adjust: M = Start Point (X,Y), Q = Control Point (X,Y), followed by End Point (X,Y) */}
+                  <path id="noseCurve" d="M 350,500 Q 848,300 1346,500" fill="transparent" />
                 </defs>
                 
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
@@ -536,7 +537,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               </svg>
 
               {/* Invisible Hitboxes for Replay Buttons */}
-              {/* x0.5 Speed - Top Truck Area */}
+              
+              {/* x0.5 Speed - LEFT SIDE (Left wheel + left axle) */}
+              {/* TO ADJUST HITBOX: Change left-[X%], top-[X%], w-[X%], h-[X%] below */}
               <button 
                 onClick={() => {
                   const speed = 0.5;
@@ -554,11 +557,12 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                       playerRef.current.pauseVideo();
                   }
                 }}
-                className={`absolute w-[80%] h-[20%] left-[10%] top-[18%] z-10 cursor-pointer rounded-2xl transition-all ${loopSpeed === 0.5 ? 'bg-red-500/30 border-2 border-red-500' : 'bg-transparent hover:bg-black/10'}`}
+                className={`absolute w-[40%] h-[15%] left-[8%] top-[50%] z-10 cursor-pointer rounded-xl transition-all ${loopSpeed === 0.5 ? 'bg-red-500/30 border-2 border-red-500' : 'bg-transparent border-2 border-transparent hover:border-red-500 hover:bg-red-500/10'}`}
                 title="Replay x0.5"
               />
 
-              {/* x0.25 Speed - Bottom Truck Area */}
+              {/* x0.25 Speed - RIGHT SIDE (Right wheel + right axle) */}
+              {/* TO ADJUST HITBOX: Change left-[X%], top-[X%], w-[X%], h-[X%] below */}
               <button 
                 onClick={() => {
                   const speed = 0.25;
@@ -576,7 +580,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                       playerRef.current.pauseVideo();
                   }
                 }}
-                className={`absolute w-[80%] h-[20%] left-[10%] bottom-[15%] z-10 cursor-pointer rounded-2xl transition-all ${loopSpeed === 0.25 ? 'bg-red-500/30 border-2 border-red-500' : 'bg-transparent hover:bg-black/10'}`}
+                className={`absolute w-[40%] h-[15%] left-[52%] top-[50%] z-10 cursor-pointer rounded-xl transition-all ${loopSpeed === 0.25 ? 'bg-red-500/30 border-2 border-red-500' : 'bg-transparent border-2 border-transparent hover:border-red-500 hover:bg-red-500/10'}`}
                 title="Replay x0.25"
               />
             </div>
