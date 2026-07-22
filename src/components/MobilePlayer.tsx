@@ -647,31 +647,29 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs with precise downward shifts using layout margin-top:
-                          // Top row (i=0,1): shifted down by 360px (W/2, leaving 360px distance from the end of the axle)
-                          // Bottom row (i=2,3): shifted down by 540px
-                          const rowShiftClass = i < 2 ? "mt-[360px]" : "mt-[540px]";
+                          // 4 clean 2x2 rectangular vinyl sticker designs with 50% enlarged sticker box heights (extending top row downwards and bottom row upwards):
+                          const rowShiftClass = i < 2 ? "mt-[360px]" : "mt-[450px]";
 
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
                             {
-                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
-                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
+                              inner: "font-marker text-[58px] sm:text-[66px] md:text-[74px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
                             },
                             // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker
                             {
-                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
-                              inner: "font-graffiti text-[54px] sm:text-[62px] md:text-[70px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
+                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
+                              inner: "font-graffiti text-[60px] sm:text-[68px] md:text-[76px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
                             },
                             // Sticker 2 (Bottom-Left): Red Thrasher Box Sticker
                             {
-                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
-                              inner: "font-rock text-[44px] sm:text-[50px] md:text-[56px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
+                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
+                              inner: "font-rock text-[48px] sm:text-[54px] md:text-[62px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
                             },
                             // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag
                             {
-                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
-                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-6 py-7 w-full flex items-center justify-center min-h-[260px]",
+                              inner: "font-marker text-[58px] sm:text-[66px] md:text-[74px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
                             }
                           ];
 
