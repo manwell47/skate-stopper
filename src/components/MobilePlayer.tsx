@@ -516,15 +516,15 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 relative overflow-hidden bg-black">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-zinc-900 custom-scrollbar flex flex-col">
             
-            {/* Skateboard Background Graphic */}
-            <svg viewBox="0 0 1696 2528" preserveAspectRatio="xMidYMin slice" className="absolute inset-0 w-full h-full pointer-events-auto">
+            {/* Skateboard Background Graphic (Acts as the full layout) */}
+            <svg viewBox="0 0 1696 2528" className="w-full h-auto block mx-auto max-w-[700px] drop-shadow-2xl">
               <defs>
                 <path id="noseCurve" d="M 350,500 Q 848,300 1346,500" fill="transparent" />
               </defs>
               
-              <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" preserveAspectRatio="xMidYMin slice" />
+              <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
               {/* Player Name Text */}
               <text fill="#111" fontSize={Math.max(100, 180 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="sans-serif" letterSpacing="5" opacity="0.8">
@@ -588,77 +588,74 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               >
                 <title>Replay x0.25</title>
               </rect>
-            </svg>
 
-            {/* Scrollable Content Layer */}
-            <div className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden flex flex-col pointer-events-none custom-scrollbar">
-              
-              {/* Spacer pushing content below the truck based on width.
-                  The truck bottom is at ~1352px out of 1696px width = ~80% */}
-              <div style={{ marginTop: '80%' }} />
-
-              <div className="pointer-events-auto flex flex-col w-full max-w-lg mx-auto pb-4 px-2">
-                {/* Meme Quote */}
-                <div className="flex justify-center mb-3">
-                  <p className="text-[10px] sm:text-xs font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-2.5 py-1 rounded-sm border-b-2 border-green-500/50 shadow-[0_5px_15px_rgba(0,0,0,0.8)] backdrop-blur-sm max-w-[95%] text-center">
-                    "{currentMeme}"
-                  </p>
-                </div>
-
-                {/* Trick Options */}
-                {marker.isCustomText ? (
-                  <div className="flex flex-col space-y-2">
-                    <input 
-                      type="text"
-                      value={textGuess}
-                      onChange={(e) => setTextGuess(e.target.value)}
-                      placeholder="Escribe el truco..."
-                      className="zine-input text-lg text-center uppercase py-2 rotate-[-1deg] shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
-                    />
-                    <button
-                      disabled={!textGuess.trim()}
-                      onClick={() => handleGuess(textGuess)}
-                      className="w-full sticker-button bg-white p-1 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
-                    >
-                      <div className="bg-black text-white font-display text-xl py-2 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
-                        COMPROBAR
-                      </div>
-                    </button>
+              {/* Trick Options and Meme Layered Using foreignObject */}
+              <foreignObject x="100" y="1450" width="1496" height="1078">
+                <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col items-center justify-start pt-8 pb-4">
+                  
+                  {/* Meme Quote */}
+                  <div className="flex justify-center mb-12 w-full">
+                    <p className="text-4xl md:text-5xl font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-8 py-5 rounded-md border-b-8 border-green-500/50 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-sm max-w-[95%] text-center">
+                      "{currentMeme}"
+                    </p>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-2">
-                    {shuffledOptions.map((opt, i) => {
-                      // Alternate slight rotations for stickers
-                      const rotateClass = i % 2 === 0 ? "rotate-[-2deg] hover:rotate-[1deg]" : "rotate-[2deg] hover:rotate-[-1deg]";
-                      
-                      return (
+
+                  {/* Trick Options */}
+                  <div className="w-full max-w-[1300px] mx-auto">
+                    {marker.isCustomText ? (
+                      <div className="flex flex-col space-y-12">
+                        <input 
+                          type="text"
+                          value={textGuess}
+                          onChange={(e) => setTextGuess(e.target.value)}
+                          placeholder="Escribe el truco..."
+                          className="zine-input text-[5rem] leading-none text-center uppercase py-10 rotate-[-1deg] shadow-[15px_15px_40px_rgba(0,0,0,0.6)] w-full"
+                        />
                         <button
-                          key={i}
-                          disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
-                          onClick={() => handleGuess(opt)}
-                          className={`
-                            sticker-button bg-white p-1 torn-edge group transition-transform shadow-[3px_3px_10px_rgba(0,0,0,0.6)]
-                            ${rotateClass}
-                            ${selectedOption && opt === marker.correctTrick ? 'ring-4 ring-green-500' : ''}
-                            ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-4 ring-red-500' : ''}
-                            ${!!selectedOption ? 'opacity-80' : ''}
-                          `}
+                          disabled={!textGuess.trim()}
+                          onClick={() => handleGuess(textGuess)}
+                          className="w-full sticker-button bg-white p-4 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[15px_15px_40px_rgba(0,0,0,0.6)]"
                         >
-                          <div className={`
-                            h-full bg-black text-white p-1.5 sm:p-2 font-display tracking-wider text-[9px] sm:text-[11px] md:text-sm flex items-center justify-center text-center uppercase transition-colors min-h-[3rem]
-                            ${!selectedOption ? 'group-hover:bg-zinc-800' : ''}
-                            ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
-                            ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-500 !text-white' : ''}
-                          `}>
-                            {opt}
+                          <div className="bg-black text-white font-display text-[6rem] leading-none py-10 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
+                            COMPROBAR
                           </div>
                         </button>
-                      );
-                    })}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-10">
+                        {shuffledOptions.map((opt, i) => {
+                          const rotateClass = i % 2 === 0 ? "rotate-[-2deg] hover:rotate-[1deg]" : "rotate-[2deg] hover:rotate-[-1deg]";
+                          
+                          return (
+                            <button
+                              key={i}
+                              disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
+                              onClick={() => handleGuess(opt)}
+                              className={`
+                                sticker-button bg-white p-4 torn-edge group transition-transform shadow-[15px_15px_30px_rgba(0,0,0,0.6)]
+                                ${rotateClass}
+                                ${selectedOption && opt === marker.correctTrick ? 'ring-[16px] ring-green-500' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-[16px] ring-red-500' : ''}
+                                ${!!selectedOption ? 'opacity-80' : ''}
+                              `}
+                            >
+                              <div className={`
+                                h-full bg-black text-white p-8 font-display tracking-wider text-4xl sm:text-5xl flex items-center justify-center text-center uppercase transition-colors min-h-[220px]
+                                ${!selectedOption ? 'group-hover:bg-zinc-800' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-500 !text-white' : ''}
+                              `}>
+                                {opt}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </div>
+                </div>
+              </foreignObject>
+            </svg>
           </div>
         ) : gameState === "feedback_paused" ? (
           <div className="space-y-2 flex-1 flex flex-col justify-start">
