@@ -622,8 +622,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Positioned at y=1400 so bottom-right sticker stealthily covers the Gemini logo on the wood graphic */}
-                <foreignObject x="30" y="1400" width="1636" height="1050" style={{ overflow: 'visible' }}>
+                {/* Trick Options Sticker Layer - Positioned at SVG y=1650 to leave generous air (330 SVG units) under the axle while covering the Gemini logo */}
+                <foreignObject x="30" y="1650" width="1636" height="850" style={{ overflow: 'visible' }}>
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2 overflow-visible">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-8 pt-20">
@@ -648,7 +648,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
                           // 4 clean 2x2 rectangular vinyl sticker designs with generous breathing room under axle while covering the Gemini logo on the bottom-right wood:
-                          const rowShiftClass = i < 2 ? "mt-[300px]" : "mt-[440px]";
+                          const rowShiftClass = i < 2 ? "mt-[30px]" : "mt-[220px]";
 
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic "HELLO MY NAME IS" Slap Tag
