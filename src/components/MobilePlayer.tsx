@@ -516,146 +516,152 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-zinc-900 custom-scrollbar flex flex-col">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-zinc-900 custom-scrollbar flex flex-col relative">
             
-            {/* Skateboard Background Graphic (Acts as the full layout) */}
-            <svg viewBox="0 0 1696 2528" className="w-full h-auto block mx-auto max-w-[700px] drop-shadow-2xl">
-              <defs>
-                <path id="noseCurve" d="M 350,500 Q 848,300 1346,500" fill="transparent" />
-              </defs>
+            {/* The container that scales correctly with the SVG aspect ratio */}
+            <div className="relative w-full max-w-[700px] mx-auto drop-shadow-2xl">
               
-              <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
+              {/* Skateboard Background Graphic */}
+              <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
+                <defs>
+                  {/* Curve moved lower to center of nose */}
+                  <path id="noseCurve" d="M 350,800 Q 848,600 1346,800" fill="transparent" />
+                </defs>
+                
+                <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
-              {/* Player Name Text */}
-              <text fill="#111" fontSize={Math.max(100, 180 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="sans-serif" letterSpacing="5" opacity="0.8">
-                <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
-                  {players[currentPlayerGuessingIndex].name.toUpperCase()}
-                </textPath>
-              </text>
+                {/* Player Name Text with Marker Font */}
+                <text fill="#222" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2" opacity="0.85">
+                  <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
+                    {players[currentPlayerGuessingIndex].name.toUpperCase()}
+                  </textPath>
+                </text>
 
-              {/* Hitboxes inside SVG for exact alignment */}
-              
-              {/* x0.5 Speed - LEFT SIDE */}
-              <rect 
-                x="254" y="1049" width="593" height="303" 
-                fill={loopSpeed === 0.5 ? "rgba(255,0,0,0.3)" : "transparent"} 
-                stroke={loopSpeed === 0.5 ? "red" : "transparent"} strokeWidth="10" 
-                rx="30" ry="30"
-                className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
-                onClick={() => {
-                  const speed = 0.5;
-                  const nextSpeed = loopSpeed === speed ? 0 : speed;
-                  setLoopSpeed(nextSpeed);
-                  if (nextSpeed > 0 && playerRef.current) {
-                      playerRef.current.setPlaybackRate(nextSpeed);
-                      playerRef.current.setVolume(5);
-                      playerRef.current.seekTo(stateRef.current.trickStartTime, true);
-                      playerRef.current.playVideo();
-                  } else if (nextSpeed === 0 && playerRef.current) {
-                      playerRef.current.setPlaybackRate(1.0);
-                      playerRef.current.setVolume(100);
-                      playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
-                      playerRef.current.pauseVideo();
-                  }
-                }}
-              >
-                <title>Replay x0.5</title>
-              </rect>
+                {/* Hitboxes inside SVG for exact alignment */}
+                {/* x0.5 Speed - LEFT SIDE */}
+                <rect 
+                  x="254" y="1049" width="593" height="303" 
+                  fill={loopSpeed === 0.5 ? "rgba(255,0,0,0.3)" : "transparent"} 
+                  stroke={loopSpeed === 0.5 ? "red" : "transparent"} strokeWidth="10" 
+                  rx="30" ry="30"
+                  className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
+                  onClick={() => {
+                    const speed = 0.5;
+                    const nextSpeed = loopSpeed === speed ? 0 : speed;
+                    setLoopSpeed(nextSpeed);
+                    if (nextSpeed > 0 && playerRef.current) {
+                        playerRef.current.setPlaybackRate(nextSpeed);
+                        playerRef.current.setVolume(5);
+                        playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                        playerRef.current.playVideo();
+                    } else if (nextSpeed === 0 && playerRef.current) {
+                        playerRef.current.setPlaybackRate(1.0);
+                        playerRef.current.setVolume(100);
+                        playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                        playerRef.current.pauseVideo();
+                    }
+                  }}
+                >
+                  <title>Replay x0.5</title>
+                </rect>
 
-              {/* x0.25 Speed - RIGHT SIDE */}
-              <rect 
-                x="848" y="1049" width="593" height="303" 
-                fill={loopSpeed === 0.25 ? "rgba(255,0,0,0.3)" : "transparent"} 
-                stroke={loopSpeed === 0.25 ? "red" : "transparent"} strokeWidth="10" 
-                rx="30" ry="30"
-                className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
-                onClick={() => {
-                  const speed = 0.25;
-                  const nextSpeed = loopSpeed === speed ? 0 : speed;
-                  setLoopSpeed(nextSpeed);
-                  if (nextSpeed > 0 && playerRef.current) {
-                      playerRef.current.setPlaybackRate(nextSpeed);
-                      playerRef.current.setVolume(5);
-                      playerRef.current.seekTo(stateRef.current.trickStartTime, true);
-                      playerRef.current.playVideo();
-                  } else if (nextSpeed === 0 && playerRef.current) {
-                      playerRef.current.setPlaybackRate(1.0);
-                      playerRef.current.setVolume(100);
-                      playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
-                      playerRef.current.pauseVideo();
-                  }
-                }}
-              >
-                <title>Replay x0.25</title>
-              </rect>
+                {/* x0.25 Speed - RIGHT SIDE */}
+                <rect 
+                  x="848" y="1049" width="593" height="303" 
+                  fill={loopSpeed === 0.25 ? "rgba(255,0,0,0.3)" : "transparent"} 
+                  stroke={loopSpeed === 0.25 ? "red" : "transparent"} strokeWidth="10" 
+                  rx="30" ry="30"
+                  className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
+                  onClick={() => {
+                    const speed = 0.25;
+                    const nextSpeed = loopSpeed === speed ? 0 : speed;
+                    setLoopSpeed(nextSpeed);
+                    if (nextSpeed > 0 && playerRef.current) {
+                        playerRef.current.setPlaybackRate(nextSpeed);
+                        playerRef.current.setVolume(5);
+                        playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                        playerRef.current.playVideo();
+                    } else if (nextSpeed === 0 && playerRef.current) {
+                        playerRef.current.setPlaybackRate(1.0);
+                        playerRef.current.setVolume(100);
+                        playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                        playerRef.current.pauseVideo();
+                    }
+                  }}
+                >
+                  <title>Replay x0.25</title>
+                </rect>
+              </svg>
 
-              {/* Trick Options and Meme Layered Using foreignObject */}
-              <foreignObject x="100" y="1450" width="1496" height="1078">
-                <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col items-center justify-start pt-8 pb-4">
-                  
-                  {/* Meme Quote */}
-                  <div className="flex justify-center mb-12 w-full">
-                    <p className="text-4xl md:text-5xl font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-8 py-5 rounded-md border-b-8 border-green-500/50 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-sm max-w-[95%] text-center">
-                      "{currentMeme}"
-                    </p>
-                  </div>
-
-                  {/* Trick Options */}
-                  <div className="w-full max-w-[1300px] mx-auto">
-                    {marker.isCustomText ? (
-                      <div className="flex flex-col space-y-12">
-                        <input 
-                          type="text"
-                          value={textGuess}
-                          onChange={(e) => setTextGuess(e.target.value)}
-                          placeholder="Escribe el truco..."
-                          className="zine-input text-[5rem] leading-none text-center uppercase py-10 rotate-[-1deg] shadow-[15px_15px_40px_rgba(0,0,0,0.6)] w-full"
-                        />
-                        <button
-                          disabled={!textGuess.trim()}
-                          onClick={() => handleGuess(textGuess)}
-                          className="w-full sticker-button bg-white p-4 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[15px_15px_40px_rgba(0,0,0,0.6)]"
-                        >
-                          <div className="bg-black text-white font-display text-[6rem] leading-none py-10 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
-                            COMPROBAR
-                          </div>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-10">
-                        {shuffledOptions.map((opt, i) => {
-                          const rotateClass = i % 2 === 0 ? "rotate-[-2deg] hover:rotate-[1deg]" : "rotate-[2deg] hover:rotate-[-1deg]";
-                          
-                          return (
-                            <button
-                              key={i}
-                              disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
-                              onClick={() => handleGuess(opt)}
-                              className={`
-                                sticker-button bg-white p-4 torn-edge group transition-transform shadow-[15px_15px_30px_rgba(0,0,0,0.6)]
-                                ${rotateClass}
-                                ${selectedOption && opt === marker.correctTrick ? 'ring-[16px] ring-green-500' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-[16px] ring-red-500' : ''}
-                                ${!!selectedOption ? 'opacity-80' : ''}
-                              `}
-                            >
-                              <div className={`
-                                h-full bg-black text-white p-8 font-display tracking-wider text-4xl sm:text-5xl flex items-center justify-center text-center uppercase transition-colors min-h-[220px]
-                                ${!selectedOption ? 'group-hover:bg-zinc-800' : ''}
-                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-500 !text-white' : ''}
-                              `}>
-                                {opt}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+              {/* Absolute HTML Overlay for perfect rendering across all browsers.
+                  1450 / 2528 = 57.3% from top 
+                  We position it at 56% to start just slightly below the truck. */}
+              <div className="absolute inset-x-0 bottom-0 pointer-events-none flex flex-col items-center px-4 sm:px-8 pb-4" style={{ top: '56%' }}>
+                
+                {/* Meme Quote */}
+                <div className="flex justify-center mb-6 w-full">
+                  <p className="text-sm sm:text-base md:text-xl font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-4 py-2 rounded-sm border-b-4 border-green-500/50 shadow-[0_5px_15px_rgba(0,0,0,0.8)] backdrop-blur-sm text-center">
+                    "{currentMeme}"
+                  </p>
                 </div>
-              </foreignObject>
-            </svg>
+
+                {/* Trick Options */}
+                <div className="w-full max-w-lg pointer-events-auto">
+                  {marker.isCustomText ? (
+                    <div className="flex flex-col space-y-4">
+                      <input 
+                        type="text"
+                        value={textGuess}
+                        onChange={(e) => setTextGuess(e.target.value)}
+                        placeholder="Escribe el truco..."
+                        className="zine-input text-2xl sm:text-3xl font-marker text-center py-4 rotate-[-1deg] shadow-[5px_5px_15px_rgba(0,0,0,0.6)] w-full text-black bg-zinc-100 placeholder:text-zinc-400 border-none"
+                      />
+                      <button
+                        disabled={!textGuess.trim()}
+                        onClick={() => handleGuess(textGuess)}
+                        className="w-full sticker-button bg-black p-2 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
+                      >
+                        <div className="bg-red-600 text-white font-rock text-3xl sm:text-4xl py-4 group-hover:bg-red-500 transition-colors uppercase text-center border-2 border-dashed border-white/50">
+                          COMPROBAR
+                        </div>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      {shuffledOptions.map((opt, i) => {
+                        const rotateClass = i % 2 === 0 ? "rotate-[-3deg] hover:rotate-[1deg]" : "rotate-[3deg] hover:rotate-[-1deg]";
+                        
+                        return (
+                          <button
+                            key={i}
+                            disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
+                            onClick={() => handleGuess(opt)}
+                            className={`
+                              bg-zinc-100 p-2 sm:p-3 torn-edge group transition-transform shadow-[4px_4px_10px_rgba(0,0,0,0.7)]
+                              ${rotateClass}
+                              ${selectedOption && opt === marker.correctTrick ? 'ring-4 ring-green-500 scale-105' : ''}
+                              ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-4 ring-red-500 opacity-60' : ''}
+                              ${!!selectedOption ? 'opacity-90' : ''}
+                              border-[3px] border-black bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')]
+                            `}
+                          >
+                            <div className={`
+                              h-full w-full bg-black text-zinc-100 p-3 sm:p-4 font-marker tracking-wide text-sm sm:text-base flex items-center justify-center text-center uppercase transition-colors min-h-[4rem] sm:min-h-[5rem]
+                              border border-zinc-800
+                              ${!selectedOption ? 'group-hover:bg-zinc-900 group-hover:text-white' : ''}
+                              ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
+                              ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-black border-black' : ''}
+                            `}>
+                              {opt}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         ) : gameState === "feedback_paused" ? (
           <div className="space-y-2 flex-1 flex flex-col justify-start">
