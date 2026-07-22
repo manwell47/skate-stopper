@@ -647,8 +647,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs positioned robustly to cover the Gemini logo on the bottom-right wood:
-                          const rowShiftClass = i < 2 ? "mt-[160px]" : "mt-[350px]";
+                          // 4 clean 2x2 rectangular vinyl sticker designs with breathing room under axle while covering the Gemini logo on the bottom-right wood:
+                          const rowShiftClass = i < 2 ? "mt-[225px]" : "mt-[375px]";
 
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
