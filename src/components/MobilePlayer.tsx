@@ -622,56 +622,52 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Positioned at y=1480 so it NEVER steps on or touches the truck (y=980-1350) */}
-                <foreignObject x="100" y="1480" width="1496" height="1000">
+                {/* Trick Options Sticker Layer - Positioned at y=1600 for guaranteed clearance below truck (y=980-1352) */}
+                <foreignObject x="80" y="1600" width="1536" height="900">
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2">
                     {marker.isCustomText ? (
-                      <div className="flex flex-col w-full space-y-6">
+                      <div className="flex flex-col w-full space-y-8">
                         <input 
                           type="text"
                           value={textGuess}
                           onChange={(e) => setTextGuess(e.target.value)}
                           placeholder="Escribe el truco..."
-                          className="zine-input text-5xl font-marker text-center py-6 rotate-[-1deg] shadow-[10px_10px_30px_rgba(0,0,0,0.6)] w-full text-black bg-zinc-100 border-none"
+                          className="zine-input text-6xl sm:text-7xl font-marker text-center py-8 rotate-[-1deg] shadow-[15px_15px_40px_rgba(0,0,0,0.6)] w-full text-black bg-zinc-100 border-none"
                         />
                         <button
                           disabled={!textGuess.trim()}
                           onClick={() => handleGuess(textGuess)}
-                          className="w-full sticker-button bg-black p-3 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[10px_10px_30px_rgba(0,0,0,0.6)]"
+                          className="w-full sticker-button bg-black p-4 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[15px_15px_40px_rgba(0,0,0,0.6)]"
                         >
-                          <div className="bg-red-600 text-white font-rock text-5xl py-6 tracking-widest group-hover:bg-red-500 transition-colors uppercase text-center border-4 border-dashed border-white/50">
+                          <div className="bg-red-600 text-white font-rock text-6xl sm:text-7xl py-8 tracking-widest group-hover:bg-red-500 transition-colors uppercase text-center border-4 border-dashed border-white/50">
                             COMPROBAR
                           </div>
                         </button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-x-5 gap-y-4 w-full max-w-[96%] mx-auto">
+                      <div className="grid grid-cols-2 gap-x-12 gap-y-12 w-full px-4">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 authentic compact rectangular skate vinyl stickers
+                          // 4 distinct iconic sticker shapes and designs
                           const stickerConfigs = [
-                            // Style 0: Classic White Border Slap Tag
+                            // Sticker 0: Stadium Oval / Pill Shape Sticker
                             {
-                              outer: "bg-white border-[3px] border-zinc-900 rotate-[-3deg] hover:rotate-[1deg] shadow-[8px_8px_20px_rgba(0,0,0,0.8)] rounded-sm p-1.5 w-full",
-                              inner: "bg-zinc-950 text-white p-3 sm:p-4 font-marker text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
-                              badge: null
+                              outer: "bg-zinc-950 text-yellow-300 border-[8px] border-zinc-200 shadow-[15px_15px_30px_rgba(0,0,0,0.85)] rounded-full rotate-[-4deg] hover:rotate-[1deg] px-8 py-6 w-full flex items-center justify-center min-h-[250px]",
+                              inner: "font-marker text-[64px] sm:text-[72px] md:text-[80px] text-yellow-300 text-center leading-[1.1] tracking-wide break-words w-full"
                             },
-                            // Style 1: Yellow Hazard Vinyl Badge
+                            // Sticker 1: Super Rounded Square Vinyl Badge
                             {
-                              outer: "bg-yellow-400 border-[3px] border-black rotate-[4deg] hover:rotate-[-1deg] shadow-[8px_8px_20px_rgba(0,0,0,0.8)] rounded-md p-1.5 w-full",
-                              inner: "bg-yellow-400 text-black p-3 sm:p-4 font-graffiti text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
-                              badge: null
+                              outer: "bg-yellow-400 text-black border-[8px] border-black shadow-[15px_15px_30px_rgba(0,0,0,0.85)] rounded-[4rem] rotate-[5deg] hover:rotate-[-1deg] px-8 py-6 w-full flex items-center justify-center min-h-[250px]",
+                              inner: "font-graffiti text-[68px] sm:text-[76px] md:text-[84px] text-black text-center leading-[1.1] tracking-tight break-words w-full"
                             },
-                            // Style 2: Red Box Vinyl Sticker
+                            // Sticker 2: Jagged Torn-Edge Slap Tag
                             {
-                              outer: "bg-red-600 border-[3px] border-white rotate-[-4deg] hover:rotate-[2deg] shadow-[8px_8px_20px_rgba(0,0,0,0.85)] torn-edge p-1.5 w-full",
-                              inner: "bg-red-600 text-white p-3 sm:p-4 font-rock text-xl sm:text-2xl md:text-3xl min-h-[90px] sm:min-h-[110px]",
-                              badge: null
+                              outer: "bg-red-600 text-white border-[8px] border-white shadow-[15px_15px_30px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-8 py-6 w-full flex items-center justify-center min-h-[250px]",
+                              inner: "font-rock text-[56px] sm:text-[64px] md:text-[72px] text-white text-center leading-[1.1] tracking-normal break-words w-full"
                             },
-                            // Style 3: Vintage Tag Sticker
+                            // Sticker 3: Soft Rounded Rectangle Tag
                             {
-                              outer: "bg-zinc-100 border-[3px] border-zinc-900 rotate-[3deg] hover:rotate-[-2deg] shadow-[8px_8px_20px_rgba(0,0,0,0.75)] rounded-xs p-1.5 w-full",
-                              inner: "bg-zinc-100 text-black p-3 sm:p-4 font-marker text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
-                              badge: null
+                              outer: "bg-amber-100 text-zinc-900 border-[8px] border-zinc-900 shadow-[15px_15px_30px_rgba(0,0,0,0.85)] rounded-3xl rotate-[4deg] hover:rotate-[-2deg] px-8 py-6 w-full flex items-center justify-center min-h-[250px]",
+                              inner: "font-marker text-[64px] sm:text-[72px] md:text-[80px] text-zinc-950 text-center leading-[1.1] tracking-wide break-words w-full"
                             }
                           ];
 
@@ -685,17 +681,17 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                               className={`
                                 group transition-transform cursor-pointer block text-center
                                 ${cfg.outer}
-                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? 'ring-[12px] ring-green-500 scale-105 !z-30' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-[12px] ring-red-500 opacity-60' : ''}
                                 ${!!selectedOption ? 'opacity-90' : ''}
                               `}
                             >
                               <div className={`
-                                w-full flex items-center justify-center text-center uppercase transition-colors leading-tight tracking-wide break-words
+                                flex items-center justify-center text-center uppercase transition-colors
                                 ${cfg.inner}
                                 ${!selectedOption ? 'group-hover:brightness-110' : ''}
-                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white border-black' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!text-green-400' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!text-red-300' : ''}
                               `}>
                                 {opt}
                               </div>
