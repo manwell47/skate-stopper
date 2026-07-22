@@ -522,15 +522,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               {/* Skateboard Background Graphic */}
               <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
                 <defs>
-                  {/* Curve for nose text */}
-                  <path id="noseCurve" d="M 280,670 Q 848,450 1416,670" fill="transparent" />
-                  <path id="memeCurve" d="M 280,900 Q 848,740 1416,900" fill="transparent" />
-                  
-                  {/* Graffiti filter effect */}
-                  <filter id="graffitiBleed" x="-20%" y="-20%" width="140%" height="140%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
-                  </filter>
+                  {/* Constrained curves that stay strictly inside the deck boundaries */}
+                  <path id="noseCurve" d="M 380,640 Q 848,470 1316,640" fill="transparent" />
+                  <path id="memeCurve" d="M 380,860 Q 848,730 1316,860" fill="transparent" />
                 </defs>
                 
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
@@ -538,20 +532,20 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                 {(() => {
                   const rawName = players[currentPlayerGuessingIndex].name.toUpperCase();
                   const nameLen = Math.max(1, rawName.length);
-                  // Auto-scale font size: 4 chars -> 170px, 10 chars -> 135px, 19 chars -> 72px
-                  const autoFontSize = Math.min(170, Math.max(65, Math.floor(1350 / (nameLen * 0.95))));
+                  // Dynamic font size constrained to stay within the deck (4 chars -> 140px, 10 chars -> 110px, 19 chars -> 60px)
+                  const autoFontSize = Math.min(140, Math.max(50, Math.floor(980 / (nameLen * 0.85))));
                   
                   return (
                     <>
                       {/* Player Name Drop Shadow Layer */}
-                      <text fill="#000" opacity="0.4" transform="translate(10, 12)" fontSize={autoFontSize} fontWeight="900" fontFamily="'Sedgwick Ave Display', cursive" letterSpacing="2">
+                      <text fill="#000" opacity="0.3" transform="translate(6, 8)" fontSize={autoFontSize} fontWeight="700" fontFamily="'Sedgwick Ave', cursive" letterSpacing="1">
                         <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                           {rawName}
                         </textPath>
                       </text>
                       
-                      {/* Main Player Name in Graffiti Style */}
-                      <text fill="#111111" filter="url(#graffitiBleed)" stroke="#111111" strokeWidth="8" strokeLinejoin="round" fontSize={autoFontSize} fontWeight="900" fontFamily="'Sedgwick Ave Display', cursive" letterSpacing="2">
+                      {/* Main Player Name in Clean Hip-Hop Tag Style */}
+                      <text fill="#1a1a1a" stroke="#1a1a1a" strokeWidth="2" strokeLinejoin="round" fontSize={autoFontSize} fontWeight="700" fontFamily="'Sedgwick Ave', cursive" letterSpacing="1" opacity="0.95">
                         <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                           {rawName}
                         </textPath>
@@ -560,12 +554,18 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   );
                 })()}
 
-                {/* Meme Quote Written on the Nose Wood */}
-                <text fill="#2a2520" fontSize="72" fontFamily="'Permanent Marker', cursive" opacity="0.85" fontStyle="italic">
-                  <textPath href="#memeCurve" startOffset="50%" textAnchor="middle">
-                    "{currentMeme}"
-                  </textPath>
-                </text>
+                {/* Meme Quote Written on the Nose Wood (Auto-scaled so it never touches edges) */}
+                {(() => {
+                  const memeLen = Math.max(1, currentMeme.length);
+                  const memeFontSize = Math.min(60, Math.max(34, Math.floor(900 / (memeLen * 0.6))));
+                  return (
+                    <text fill="#2a2520" fontSize={memeFontSize} fontFamily="'Permanent Marker', cursive" opacity="0.85" fontStyle="italic">
+                      <textPath href="#memeCurve" startOffset="50%" textAnchor="middle">
+                        "{currentMeme}"
+                      </textPath>
+                    </text>
+                  );
+                })()}
 
                 {/* Hitboxes inside SVG for exact alignment matching wheels + hanger inscriptions */}
                 {/* x0.5 Speed - LEFT SIDE (Left wheel + Left Hanger Inscription) */}
@@ -622,8 +622,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Embedded directly in SVG space (y=1400 to y=2450) */}
-                <foreignObject x="100" y="1400" width="1496" height="1050">
+                {/* Trick Options Sticker Layer - Positioned at y=1480 so it NEVER steps on or touches the truck (y=980-1350) */}
+                <foreignObject x="100" y="1480" width="1496" height="1000">
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-6">
@@ -645,66 +645,74 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full">
-                        {shuffledOptions.map((opt, i) => {
-                          // Define 4 distinct authentic skate sticker styles
-                          const stickerStyles = [
-                            // Style 0: "Slap Tag" Hello My Name Is style
-                            {
-                              outer: "bg-white border-2 border-zinc-300 rotate-[-4deg] hover:rotate-[1deg] shadow-[10px_12px_25px_rgba(0,0,0,0.7)] rounded-md overflow-hidden",
-                              inner: "bg-white text-zinc-950 p-4 font-marker text-3xl md:text-4xl min-h-[170px]",
-                              badge: "bg-red-600 text-white text-lg font-bold text-center uppercase tracking-widest py-1 font-sans border-b-2 border-red-700"
-                            },
-                            // Style 1: Yellow/Black Hazard Vinyl Badge
-                            {
-                              outer: "bg-yellow-400 border-4 border-black rotate-[5deg] hover:rotate-[-1deg] shadow-[12px_10px_25px_rgba(0,0,0,0.8)] rounded-xl overflow-hidden mt-4",
-                              inner: "bg-yellow-400 text-black p-4 font-graffiti text-3xl md:text-4xl min-h-[170px]",
-                              badge: null
-                            },
-                            // Style 2: Bold Red/White Thrasher Box Sticker
-                            {
-                              outer: "bg-red-700 border-4 border-white rotate-[3deg] hover:rotate-[-2deg] shadow-[10px_14px_25px_rgba(0,0,0,0.85)] torn-edge overflow-hidden",
-                              inner: "bg-red-700 text-white p-4 font-graffiti text-3xl md:text-4xl min-h-[170px]",
-                              badge: null
-                            },
-                            // Style 3: Vintage Duct Tape / Worn Paper Tag
-                            {
-                              outer: "bg-amber-100 border-3 border-dashed border-zinc-800 rotate-[-5deg] hover:rotate-[2deg] shadow-[12px_12px_25px_rgba(0,0,0,0.75)] rounded-sm overflow-hidden mt-4",
-                              inner: "bg-amber-100 text-zinc-900 p-4 font-rock text-2xl md:text-3xl min-h-[170px]",
-                              badge: null
-                            }
-                          ];
+                      <div className="w-full flex flex-col space-y-5">
+                        {/* Organic Sticker Bomb Composition with 4 distinct rectangular shapes */}
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-5 w-full">
+                          {shuffledOptions.map((opt, i) => {
+                            // 4 distinct sticker styles and layouts
+                            const stickerConfigs = [
+                              // Sticker 0: Wide Slap Tag banner
+                              {
+                                container: "col-span-2 max-w-[94%] mx-auto rotate-[-2deg] hover:rotate-[0deg]",
+                                outer: "bg-white border-2 border-zinc-300 shadow-[10px_12px_20px_rgba(0,0,0,0.7)] rounded-sm overflow-hidden w-full",
+                                inner: "bg-white text-zinc-950 px-4 py-3 font-marker text-3xl md:text-4xl min-h-[110px]",
+                                badge: "bg-red-600 text-white text-base font-bold text-center uppercase tracking-widest py-0.5 font-sans border-b border-red-700"
+                              },
+                              // Sticker 1: Compact Yellow Hazard Badge
+                              {
+                                container: "col-span-1 rotate-[4deg] hover:rotate-[-1deg]",
+                                outer: "bg-yellow-400 border-3 border-black shadow-[10px_10px_20px_rgba(0,0,0,0.8)] rounded-md overflow-hidden w-full",
+                                inner: "bg-yellow-400 text-black p-3 font-graffiti text-2xl md:text-3xl min-h-[140px]",
+                                badge: null
+                              },
+                              // Sticker 2: Red/White Thrasher Box Sticker
+                              {
+                                container: "col-span-1 rotate-[-4deg] hover:rotate-[1deg]",
+                                outer: "bg-red-700 border-3 border-white shadow-[10px_10px_20px_rgba(0,0,0,0.85)] torn-edge overflow-hidden w-full",
+                                inner: "bg-red-700 text-white p-3 font-graffiti text-2xl md:text-3xl min-h-[140px]",
+                                badge: null
+                              },
+                              // Sticker 3: Horizontal Duct Tape Strip
+                              {
+                                container: "col-span-2 max-w-[88%] mx-auto rotate-[3deg] hover:rotate-[-1deg] mt-1",
+                                outer: "bg-amber-100 border-2 border-dashed border-zinc-700 shadow-[10px_10px_20px_rgba(0,0,0,0.75)] rounded-xs overflow-hidden w-full",
+                                inner: "bg-amber-100 text-zinc-900 px-4 py-3 font-rock text-2xl md:text-3xl min-h-[110px]",
+                                badge: null
+                              }
+                            ];
 
-                          const style = stickerStyles[i % stickerStyles.length];
-                          
-                          return (
-                            <button
-                              key={i}
-                              disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
-                              onClick={() => handleGuess(opt)}
-                              className={`
-                                group transition-transform cursor-pointer
-                                ${style.outer}
-                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
-                                ${!!selectedOption ? 'opacity-90' : ''}
-                              `}
-                            >
-                              {style.badge && (
-                                <div className={style.badge}>SKATE TRICK</div>
-                              )}
-                              <div className={`
-                                w-full flex items-center justify-center text-center uppercase transition-colors leading-tight
-                                ${style.inner}
-                                ${!selectedOption ? 'group-hover:brightness-110' : ''}
-                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white' : ''}
-                              `}>
-                                {opt}
+                            const cfg = stickerConfigs[i % stickerConfigs.length];
+                            
+                            return (
+                              <div key={i} className={`w-full ${cfg.container}`}>
+                                <button
+                                  disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
+                                  onClick={() => handleGuess(opt)}
+                                  className={`
+                                    w-full group transition-transform cursor-pointer block
+                                    ${cfg.outer}
+                                    ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
+                                    ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
+                                    ${!!selectedOption ? 'opacity-90' : ''}
+                                  `}
+                                >
+                                  {cfg.badge && (
+                                    <div className={cfg.badge}>SKATE TRICK</div>
+                                  )}
+                                  <div className={`
+                                    w-full flex items-center justify-center text-center uppercase transition-colors leading-tight
+                                    ${cfg.inner}
+                                    ${!selectedOption ? 'group-hover:brightness-110' : ''}
+                                    ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
+                                    ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white' : ''}
+                                  `}>
+                                    {opt}
+                                  </div>
+                                </button>
                               </div>
-                            </button>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
