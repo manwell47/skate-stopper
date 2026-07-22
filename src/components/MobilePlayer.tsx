@@ -647,7 +647,11 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                     ) : (
                       <div className="grid grid-cols-2 gap-x-10 gap-y-8 w-full px-4">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 clean 2x2 rectangular vinyl sticker designs
+                          // 4 clean 2x2 rectangular vinyl sticker designs with precise downward shifts:
+                          // Top row (i=0,1): shifted down by 180px (W/4, half of bottom shift)
+                          // Bottom row (i=2,3): shifted down by 360px (W/2, half of option width)
+                          const rowShiftClass = i < 2 ? "translate-y-[180px]" : "translate-y-[360px]";
+
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
                             {
@@ -679,7 +683,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                               disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                               onClick={() => handleGuess(opt)}
                               className={`
-                                group transition-transform cursor-pointer block text-center
+                                group transition-transform cursor-pointer block text-center ${rowShiftClass}
                                 ${cfg.outer}
                                 ${selectedOption && opt === marker.correctTrick ? 'ring-[12px] ring-green-500 scale-105 !z-30' : ''}
                                 ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-[12px] ring-red-500 opacity-60' : ''}
