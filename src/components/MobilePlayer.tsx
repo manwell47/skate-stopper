@@ -645,32 +645,32 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-6 w-full max-w-[90%] mx-auto">
+                      <div className="grid grid-cols-2 gap-x-5 gap-y-4 w-full max-w-[96%] mx-auto">
                         {shuffledOptions.map((opt, i) => {
-                          // 4 iconic, similar-sized vinyl sticker designs (inspired by real skate/band stickers)
+                          // 4 authentic compact rectangular skate vinyl stickers
                           const stickerConfigs = [
-                            // Sticker 0: Dark Vinyl Circle Badge
+                            // Style 0: Classic White Border Slap Tag
                             {
-                              outer: "bg-zinc-950 text-white border-4 border-zinc-300 shadow-[10px_12px_22px_rgba(0,0,0,0.85)] rounded-[2rem] rotate-[-4deg] hover:rotate-[1deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
-                              inner: "font-marker text-2xl md:text-3xl text-yellow-300 text-center leading-tight tracking-wide break-words max-w-[95%]",
-                              badge: "text-xs font-mono font-bold text-red-500 uppercase tracking-widest mb-1 border-b border-red-500/40 pb-0.5"
-                            },
-                            // Sticker 1: Acid Green / Yellow Vinyl Badge
-                            {
-                              outer: "bg-lime-400 text-black border-4 border-black shadow-[12px_10px_22px_rgba(0,0,0,0.85)] rounded-[2rem] rotate-[5deg] hover:rotate-[-1deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
-                              inner: "font-graffiti text-2xl md:text-3xl text-black text-center leading-tight tracking-tight break-words max-w-[95%]",
+                              outer: "bg-white border-[3px] border-zinc-900 rotate-[-3deg] hover:rotate-[1deg] shadow-[8px_8px_20px_rgba(0,0,0,0.8)] rounded-sm p-1.5 w-full",
+                              inner: "bg-zinc-950 text-white p-3 sm:p-4 font-marker text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
                               badge: null
                             },
-                            // Sticker 2: Black & White Vintage Stamp Badge
+                            // Style 1: Yellow Hazard Vinyl Badge
                             {
-                              outer: "bg-zinc-100 text-black border-4 border-zinc-950 shadow-[10px_14px_22px_rgba(0,0,0,0.85)] rounded-3xl rotate-[3deg] hover:rotate-[-2deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
-                              inner: "font-rock text-xl md:text-2xl text-zinc-950 text-center leading-tight tracking-normal break-words max-w-[95%]",
-                              badge: "text-xs font-sans font-black text-zinc-600 uppercase tracking-widest mb-1 border-b-2 border-zinc-900/30 pb-0.5"
+                              outer: "bg-yellow-400 border-[3px] border-black rotate-[4deg] hover:rotate-[-1deg] shadow-[8px_8px_20px_rgba(0,0,0,0.8)] rounded-md p-1.5 w-full",
+                              inner: "bg-yellow-400 text-black p-3 sm:p-4 font-graffiti text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
+                              badge: null
                             },
-                            // Sticker 3: Bold Red Skate Vinyl Badge
+                            // Style 2: Red Box Vinyl Sticker
                             {
-                              outer: "bg-red-600 text-white border-4 border-white shadow-[12px_12px_22px_rgba(0,0,0,0.85)] rounded-3xl rotate-[-5deg] hover:rotate-[2deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
-                              inner: "font-graffiti text-2xl md:text-3xl text-white text-center leading-tight tracking-wide break-words max-w-[95%]",
+                              outer: "bg-red-600 border-[3px] border-white rotate-[-4deg] hover:rotate-[2deg] shadow-[8px_8px_20px_rgba(0,0,0,0.85)] torn-edge p-1.5 w-full",
+                              inner: "bg-red-600 text-white p-3 sm:p-4 font-rock text-xl sm:text-2xl md:text-3xl min-h-[90px] sm:min-h-[110px]",
+                              badge: null
+                            },
+                            // Style 3: Vintage Tag Sticker
+                            {
+                              outer: "bg-zinc-100 border-[3px] border-zinc-900 rotate-[3deg] hover:rotate-[-2deg] shadow-[8px_8px_20px_rgba(0,0,0,0.75)] rounded-xs p-1.5 w-full",
+                              inner: "bg-zinc-100 text-black p-3 sm:p-4 font-marker text-2xl sm:text-3xl md:text-4xl min-h-[90px] sm:min-h-[110px]",
                               badge: null
                             }
                           ];
@@ -683,22 +683,19 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                               disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                               onClick={() => handleGuess(opt)}
                               className={`
-                                group transition-transform cursor-pointer block
+                                group transition-transform cursor-pointer block text-center
                                 ${cfg.outer}
                                 ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
                                 ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
                                 ${!!selectedOption ? 'opacity-90' : ''}
                               `}
                             >
-                              {cfg.badge && (
-                                <div className={cfg.badge}>SKATE TRICK</div>
-                              )}
                               <div className={`
-                                flex items-center justify-center text-center uppercase transition-colors
+                                w-full flex items-center justify-center text-center uppercase transition-colors leading-tight tracking-wide break-words
                                 ${cfg.inner}
                                 ${!selectedOption ? 'group-hover:brightness-110' : ''}
-                                ${selectedOption && opt === marker.correctTrick ? '!text-green-400' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!text-red-300' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white border-black' : ''}
                               `}>
                                 {opt}
                               </div>
