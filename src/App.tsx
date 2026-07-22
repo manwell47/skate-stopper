@@ -233,6 +233,9 @@ export default function App() {
       if (audioRef.current) {
         audioRef.current.muted = next;
       }
+      if (tictacRef.current) {
+        tictacRef.current.muted = next;
+      }
       return next;
     });
   };
