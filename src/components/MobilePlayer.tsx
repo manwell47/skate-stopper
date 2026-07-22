@@ -622,11 +622,11 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Positioned at y=1650 with overflow-visible to prevent border clipping */}
-                <foreignObject x="80" y="1650" width="1536" height="850" style={{ overflow: 'visible' }}>
+                {/* Trick Options Sticker Layer - Enlarged foreignObject container starting at y=1400 so rotation/hover borders are never clipped */}
+                <foreignObject x="30" y="1400" width="1636" height="1100" style={{ overflow: 'visible' }}>
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2 overflow-visible">
                     {marker.isCustomText ? (
-                      <div className="flex flex-col w-full space-y-8">
+                      <div className="flex flex-col w-full space-y-8 pt-20">
                         <input
                           type="text"
                           value={textGuess}
@@ -645,7 +645,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-x-10 gap-y-8 w-full px-4 overflow-visible">
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full px-4 overflow-visible">
                         {shuffledOptions.map((opt, i) => {
                           // 4 clean 2x2 rectangular vinyl sticker designs with precise downward shifts:
                           // Top row (i=0,1): shifted down by 180px (W/4, half of bottom shift)
@@ -655,23 +655,23 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           const stickerConfigs = [
                             // Sticker 0 (Top-Left): Classic White Slap Tag
                             {
-                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-6 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-marker text-[60px] sm:text-[68px] md:text-[76px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-white text-black border-[6px] border-zinc-900 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-md rotate-[-2deg] hover:rotate-[1deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
+                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-zinc-950 text-center leading-[1.15] tracking-wide break-words w-full"
                             },
-                            // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker (Slightly more compact to prevent border clipping)
+                            // Sticker 1 (Top-Right): Yellow Hazard Vinyl Sticker
                             {
-                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-6 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-graffiti text-[64px] sm:text-[72px] md:text-[80px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
+                              outer: "bg-yellow-400 text-black border-[6px] border-black shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-xl rotate-[2deg] hover:rotate-[-1deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
+                              inner: "font-graffiti text-[54px] sm:text-[62px] md:text-[70px] text-black text-center leading-[1.15] tracking-tight break-words w-full"
                             },
                             // Sticker 2 (Bottom-Left): Red Thrasher Box Sticker
                             {
-                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-6 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-rock text-[52px] sm:text-[60px] md:text-[68px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
+                              outer: "bg-red-600 text-white border-[6px] border-white shadow-[12px_12px_25px_rgba(0,0,0,0.85)] torn-edge rotate-[-3deg] hover:rotate-[2deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
+                              inner: "font-rock text-[44px] sm:text-[50px] md:text-[56px] text-white text-center leading-[1.15] tracking-normal break-words w-full"
                             },
                             // Sticker 3 (Bottom-Right): Vintage Black Vinyl Tag
                             {
-                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-6 py-4 w-full flex items-center justify-center min-h-[195px]",
-                              inner: "font-marker text-[60px] sm:text-[68px] md:text-[76px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
+                              outer: "bg-zinc-950 text-white border-[6px] border-zinc-300 shadow-[12px_12px_25px_rgba(0,0,0,0.85)] rounded-lg rotate-[2deg] hover:rotate-[-2deg] px-5 py-3 w-full flex items-center justify-center min-h-[175px]",
+                              inner: "font-marker text-[52px] sm:text-[60px] md:text-[68px] text-yellow-300 text-center leading-[1.15] tracking-wide break-words w-full"
                             }
                           ];
 
