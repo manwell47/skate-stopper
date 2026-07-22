@@ -516,10 +516,10 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             </p>
           </div>
         ) : gameState === "guessing" ? (
-          <div className="flex-1 relative flex flex-col justify-end overflow-hidden bg-black py-4 px-2">
+          <div className="flex-1 relative overflow-hidden bg-black">
             
             {/* Skateboard Background Graphic */}
-            <svg viewBox="0 0 1696 2528" preserveAspectRatio="xMidYMin slice" className="absolute inset-0 w-full h-full">
+            <svg viewBox="0 0 1696 2528" preserveAspectRatio="xMidYMin slice" className="absolute inset-0 w-full h-full pointer-events-auto">
               <defs>
                 <path id="noseCurve" d="M 350,500 Q 848,300 1346,500" fill="transparent" />
               </defs>
@@ -590,42 +590,43 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               </rect>
             </svg>
 
-            {/* Content layered over the skateboard */}
-            <div className="relative z-10 flex flex-col h-full pointer-events-none">
+            {/* Scrollable Content Layer */}
+            <div className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden flex flex-col pointer-events-none custom-scrollbar">
               
-              {/* Spacer to push content down to bottom */}
-              <div className="flex-1 min-h-[180px]" />
+              {/* Spacer pushing content below the truck based on width.
+                  The truck bottom is at ~1352px out of 1696px width = ~80% */}
+              <div style={{ marginTop: '80%' }} />
 
-              {/* Meme Quote */}
-              <div className="pointer-events-auto mt-4 mb-2 flex justify-center">
-                <p className="text-xs sm:text-sm font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/70 px-3 py-1.5 rounded-sm border-b-2 border-green-500/50 shadow-[0_5px_15px_rgba(0,0,0,0.8)] backdrop-blur-sm max-w-[90%] text-center">
-                  "{currentMeme}"
-                </p>
-              </div>
+              <div className="pointer-events-auto flex flex-col w-full max-w-lg mx-auto pb-4 px-2">
+                {/* Meme Quote */}
+                <div className="flex justify-center mb-3">
+                  <p className="text-[10px] sm:text-xs font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-2.5 py-1 rounded-sm border-b-2 border-green-500/50 shadow-[0_5px_15px_rgba(0,0,0,0.8)] backdrop-blur-sm max-w-[95%] text-center">
+                    "{currentMeme}"
+                  </p>
+                </div>
 
-              {/* Trick Options */}
-              <div className="pointer-events-auto w-full max-w-lg mx-auto">
+                {/* Trick Options */}
                 {marker.isCustomText ? (
-                  <div className="flex flex-col space-y-3 px-2">
+                  <div className="flex flex-col space-y-2">
                     <input 
                       type="text"
                       value={textGuess}
                       onChange={(e) => setTextGuess(e.target.value)}
                       placeholder="Escribe el truco..."
-                      className="zine-input text-xl text-center uppercase py-3 rotate-[-1deg] shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
+                      className="zine-input text-lg text-center uppercase py-2 rotate-[-1deg] shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
                     />
                     <button
                       disabled={!textGuess.trim()}
                       onClick={() => handleGuess(textGuess)}
-                      className="w-full sticker-button bg-white p-1.5 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[5px_5px_20px_rgba(0,0,0,0.6)]"
+                      className="w-full sticker-button bg-white p-1 torn-edge group disabled:opacity-50 rotate-[1deg] hover:rotate-0 transition-transform shadow-[5px_5px_15px_rgba(0,0,0,0.6)]"
                     >
-                      <div className="bg-black text-white font-display text-2xl py-3 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
+                      <div className="bg-black text-white font-display text-xl py-2 tracking-widest group-hover:bg-red-600 transition-colors uppercase text-center">
                         COMPROBAR
                       </div>
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-3 px-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {shuffledOptions.map((opt, i) => {
                       // Alternate slight rotations for stickers
                       const rotateClass = i % 2 === 0 ? "rotate-[-2deg] hover:rotate-[1deg]" : "rotate-[2deg] hover:rotate-[-1deg]";
@@ -636,7 +637,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                           onClick={() => handleGuess(opt)}
                           className={`
-                            sticker-button bg-white p-1.5 torn-edge group transition-transform shadow-[5px_5px_15px_rgba(0,0,0,0.6)]
+                            sticker-button bg-white p-1 torn-edge group transition-transform shadow-[3px_3px_10px_rgba(0,0,0,0.6)]
                             ${rotateClass}
                             ${selectedOption && opt === marker.correctTrick ? 'ring-4 ring-green-500' : ''}
                             ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-4 ring-red-500' : ''}
@@ -644,7 +645,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           `}
                         >
                           <div className={`
-                            h-full bg-black text-white p-3 font-display tracking-wider text-sm sm:text-base md:text-lg flex items-center justify-center text-center uppercase transition-colors
+                            h-full bg-black text-white p-1.5 sm:p-2 font-display tracking-wider text-[9px] sm:text-[11px] md:text-sm flex items-center justify-center text-center uppercase transition-colors min-h-[3rem]
                             ${!selectedOption ? 'group-hover:bg-zinc-800' : ''}
                             ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
                             ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-500 !text-white' : ''}
