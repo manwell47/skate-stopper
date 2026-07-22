@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Creepster&family=Sedgwick+Ave&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Creepster&family=Sedgwick+Ave&family=DynaPuff:wght@500;700&family=Shrikhand&family=Caveat:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
 @import '@fontsource/permanent-marker';
 @import '@fontsource/rock-salt';
 @import "tailwindcss";
@@ -7,6 +7,8 @@
   --font-sans: "VT323", monospace;
   --font-display: "Creepster", cursive;
   --font-graffiti: "Sedgwick Ave", cursive;
+  --font-pastel: "DynaPuff", cursive;
+  --font-shrikhand: "Shrikhand", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-marker: "Permanent Marker", cursive;
   --font-rock: "Rock Salt", cursive;

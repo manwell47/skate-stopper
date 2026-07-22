@@ -27,7 +27,7 @@ interface Props {
 export default function MobilePlayer({ lineData, onBack }: Props) {
   const [numPlayers, setNumPlayers] = useState(1);
   const [playerNames, setPlayerNames] = useState<string[]>([localStorage.getItem("skate_stopper_alias") || ""]);
-  const [players, setPlayers] = useState<{name: string, score: number}[]>([]);
+  const [players, setPlayers] = useState<{ name: string, score: number }[]>([]);
   const [aliasConfirmed, setAliasConfirmed] = useState(false);
 
   const [currentPlayerGuessingIndex, setCurrentPlayerGuessingIndex] = useState(0);
@@ -36,12 +36,12 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
   const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
   const [gameState, setGameState] = useState<"ready" | "playing_to_pause" | "guessing" | "playing_feedback" | "feedback_paused" | "replaying_trick" | "replaying_whole" | "playing_to_end" | "jury" | "finished">("ready");
-  
+
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [textGuess, setTextGuess] = useState("");
   const [loopSpeed, setLoopSpeed] = useState<number>(0);
-  
+
   interface Challenge {
     playerIndex: number;
     playerName: string;
@@ -51,37 +51,37 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
     status?: "pending" | "accepted" | "rejected";
   }
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  
+
   const playerRef = useRef<YouTubePlayer | null>(null);
   const intervalRef = useRef<number | null>(null);
   const leaderboardUpdatedRef = useRef(false);
-  const [leaderboard, setLeaderboard] = useState<{name: string, score: number}[]>([]);
+  const [leaderboard, setLeaderboard] = useState<{ name: string, score: number }[]>([]);
 
   useEffect(() => {
     if (gameState === "finished" && !leaderboardUpdatedRef.current) {
       leaderboardUpdatedRef.current = true;
       const key = `skate_stopper_ranking_${lineData.videoId}_${lineData.clipStartTime}`;
       const saved = localStorage.getItem(key);
-      let currentRanking: {name: string, score: number}[] = saved ? JSON.parse(saved) : [];
-      
+      let currentRanking: { name: string, score: number }[] = saved ? JSON.parse(saved) : [];
+
       players.forEach(p => {
         currentRanking.push(p);
       });
-      
+
       currentRanking.sort((a, b) => b.score - a.score);
-      
+
       localStorage.setItem(key, JSON.stringify(currentRanking));
       setLeaderboard(currentRanking);
 
       const globalSaved = localStorage.getItem("skate_stopper_global_ranking");
-      let globalRanking: {name: string, score: number}[] = globalSaved ? JSON.parse(globalSaved) : [];
-      
+      let globalRanking: { name: string, score: number }[] = globalSaved ? JSON.parse(globalSaved) : [];
+
       players.forEach(p => {
         const existingPlayer = globalRanking.find(g => g.name === p.name);
         if (existingPlayer) {
           existingPlayer.score += p.score;
         } else {
-          globalRanking.push({...p});
+          globalRanking.push({ ...p });
         }
       });
 
@@ -116,7 +116,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
   };
 
   const onStateChange: YouTubeProps['onStateChange'] = (event) => {
-    if (event.data === 1) { 
+    if (event.data === 1) {
       if (stateRef.current.gameState === "ready") {
         setGameState("playing_to_pause");
       }
@@ -284,7 +284,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
   const handleGuess = (option: string) => {
     if (gameState !== "guessing") return;
-    
+
     const nextGuesses = { ...currentTrickGuesses, [currentPlayerGuessingIndex]: option };
     setCurrentTrickGuesses(nextGuesses);
     setTextGuess(""); // clear for the next player
@@ -293,7 +293,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
       setCurrentPlayerGuessingIndex(prev => prev + 1);
     } else {
       setSelectedOption(marker?.correctTrick || "");
-      
+
       setPlayers(prevPlayers => {
         return prevPlayers.map((p, i) => {
           if (marker && checkTrickMatch(nextGuesses[i], marker.correctTrick)) {
@@ -347,7 +347,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           <h2 className="text-5xl font-display text-white drop-shadow-[2px_2px_0_rgba(255,0,0,0.8)] glitch-text" data-text="CREW">CREW</h2>
           <p className="text-xl text-green-400 font-bold uppercase tracking-widest">ADD HOMIES (MAX 10)</p>
         </div>
-        
+
         <form onSubmit={handleConfirmAlias} className="w-full space-y-8 relative z-10 mt-8">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-6 p-2 border-b-2 border-white/30">
@@ -360,8 +360,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           <div className="space-y-4">
             {Array.from({ length: numPlayers }).map((_, i) => (
               <div key={i}>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={playerNames[i] || ""}
                   onChange={e => {
                     const next = [...playerNames];
@@ -376,7 +376,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
             ))}
           </div>
 
-          <button 
+          <button
             type="submit"
             className="w-full sticker-button px-4 py-4 mt-8 bg-white torn-edge group"
           >
@@ -398,7 +398,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           <h2 className="text-4xl font-display text-white drop-shadow-[2px_2px_0_rgba(255,0,0,0.8)] glitch-text" data-text="TAPE EJECTED">TAPE EJECTED</h2>
           <p className="text-lg text-green-400 font-bold uppercase tracking-widest">{lineData.skater}</p>
         </div>
-        
+
         <div className="w-full relative z-10 mt-4">
           <p className="text-xl text-white font-display text-center mb-4 tracking-widest">RESULTS</p>
           <div className="space-y-2">
@@ -422,14 +422,14 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={onBack}
           className="w-full sticker-button px-4 py-4 mt-8 bg-white torn-edge group relative z-10"
         >
-           <div className="bg-black text-white font-display text-3xl px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors">
-             <RotateCcw className="w-6 h-6" strokeWidth={3} />
-             REWIND
-           </div>
+          <div className="bg-black text-white font-display text-3xl px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors">
+            <RotateCcw className="w-6 h-6" strokeWidth={3} />
+            REWIND
+          </div>
         </button>
       </div>
     );
@@ -443,8 +443,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
       <div className="w-full landscape:w-1/2 flex flex-col shrink-0 relative z-40 border-b-2 landscape:border-b-0 landscape:border-r-2 border-white/20">
         {/* Dedicated Top Header Bar (100% Reliable Back Arrow) */}
         <div className="p-2.5 sm:p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b border-white/20">
-          <button 
-            onClick={onBack} 
+          <button
+            onClick={onBack}
             className="text-white hover:text-red-500 transition-colors p-2 active:scale-95 bg-zinc-900 border border-white/30 shadow-[2px_2px_0px_#000] cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
@@ -489,8 +489,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
 
           {/* Progress Bar */}
           <div className="absolute bottom-0 left-0 h-1 bg-white/20 w-full z-20">
-            <div 
-              className="h-full bg-red-600 transition-all duration-300 relative" 
+            <div
+              className="h-full bg-red-600 transition-all duration-300 relative"
               style={{ width: `${((currentMarkerIndex) / lineData.markers.length) * 100}%` }}
             />
           </div>
@@ -515,10 +515,10 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           </div>
         ) : gameState === "guessing" ? (
           <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#12100e] custom-scrollbar flex flex-col items-center justify-start p-2">
-            
+
             {/* The container that holds the skateboard SVG */}
             <div className="relative w-full max-w-[650px] mx-auto drop-shadow-2xl">
-              
+
               {/* Skateboard Background Graphic */}
               <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
                 <defs>
@@ -526,26 +526,26 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <path id="noseCurve" d="M 380,640 Q 848,470 1316,640" fill="transparent" />
                   <path id="memeCurve" d="M 380,860 Q 848,730 1316,860" fill="transparent" />
                 </defs>
-                
+
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
                 {(() => {
                   const rawName = players[currentPlayerGuessingIndex].name.toUpperCase();
                   const nameLen = Math.max(1, rawName.length);
-                  // Dynamic font size constrained to stay within the deck (4 chars -> 140px, 10 chars -> 110px, 19 chars -> 60px)
-                  const autoFontSize = Math.min(140, Math.max(50, Math.floor(980 / (nameLen * 0.85))));
-                  
+                  // Dynamic font size for pastel bubble graffiti model (DynaPuff)
+                  const autoFontSize = Math.min(135, Math.max(48, Math.floor(950 / (nameLen * 0.85))));
+
                   return (
                     <>
-                      {/* Player Name Drop Shadow Layer */}
-                      <text fill="#000" opacity="0.3" transform="translate(6, 8)" fontSize={autoFontSize} fontWeight="700" fontFamily="'Sedgwick Ave', cursive" letterSpacing="1">
+                      {/* Player Name Soft Drop Shadow Layer */}
+                      <text fill="#000" opacity="0.2" transform="translate(4, 6)" fontSize={autoFontSize} fontWeight="700" fontFamily="'DynaPuff', cursive" letterSpacing="1">
                         <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                           {rawName}
                         </textPath>
                       </text>
-                      
-                      {/* Main Player Name in Clean Hip-Hop Tag Style */}
-                      <text fill="#1a1a1a" stroke="#1a1a1a" strokeWidth="2" strokeLinejoin="round" fontSize={autoFontSize} fontWeight="700" fontFamily="'Sedgwick Ave', cursive" letterSpacing="1" opacity="0.95">
+
+                      {/* Main Player Name in Pastel Bubble Graffiti Style */}
+                      <text fill="#2a221d" stroke="#2a221d" strokeWidth="2" strokeLinejoin="round" fontSize={autoFontSize} fontWeight="700" fontFamily="'DynaPuff', cursive" letterSpacing="1" opacity="0.95">
                         <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                           {rawName}
                         </textPath>
@@ -567,55 +567,55 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   );
                 })()}
 
-                {/* Hitboxes inside SVG for exact alignment matching ONLY wheels + hanger inscriptions (y=1140 to y=1350) */}
-                {/* x0.5 Speed - LEFT SIDE (Left wheel + Left Hanger Inscription) */}
-                <rect 
-                  x="220" y="1140" width="628" height="210" 
-                  fill={loopSpeed === 0.5 ? "rgba(255,0,0,0.35)" : "transparent"} 
-                  stroke={loopSpeed === 0.5 ? "red" : "transparent"} strokeWidth="8" 
-                  rx="20" ry="20"
-                  className="cursor-pointer transition-colors hover:fill-red-500/15 hover:stroke-red-500"
+                {/* Hitboxes inside SVG: Shortened to end 3px past the 0.5x and 0.25x inscriptions with NO red contours */}
+                {/* x0.5 Speed - LEFT SIDE (Left wheel + Left Hanger Inscription up to x=730) */}
+                <rect
+                  x="220" y="1140" width="510" height="210"
+                  fill={loopSpeed === 0.5 ? "rgba(255,255,255,0.25)" : "transparent"}
+                  stroke="transparent" strokeWidth="0"
+                  rx="15" ry="15"
+                  className="cursor-pointer transition-colors hover:fill-white/10"
                   onClick={() => {
                     const speed = 0.5;
                     const nextSpeed = loopSpeed === speed ? 0 : speed;
                     setLoopSpeed(nextSpeed);
                     if (nextSpeed > 0 && playerRef.current) {
-                        playerRef.current.setPlaybackRate(nextSpeed);
-                        playerRef.current.setVolume(5);
-                        playerRef.current.seekTo(stateRef.current.trickStartTime, true);
-                        playerRef.current.playVideo();
+                      playerRef.current.setPlaybackRate(nextSpeed);
+                      playerRef.current.setVolume(5);
+                      playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                      playerRef.current.playVideo();
                     } else if (nextSpeed === 0 && playerRef.current) {
-                        playerRef.current.setPlaybackRate(1.0);
-                        playerRef.current.setVolume(100);
-                        playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
-                        playerRef.current.pauseVideo();
+                      playerRef.current.setPlaybackRate(1.0);
+                      playerRef.current.setVolume(100);
+                      playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                      playerRef.current.pauseVideo();
                     }
                   }}
                 >
                   <title>Replay x0.5</title>
                 </rect>
 
-                {/* x0.25 Speed - RIGHT SIDE (Right Hanger Inscription + Right Wheel) */}
-                <rect 
-                  x="848" y="1140" width="628" height="210" 
-                  fill={loopSpeed === 0.25 ? "rgba(255,0,0,0.35)" : "transparent"} 
-                  stroke={loopSpeed === 0.25 ? "red" : "transparent"} strokeWidth="8" 
-                  rx="20" ry="20"
-                  className="cursor-pointer transition-colors hover:fill-red-500/15 hover:stroke-red-500"
+                {/* x0.25 Speed - RIGHT SIDE (Right Hanger Inscription from x=966 + Right Wheel) */}
+                <rect
+                  x="966" y="1140" width="510" height="210"
+                  fill={loopSpeed === 0.25 ? "rgba(255,255,255,0.25)" : "transparent"}
+                  stroke="transparent" strokeWidth="0"
+                  rx="15" ry="15"
+                  className="cursor-pointer transition-colors hover:fill-white/10"
                   onClick={() => {
                     const speed = 0.25;
                     const nextSpeed = loopSpeed === speed ? 0 : speed;
                     setLoopSpeed(nextSpeed);
                     if (nextSpeed > 0 && playerRef.current) {
-                        playerRef.current.setPlaybackRate(nextSpeed);
-                        playerRef.current.setVolume(5);
-                        playerRef.current.seekTo(stateRef.current.trickStartTime, true);
-                        playerRef.current.playVideo();
+                      playerRef.current.setPlaybackRate(nextSpeed);
+                      playerRef.current.setVolume(5);
+                      playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                      playerRef.current.playVideo();
                     } else if (nextSpeed === 0 && playerRef.current) {
-                        playerRef.current.setPlaybackRate(1.0);
-                        playerRef.current.setVolume(100);
-                        playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
-                        playerRef.current.pauseVideo();
+                      playerRef.current.setPlaybackRate(1.0);
+                      playerRef.current.setVolume(100);
+                      playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                      playerRef.current.pauseVideo();
                     }
                   }}
                 >
@@ -627,7 +627,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-8">
-                        <input 
+                        <input
                           type="text"
                           value={textGuess}
                           onChange={(e) => setTextGuess(e.target.value)}
@@ -672,7 +672,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                           ];
 
                           const cfg = stickerConfigs[i % stickerConfigs.length];
-                          
+
                           return (
                             <button
                               key={i}
@@ -707,124 +707,124 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           </div>
         ) : gameState === "feedback_paused" ? (
           <div className="space-y-2 flex-1 flex flex-col justify-start">
-             <div className="text-center">
-               <p className="text-[10px] font-sans font-bold text-white/50 mb-0.5 uppercase tracking-widest">IT WAS A...</p>
-               <p className="text-2xl sm:text-3xl font-display text-white glitch-text tracking-widest uppercase" data-text={marker.correctTrick.toUpperCase()}>{marker.correctTrick.toUpperCase()}</p>
-             </div>
-             
-             <div className="space-y-1.5 max-h-36 overflow-y-auto">
-               {players.map((p, i) => {
-                 const guess = currentTrickGuesses[i];
-                 const isCorrect = marker && checkTrickMatch(guess, marker.correctTrick);
-                 const hasChallenged = challenges.some(c => c.playerIndex === i && c.trickIndex === currentMarkerIndex);
-                 return (
-                   <div key={i} className={`p-1.5 flex justify-between items-center border-l-4 ${isCorrect ? 'border-green-400 bg-green-400/10' : hasChallenged ? 'border-yellow-400 bg-yellow-400/10' : 'border-red-500 bg-red-500/10'}`}>
-                     <div className="flex flex-col">
-                       <span className="font-display text-base text-white tracking-widest uppercase truncate max-w-[130px]">{p.name}</span>
-                       {!isCorrect && !hasChallenged && players.length > 1 && (
-                          <button onClick={() => handleChallenge(i)} className="text-[10px] font-sans text-red-400 font-bold uppercase underline text-left hover:text-red-300">
-                             REBATIR VOTO
-                          </button>
-                       )}
-                       {hasChallenged && (
-                          <span className="text-[10px] font-sans text-yellow-400 font-bold uppercase">EN DISPUTA ⚖️</span>
-                       )}
-                     </div>
-                     <div className="flex flex-col items-end">
-                       <span className="font-sans font-bold text-xs text-white/80 uppercase truncate max-w-[110px]">{guess || "NO ANSWER"}</span>
-                       <span className="font-sans text-[10px] text-white/50">{p.score} PTS</span>
-                     </div>
-                   </div>
-                 );
-               })}
-             </div>
-             
-             <div className="flex flex-col gap-1.5">
-               {/* Replay Controls Row */}
-               <div className="flex gap-2 w-full">
-                 <button 
-                   onClick={handleReplayTrick}
-                   className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
-                 >
-                   <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
-                     <RotateCcw className="w-3.5 h-3.5" /> REPLAY TRICK
-                   </div>
-                 </button>
-                 {lineData.markers.length > 1 && (
-                   <button 
-                     onClick={handleReplayWhole}
-                     className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
-                   >
-                     <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
-                       <RotateCcw className="w-3.5 h-3.5" /> REPLAY WHOLE
-                     </div>
-                   </button>
-                 )}
-               </div>
+            <div className="text-center">
+              <p className="text-[10px] font-sans font-bold text-white/50 mb-0.5 uppercase tracking-widest">IT WAS A...</p>
+              <p className="text-2xl sm:text-3xl font-display text-white glitch-text tracking-widest uppercase" data-text={marker.correctTrick.toUpperCase()}>{marker.correctTrick.toUpperCase()}</p>
+            </div>
 
-               {/* Next Trick / Results Button */}
-               <button 
-                 onClick={handleNextMarker}
-                 className="w-full sticker-button p-1 bg-white torn-edge group"
-               >
-                 <div className="bg-black text-white font-display text-xl py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
-                   {currentMarkerIndex === lineData.markers.length - 1 ? "VER RESULTADOS" : <><Play className="w-5 h-5 fill-white" /> NEXT TRICK</>}
-                 </div>
-               </button>
-             </div>
+            <div className="space-y-1.5 max-h-36 overflow-y-auto">
+              {players.map((p, i) => {
+                const guess = currentTrickGuesses[i];
+                const isCorrect = marker && checkTrickMatch(guess, marker.correctTrick);
+                const hasChallenged = challenges.some(c => c.playerIndex === i && c.trickIndex === currentMarkerIndex);
+                return (
+                  <div key={i} className={`p-1.5 flex justify-between items-center border-l-4 ${isCorrect ? 'border-green-400 bg-green-400/10' : hasChallenged ? 'border-yellow-400 bg-yellow-400/10' : 'border-red-500 bg-red-500/10'}`}>
+                    <div className="flex flex-col">
+                      <span className="font-display text-base text-white tracking-widest uppercase truncate max-w-[130px]">{p.name}</span>
+                      {!isCorrect && !hasChallenged && players.length > 1 && (
+                        <button onClick={() => handleChallenge(i)} className="text-[10px] font-sans text-red-400 font-bold uppercase underline text-left hover:text-red-300">
+                          REBATIR VOTO
+                        </button>
+                      )}
+                      {hasChallenged && (
+                        <span className="text-[10px] font-sans text-yellow-400 font-bold uppercase">EN DISPUTA ⚖️</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="font-sans font-bold text-xs text-white/80 uppercase truncate max-w-[110px]">{guess || "NO ANSWER"}</span>
+                      <span className="font-sans text-[10px] text-white/50">{p.score} PTS</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              {/* Replay Controls Row */}
+              <div className="flex gap-2 w-full">
+                <button
+                  onClick={handleReplayTrick}
+                  className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
+                >
+                  <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
+                    <RotateCcw className="w-3.5 h-3.5" /> REPLAY TRICK
+                  </div>
+                </button>
+                {lineData.markers.length > 1 && (
+                  <button
+                    onClick={handleReplayWhole}
+                    className="flex-1 sticker-button p-0.5 bg-white torn-edge group"
+                  >
+                    <div className="bg-black text-white font-sans font-bold text-xs py-1.5 flex items-center justify-center gap-1 group-hover:bg-red-600 transition-colors uppercase">
+                      <RotateCcw className="w-3.5 h-3.5" /> REPLAY WHOLE
+                    </div>
+                  </button>
+                )}
+              </div>
+
+              {/* Next Trick / Results Button */}
+              <button
+                onClick={handleNextMarker}
+                className="w-full sticker-button p-1 bg-white torn-edge group"
+              >
+                <div className="bg-black text-white font-display text-xl py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
+                  {currentMarkerIndex === lineData.markers.length - 1 ? "VER RESULTADOS" : <><Play className="w-5 h-5 fill-white" /> NEXT TRICK</>}
+                </div>
+              </button>
+            </div>
           </div>
         ) : gameState === "jury" ? (
           <div className="flex-1 flex flex-col p-2 space-y-4 overflow-y-auto">
-             <div className="text-center mb-2">
-               <h3 className="text-3xl font-display text-white glitch-text tracking-widest" data-text="EL JURADO">EL JURADO</h3>
-               <p className="text-sm font-sans text-white/70 mt-1 uppercase">Dispute Resolution</p>
-             </div>
-             <div className="space-y-4 flex-1">
-               {challenges.map((c, i) => (
-                 <div key={i} className={`p-3 border-2 ${c.status === 'accepted' ? 'border-green-500 bg-green-500/10' : c.status === 'rejected' ? 'border-red-500 bg-red-500/10' : 'border-yellow-400 bg-yellow-400/10'}`}>
-                   <div className="mb-2">
-                     <span className="font-display text-xl text-white uppercase">{c.playerName}</span>
-                     <span className="font-sans text-xs text-white/50 ml-2 uppercase">SPOT {c.trickIndex + 1}</span>
-                   </div>
-                   <div className="grid grid-cols-2 gap-2 text-sm font-sans mb-3">
-                     <div>
-                       <div className="text-white/50 text-xs uppercase">Dijo:</div>
-                       <div className="text-white font-bold">{c.guessedTrick}</div>
-                     </div>
-                     <div>
-                       <div className="text-white/50 text-xs uppercase">Era:</div>
-                       <div className="text-white font-bold">{c.correctTrick}</div>
-                     </div>
-                   </div>
-                   
-                   {c.status === "pending" ? (
-                     <div className="flex gap-2">
-                       <button onClick={() => resolveChallenge(i, true)} className="flex-1 bg-green-600 hover:bg-green-500 text-white font-display text-lg py-2 transition-colors uppercase">
-                         DAR POR BUENO
-                       </button>
-                       <button onClick={() => resolveChallenge(i, false)} className="flex-1 bg-red-600 hover:bg-red-500 text-white font-display text-lg py-2 transition-colors uppercase">
-                         RECHAZAR
-                       </button>
-                     </div>
-                   ) : (
-                     <div className={`text-center font-display text-2xl uppercase tracking-widest ${c.status === 'accepted' ? 'text-green-400' : 'text-red-500'}`}>
-                       {c.status === 'accepted' ? 'ACEPTADO (+100 PTS)' : 'RECHAZADO'}
-                     </div>
-                   )}
-                 </div>
-               ))}
-             </div>
-             
-             {challenges.every(c => c.status !== "pending") && (
-               <button 
-                 onClick={finishJury}
-                 className="w-full sticker-button px-4 py-4 mt-4 bg-white torn-edge group"
-               >
-                 <div className="bg-black text-white font-display text-3xl px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
-                   VER RESULTADOS
-                 </div>
-               </button>
-             )}
+            <div className="text-center mb-2">
+              <h3 className="text-3xl font-display text-white glitch-text tracking-widest" data-text="EL JURADO">EL JURADO</h3>
+              <p className="text-sm font-sans text-white/70 mt-1 uppercase">Dispute Resolution</p>
+            </div>
+            <div className="space-y-4 flex-1">
+              {challenges.map((c, i) => (
+                <div key={i} className={`p-3 border-2 ${c.status === 'accepted' ? 'border-green-500 bg-green-500/10' : c.status === 'rejected' ? 'border-red-500 bg-red-500/10' : 'border-yellow-400 bg-yellow-400/10'}`}>
+                  <div className="mb-2">
+                    <span className="font-display text-xl text-white uppercase">{c.playerName}</span>
+                    <span className="font-sans text-xs text-white/50 ml-2 uppercase">SPOT {c.trickIndex + 1}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm font-sans mb-3">
+                    <div>
+                      <div className="text-white/50 text-xs uppercase">Dijo:</div>
+                      <div className="text-white font-bold">{c.guessedTrick}</div>
+                    </div>
+                    <div>
+                      <div className="text-white/50 text-xs uppercase">Era:</div>
+                      <div className="text-white font-bold">{c.correctTrick}</div>
+                    </div>
+                  </div>
+
+                  {c.status === "pending" ? (
+                    <div className="flex gap-2">
+                      <button onClick={() => resolveChallenge(i, true)} className="flex-1 bg-green-600 hover:bg-green-500 text-white font-display text-lg py-2 transition-colors uppercase">
+                        DAR POR BUENO
+                      </button>
+                      <button onClick={() => resolveChallenge(i, false)} className="flex-1 bg-red-600 hover:bg-red-500 text-white font-display text-lg py-2 transition-colors uppercase">
+                        RECHAZAR
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={`text-center font-display text-2xl uppercase tracking-widest ${c.status === 'accepted' ? 'text-green-400' : 'text-red-500'}`}>
+                      {c.status === 'accepted' ? 'ACEPTADO (+100 PTS)' : 'RECHAZADO'}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {challenges.every(c => c.status !== "pending") && (
+              <button
+                onClick={finishJury}
+                className="w-full sticker-button px-4 py-4 mt-4 bg-white torn-edge group"
+              >
+                <div className="bg-black text-white font-display text-3xl px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors uppercase">
+                  VER RESULTADOS
+                </div>
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
