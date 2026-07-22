@@ -445,11 +445,9 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
         <div className="p-2.5 sm:p-3 bg-black flex items-center justify-between shrink-0 relative z-50 border-b border-white/20">
           <button 
             onClick={onBack} 
-            className="p-3 -ml-3 -my-3 group"
+            className="text-white hover:text-red-500 transition-colors p-2 active:scale-95 bg-zinc-900 border border-white/30 shadow-[2px_2px_0px_#000] cursor-pointer"
           >
-            <div className="text-white group-hover:text-red-500 transition-colors p-1.5 group-active:scale-95 bg-zinc-900/80 border border-white/20 shadow-[2px_2px_0px_#000]">
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
-            </div>
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
           </button>
           <div className="text-center">
             <h2 className="text-lg sm:text-xl font-display text-white tracking-widest uppercase truncate max-w-[180px]">{lineData.skater}</h2>
@@ -525,52 +523,58 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
                 <defs>
                   {/* Curve for nose text */}
-                  <path id="noseCurve" d="M 300,680 Q 848,480 1396,680" fill="transparent" />
-                  <path id="memeCurve" d="M 300,920 Q 848,760 1396,920" fill="transparent" />
+                  <path id="noseCurve" d="M 280,670 Q 848,450 1416,670" fill="transparent" />
+                  <path id="memeCurve" d="M 280,900 Q 848,740 1416,900" fill="transparent" />
                   
-                  {/* Rough marker filter effect */}
-                  <filter id="markerBleed" x="-20%" y="-20%" width="140%" height="140%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
+                  {/* Graffiti filter effect */}
+                  <filter id="graffitiBleed" x="-20%" y="-20%" width="140%" height="140%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" result="noise" />
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
                   </filter>
                 </defs>
                 
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
-                {/* Decorative Skatepunk Accents on Nose */}
-                <text x="848" y="430" textAnchor="middle" fill="#1a1a1a" fontSize="70" fontFamily="'Permanent Marker', cursive" opacity="0.6">
-                  ★ PRO MODEL ★
-                </text>
-
-                {/* Player Name Drop Shadow Layer */}
-                <text fill="#000" opacity="0.35" transform="translate(8, 10)" fontSize={Math.max(130, 210 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 14)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="4">
-                  <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
-                    {players[currentPlayerGuessingIndex].name.toUpperCase()}
-                  </textPath>
-                </text>
-                
-                {/* Main Player Name */}
-                <text fill="#111111" filter="url(#markerBleed)" stroke="#111111" strokeWidth="6" strokeLinejoin="round" fontSize={Math.max(130, 210 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 14)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="4">
-                  <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
-                    {players[currentPlayerGuessingIndex].name.toUpperCase()}
-                  </textPath>
-                </text>
+                {(() => {
+                  const rawName = players[currentPlayerGuessingIndex].name.toUpperCase();
+                  const nameLen = Math.max(1, rawName.length);
+                  // Auto-scale font size: 4 chars -> 170px, 10 chars -> 135px, 19 chars -> 72px
+                  const autoFontSize = Math.min(170, Math.max(65, Math.floor(1350 / (nameLen * 0.95))));
+                  
+                  return (
+                    <>
+                      {/* Player Name Drop Shadow Layer */}
+                      <text fill="#000" opacity="0.4" transform="translate(10, 12)" fontSize={autoFontSize} fontWeight="900" fontFamily="'Sedgwick Ave Display', cursive" letterSpacing="2">
+                        <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
+                          {rawName}
+                        </textPath>
+                      </text>
+                      
+                      {/* Main Player Name in Graffiti Style */}
+                      <text fill="#111111" filter="url(#graffitiBleed)" stroke="#111111" strokeWidth="8" strokeLinejoin="round" fontSize={autoFontSize} fontWeight="900" fontFamily="'Sedgwick Ave Display', cursive" letterSpacing="2">
+                        <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
+                          {rawName}
+                        </textPath>
+                      </text>
+                    </>
+                  );
+                })()}
 
                 {/* Meme Quote Written on the Nose Wood */}
-                <text fill="#2b2622" fontSize="75" fontFamily="'Permanent Marker', cursive" opacity="0.85" fontStyle="italic">
+                <text fill="#2a2520" fontSize="72" fontFamily="'Permanent Marker', cursive" opacity="0.85" fontStyle="italic">
                   <textPath href="#memeCurve" startOffset="50%" textAnchor="middle">
                     "{currentMeme}"
                   </textPath>
                 </text>
 
-                {/* Hitboxes inside SVG for exact alignment */}
-                {/* x0.5 Speed - LEFT SIDE */}
+                {/* Hitboxes inside SVG for exact alignment matching wheels + hanger inscriptions */}
+                {/* x0.5 Speed - LEFT SIDE (Left wheel + Left Hanger Inscription) */}
                 <rect 
-                  x="254" y="1049" width="593" height="303" 
-                  fill={loopSpeed === 0.5 ? "rgba(255,0,0,0.3)" : "transparent"} 
+                  x="220" y="980" width="628" height="370" 
+                  fill={loopSpeed === 0.5 ? "rgba(255,0,0,0.35)" : "transparent"} 
                   stroke={loopSpeed === 0.5 ? "red" : "transparent"} strokeWidth="10" 
                   rx="30" ry="30"
-                  className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
+                  className="cursor-pointer transition-colors hover:fill-red-500/15 hover:stroke-red-500"
                   onClick={() => {
                     const speed = 0.5;
                     const nextSpeed = loopSpeed === speed ? 0 : speed;
@@ -591,13 +595,13 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.5</title>
                 </rect>
 
-                {/* x0.25 Speed - RIGHT SIDE */}
+                {/* x0.25 Speed - RIGHT SIDE (Right Hanger Inscription + Right Wheel) */}
                 <rect 
-                  x="848" y="1049" width="593" height="303" 
-                  fill={loopSpeed === 0.25 ? "rgba(255,0,0,0.3)" : "transparent"} 
+                  x="848" y="980" width="628" height="370" 
+                  fill={loopSpeed === 0.25 ? "rgba(255,0,0,0.35)" : "transparent"} 
                   stroke={loopSpeed === 0.25 ? "red" : "transparent"} strokeWidth="10" 
                   rx="30" ry="30"
-                  className="cursor-pointer transition-colors hover:fill-red-500/10 hover:stroke-red-500"
+                  className="cursor-pointer transition-colors hover:fill-red-500/15 hover:stroke-red-500"
                   onClick={() => {
                     const speed = 0.25;
                     const nextSpeed = loopSpeed === speed ? 0 : speed;
@@ -618,8 +622,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                   <title>Replay x0.25</title>
                 </rect>
 
-                {/* Trick Options Sticker Layer - Embedded directly in SVG space (y=1420 to y=2420) */}
-                <foreignObject x="120" y="1420" width="1456" height="1050">
+                {/* Trick Options Sticker Layer - Embedded directly in SVG space (y=1400 to y=2450) */}
+                <foreignObject x="100" y="1400" width="1496" height="1050">
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex flex-col justify-start items-center p-2">
                     {marker.isCustomText ? (
                       <div className="flex flex-col w-full space-y-6">
@@ -641,9 +645,37 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-8 w-full">
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full">
                         {shuffledOptions.map((opt, i) => {
-                          const rotateClass = i % 2 === 0 ? "rotate-[-3deg] hover:rotate-[1deg]" : "rotate-[3deg] hover:rotate-[-1deg]";
+                          // Define 4 distinct authentic skate sticker styles
+                          const stickerStyles = [
+                            // Style 0: "Slap Tag" Hello My Name Is style
+                            {
+                              outer: "bg-white border-2 border-zinc-300 rotate-[-4deg] hover:rotate-[1deg] shadow-[10px_12px_25px_rgba(0,0,0,0.7)] rounded-md overflow-hidden",
+                              inner: "bg-white text-zinc-950 p-4 font-marker text-3xl md:text-4xl min-h-[170px]",
+                              badge: "bg-red-600 text-white text-lg font-bold text-center uppercase tracking-widest py-1 font-sans border-b-2 border-red-700"
+                            },
+                            // Style 1: Yellow/Black Hazard Vinyl Badge
+                            {
+                              outer: "bg-yellow-400 border-4 border-black rotate-[5deg] hover:rotate-[-1deg] shadow-[12px_10px_25px_rgba(0,0,0,0.8)] rounded-xl overflow-hidden mt-4",
+                              inner: "bg-yellow-400 text-black p-4 font-graffiti text-3xl md:text-4xl min-h-[170px]",
+                              badge: null
+                            },
+                            // Style 2: Bold Red/White Thrasher Box Sticker
+                            {
+                              outer: "bg-red-700 border-4 border-white rotate-[3deg] hover:rotate-[-2deg] shadow-[10px_14px_25px_rgba(0,0,0,0.85)] torn-edge overflow-hidden",
+                              inner: "bg-red-700 text-white p-4 font-graffiti text-3xl md:text-4xl min-h-[170px]",
+                              badge: null
+                            },
+                            // Style 3: Vintage Duct Tape / Worn Paper Tag
+                            {
+                              outer: "bg-amber-100 border-3 border-dashed border-zinc-800 rotate-[-5deg] hover:rotate-[2deg] shadow-[12px_12px_25px_rgba(0,0,0,0.75)] rounded-sm overflow-hidden mt-4",
+                              inner: "bg-amber-100 text-zinc-900 p-4 font-rock text-2xl md:text-3xl min-h-[170px]",
+                              badge: null
+                            }
+                          ];
+
+                          const style = stickerStyles[i % stickerStyles.length];
                           
                           return (
                             <button
@@ -651,20 +683,22 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                               disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                               onClick={() => handleGuess(opt)}
                               className={`
-                                bg-zinc-100 p-3 torn-edge group transition-transform shadow-[8px_8px_20px_rgba(0,0,0,0.7)]
-                                ${rotateClass}
-                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105' : ''}
+                                group transition-transform cursor-pointer
+                                ${style.outer}
+                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
                                 ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
                                 ${!!selectedOption ? 'opacity-90' : ''}
-                                border-[4px] border-black bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')]
                               `}
                             >
+                              {style.badge && (
+                                <div className={style.badge}>SKATE TRICK</div>
+                              )}
                               <div className={`
-                                h-full w-full bg-black text-zinc-100 p-5 font-marker tracking-wide text-3xl md:text-4xl flex items-center justify-center text-center uppercase transition-colors min-h-[160px]
-                                border-2 border-zinc-800 leading-tight
-                                ${!selectedOption ? 'group-hover:bg-zinc-900 group-hover:text-white' : ''}
-                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
-                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-black border-black' : ''}
+                                w-full flex items-center justify-center text-center uppercase transition-colors leading-tight
+                                ${style.inner}
+                                ${!selectedOption ? 'group-hover:brightness-110' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white' : ''}
                               `}>
                                 {opt}
                               </div>
