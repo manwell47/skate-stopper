@@ -221,33 +221,35 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
   const buildTrick = (s: string, d: string, r: string, t: string, pr: string, f: string, g: string, g2: string, m: string, m2: string, gr: string, st: string, w: string, fi: string, sm: string, dm: string, rm: string, fm: string, so: string, doOut: string, ro: string, fo: string, en: string) => {
     const parts: string[] = [];
     if (s !== "Normal") parts.push(s);
-    if (r !== "None") parts.push(r);
     
-    if (t === "Fliptrick" || t === "Stall") {
-      if (pr !== "None") parts.push("Pressure");
-      if (f !== "None") parts.push(f);
+    if (t === "Fliptrick" || t === "Stall" || t === "Grab" || t === "Wallride/Other") {
+      if (d !== "None") parts.push(d);
+      if (r !== "None") parts.push(r);
+      
+      if (t === "Fliptrick" || t === "Stall") {
+        if (pr !== "None") parts.push("Pressure");
+        if (f !== "None") parts.push(f);
+      }
+      if (t === "Stall" && st !== "None") parts.push(st);
+      if (t === "Grab" && gr !== "None") parts.push(gr);
+      if (t === "Wallride/Other" && w !== "None") parts.push(w);
     }
     
-    if (t === "Grab" && gr !== "None") parts.push(gr);
-    
-    if (t === "Grind/Slide" || t === "Manual") {
-      if (fi !== "None") {
-        parts.push(fi);
-      }
+    if (t === "Grind/Slide") {
+      if (fi !== "None") parts.push(fi);
       if (d !== "None") parts.push(d);
-      
-      if (t === "Grind/Slide" && g !== "None") parts.push(g);
-      if (t === "Manual" && m !== "None") parts.push(m);
+      if (r !== "None") parts.push(r);
+      if (g !== "None") parts.push(g);
       
       if (fm !== "None" || sm !== "Normal" || dm !== "None" || rm !== "None") { 
         parts.push("mid"); 
         if (sm !== "Normal") parts.push(sm);
+        if (dm !== "None") parts.push(dm);
         if (rm !== "None") parts.push(rm);
         if (fm !== "None") parts.push(fm);
-        if (dm !== "None") parts.push(dm);
       }
-      if (t === "Grind/Slide" && g2 !== "None") { parts.push("to"); parts.push(g2); }
-      if (t === "Manual" && m2 !== "None") { parts.push("to"); parts.push(m2); }
+      if (g2 !== "None") { parts.push("to"); parts.push(g2); }
+      
       if (fo !== "None" || so !== "Normal" || doOut !== "None" || ro !== "None") { 
         parts.push("to"); 
         if (so !== "Normal") parts.push(so);
@@ -258,10 +260,39 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
       }
     }
     
-    if (t === "Stall" && st !== "None") parts.push(st);
-    if (t === "Wallride/Other" && w !== "None") parts.push(w);
-    if (t === "Caída") return "Caída";
+    if (t === "Manual") {
+      const entryParts = [];
+      if (d !== "None" && (r !== "None" || fi !== "None")) entryParts.push(d);
+      if (r !== "None") entryParts.push(r);
+      if (fi !== "None") entryParts.push(fi);
+      
+      if (entryParts.length > 0) {
+        parts.push(...entryParts);
+        parts.push("to");
+        if (s !== "Normal") parts.push(s);
+      }
+      if (m !== "None") parts.push(m);
+      
+      if (fm !== "None" || sm !== "Normal" || dm !== "None" || rm !== "None") { 
+        parts.push("mid"); 
+        if (sm !== "Normal") parts.push(sm);
+        if (dm !== "None") parts.push(dm);
+        if (rm !== "None") parts.push(rm);
+        if (fm !== "None") parts.push(fm);
+      }
+      if (m2 !== "None") { parts.push("to"); parts.push(m2); }
+      
+      if (fo !== "None" || so !== "Normal" || doOut !== "None" || ro !== "None") { 
+        parts.push("to"); 
+        if (so !== "Normal") parts.push(so);
+        if (doOut !== "None") parts.push(doOut);
+        if (ro !== "None") parts.push(ro);
+        if (fo !== "None") parts.push(fo); 
+        parts.push("out");
+      }
+    }
     
+    if (t === "Caída") return "Caída";
     if (en !== "None") parts.push(en);
     
     return parts.join(" ") || "Ollie";
@@ -309,8 +340,16 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
       }
     }
-    for (const d of dirs) {
-      if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+    if (trickType !== "Manual") {
+      for (const d of dirs) {
+        if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      }
+    }
+    if (trickType === "Fliptrick") {
+      const rots = ["None", "180", "360"];
+      for (const r of rots) {
+        if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      }
     }
 
     if (customTrick.trim()) {
@@ -379,8 +418,16 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
           if (w !== wall && wall !== "None") options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, w, "None", "Normal", "None", "None", "None", "Normal", "None", "None", "None", ending));
         }
       }
-      for (const d of dirs) {
-        if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      if (trickType !== "Manual") {
+        for (const d of dirs) {
+          if (d !== direction) options.add(buildTrick(stance, d, rotation, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        }
+      }
+      if (trickType === "Fliptrick") {
+        const rots = ["None", "180", "360"];
+        for (const r of rots) {
+          if (r !== rotation) options.add(buildTrick(stance, direction, r, trickType, pressure, flip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        }
       }
       
       if (customTrick.trim()) {
