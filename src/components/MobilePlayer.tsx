@@ -524,14 +524,27 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
               {/* Skateboard Background Graphic */}
               <svg viewBox="0 0 1696 2528" className="w-full h-auto block pointer-events-auto">
                 <defs>
-                  {/* Curve moved lower to center of nose */}
-                  <path id="noseCurve" d="M 350,800 Q 848,600 1346,800" fill="transparent" />
+                  {/* Curve moved slightly higher to make room for the meme quote */}
+                  <path id="noseCurve" d="M 350,700 Q 848,500 1346,700" fill="transparent" />
+                  
+                  {/* Rough marker filter effect */}
+                  <filter id="markerBleed" x="-20%" y="-20%" width="140%" height="140%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+                  </filter>
                 </defs>
                 
                 <image href={`${import.meta.env.BASE_URL}tabla.png`} x="0" y="0" width="1696" height="2528" />
 
-                {/* Player Name Text with Marker Font */}
-                <text fill="#222" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2" opacity="0.85">
+                {/* Player Name Text with Marker Font & Drop Shadow Layer */}
+                <text fill="#000" opacity="0.3" transform="translate(6, 8)" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2">
+                  <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
+                    {players[currentPlayerGuessingIndex].name.toUpperCase()}
+                  </textPath>
+                </text>
+                
+                {/* Main Player Name */}
+                <text fill="#1a1a1a" filter="url(#markerBleed)" stroke="#1a1a1a" strokeWidth="4" strokeLinejoin="round" fontSize={Math.max(120, 200 - Math.max(0, players[currentPlayerGuessingIndex].name.length - 8) * 12)} fontWeight="900" fontFamily="'Permanent Marker', cursive" letterSpacing="2" opacity="0.9">
                   <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
                     {players[currentPlayerGuessingIndex].name.toUpperCase()}
                   </textPath>
@@ -593,18 +606,19 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                 </rect>
               </svg>
 
-              {/* Absolute HTML Overlay for perfect rendering across all browsers.
-                  1450 / 2528 = 57.3% from top 
-                  We position it at 56% to start just slightly below the truck. */}
-              <div className="absolute inset-x-0 bottom-0 pointer-events-none flex flex-col items-center px-4 sm:px-8 pb-4" style={{ top: '56%' }}>
-                
-                {/* Meme Quote */}
-                <div className="flex justify-center mb-6 w-full">
-                  <p className="text-sm sm:text-base md:text-xl font-sans font-bold text-green-400 uppercase tracking-wider italic bg-black/80 px-4 py-2 rounded-sm border-b-4 border-green-500/50 shadow-[0_5px_15px_rgba(0,0,0,0.8)] backdrop-blur-sm text-center">
-                    "{currentMeme}"
-                  </p>
-                </div>
+              {/* Meme Overlay: positioned directly under the player name on the nose. 
+                  Curve is around y=500-700. 750 / 2528 = ~29.6% */}
+              <div className="absolute inset-x-0 pointer-events-none flex flex-col items-center px-12" style={{ top: '30%' }}>
+                <p className="text-xl sm:text-2xl md:text-3xl font-marker text-zinc-900 opacity-80 rotate-[-3deg] text-center max-w-[85%] leading-tight drop-shadow-[1px_1px_0px_rgba(255,255,255,0.2)]">
+                  "{currentMeme}"
+                </p>
+              </div>
 
+              {/* Absolute HTML Overlay for trick options.
+                  1352 / 2528 = 53.5% from top 
+                  We position it at 55% to start just slightly below the truck. */}
+              <div className="absolute inset-x-0 bottom-0 pointer-events-none flex flex-col items-center px-4 sm:px-8 pb-4" style={{ top: '55%' }}>
+                
                 {/* Trick Options */}
                 <div className="w-full max-w-lg pointer-events-auto">
                   {marker.isCustomText ? (
@@ -637,7 +651,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                             disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
                             onClick={() => handleGuess(opt)}
                             className={`
-                              bg-zinc-100 p-2 sm:p-3 torn-edge group transition-transform shadow-[4px_4px_10px_rgba(0,0,0,0.7)]
+                              bg-zinc-100 p-1.5 sm:p-2 torn-edge group transition-transform shadow-[4px_4px_10px_rgba(0,0,0,0.7)]
                               ${rotateClass}
                               ${selectedOption && opt === marker.correctTrick ? 'ring-4 ring-green-500 scale-105' : ''}
                               ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-4 ring-red-500 opacity-60' : ''}
@@ -646,8 +660,8 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                             `}
                           >
                             <div className={`
-                              h-full w-full bg-black text-zinc-100 p-3 sm:p-4 font-marker tracking-wide text-sm sm:text-base flex items-center justify-center text-center uppercase transition-colors min-h-[4rem] sm:min-h-[5rem]
-                              border border-zinc-800
+                              h-full w-full bg-black text-zinc-100 p-2 sm:p-3 font-marker tracking-wide text-xs sm:text-sm md:text-base flex items-center justify-center text-center uppercase transition-colors min-h-[3.5rem] sm:min-h-[4.5rem]
+                              border border-zinc-800 leading-tight
                               ${!selectedOption ? 'group-hover:bg-zinc-900 group-hover:text-white' : ''}
                               ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black border-black' : ''}
                               ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-black border-black' : ''}
