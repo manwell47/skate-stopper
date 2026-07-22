@@ -19,9 +19,9 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
     const dataStr = JSON.stringify([line]);
     try {
       await navigator.clipboard.writeText(dataStr);
-      alert(`¡Clip "${line.lineName}" copiado al portapapeles! Envíale este texto a tu amigo.`);
+      alert(`Clip "${line.lineName}" copied to clipboard! Send this text to your friend.`);
     } catch (e) {
-      prompt("Copia el código de este clip:", dataStr);
+      prompt("Copy the code for this clip:", dataStr);
     }
   };
 
@@ -32,7 +32,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
   };
 
   const handleClearRanking = (line: LineData) => {
-    if (window.confirm(`¿Borrar el ranking de "${line.lineName}"?`)) {
+    if (window.confirm(`Clear ranking for "${line.lineName}"?`)) {
       const key = `skate_stopper_ranking_${line.videoId}_${line.clipStartTime}`;
       localStorage.removeItem(key);
       setActiveRankingLine(null);
@@ -65,13 +65,13 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
           onClick={(e) => { e.stopPropagation(); onExportStash(); }}
           className="flex-1 bg-black/80 border border-white/50 text-white font-sans font-bold text-xs py-2 uppercase tracking-wider hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2"
         >
-          <Upload className="w-4 h-4" /> EXPORTAR
+          <Upload className="w-4 h-4" /> EXPORT
         </button>
         <button 
           onClick={(e) => { e.stopPropagation(); onImportStash(); }}
           className="flex-1 bg-black/80 border border-white/50 text-white font-sans font-bold text-xs py-2 uppercase tracking-wider hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2"
         >
-          <Download className="w-4 h-4" /> IMPORTAR
+          <Download className="w-4 h-4" /> IMPORT
         </button>
       </div>
 
@@ -79,7 +79,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
         {lines.length === 0 ? (
           <div className="border-4 border-white/20 p-8 text-center bg-black/50 w-full">
             <p className="text-2xl font-display text-white/50 tracking-widest uppercase">EMPTY STASH</p>
-            <p className="text-sm font-sans font-bold text-white/40 mt-4 uppercase tracking-widest">NO HAY CLIPS GUARDADOS</p>
+            <p className="text-sm font-sans font-bold text-white/40 mt-4 uppercase tracking-widest">NO SAVED CLIPS</p>
           </div>
         ) : (
           lines.map((line, i) => {
@@ -105,7 +105,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                         onClick={(e) => { e.stopPropagation(); setMenuOpen(null); onEdit(i); }}
                         className="flex items-center gap-2 px-3 py-2.5 text-xs text-white hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest border-b border-white/20"
                       >
-                        <Edit2 className="w-3.5 h-3.5" /> EDITAR
+                        <Edit2 className="w-3.5 h-3.5" /> EDIT
                       </button>
                       <button
                         onClick={(e) => { 
@@ -115,7 +115,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                         }}
                         className="flex items-center gap-2 px-3 py-2.5 text-xs text-green-400 hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest border-b border-white/20"
                       >
-                        <Share2 className="w-3.5 h-3.5" /> COMPARTIR CLIP
+                        <Share2 className="w-3.5 h-3.5" /> SHARE CLIP
                       </button>
                       <button
                         onClick={(e) => { 
@@ -135,7 +135,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                         }}
                         className="flex items-center gap-2 px-3 py-2.5 text-xs text-red-500 hover:bg-zinc-800 text-left font-sans font-bold uppercase tracking-widest"
                       >
-                        <Trash2 className="w-3.5 h-3.5" /> BORRAR CLIP
+                        <Trash2 className="w-3.5 h-3.5" /> DELETE CLIP
                       </button>
                     </div>
                   )}
@@ -178,7 +178,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
               <div className="flex justify-center mb-1">
                 <Trophy className="w-10 h-10 text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]" />
               </div>
-              <span className="zine-badge-yellow mb-1">PODIUM DEL CLIP</span>
+              <span className="zine-badge-yellow mb-1">CLIP PODIUM</span>
               <h3 className="text-2xl font-display text-white truncate uppercase tracking-widest">{activeRankingLine.skater}</h3>
               <p className="text-xs font-sans font-bold text-green-400 uppercase tracking-widest">{activeRankingLine.lineName}</p>
             </div>
@@ -189,8 +189,8 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                 if (ranking.length === 0) {
                   return (
                     <div className="border-2 border-dashed border-white/20 p-6 text-center">
-                      <p className="text-lg font-display text-white/50 uppercase tracking-widest">SIN PARTIDAS</p>
-                      <p className="text-xs font-sans text-white/30 uppercase mt-1">¡Juega este vídeo para estrenar el podio!</p>
+                      <p className="text-lg font-display text-white/50 uppercase tracking-widest">NO GAMES YET</p>
+                      <p className="text-xs font-sans text-white/30 uppercase mt-1">Play this video to claim the podium!</p>
                     </div>
                   );
                 }
@@ -217,7 +217,7 @@ export default function MobileStash({ lines, onEdit, onDelete, onExportStash, on
                   onClick={() => handleClearRanking(activeRankingLine)}
                   className="w-full zine-badge-red py-2 text-center hover:scale-105 transition-transform cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5 inline mr-1" /> BORRAR RANKING DEL VÍDEO
+                  <Trash2 className="w-3.5 h-3.5 inline mr-1" /> CLEAR VIDEO RANKING
                 </button>
               </div>
             )}

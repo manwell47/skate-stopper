@@ -36,7 +36,7 @@ export default function MobileLogin({ onLogin }: Props) {
           12:43:08
         </div>
         <div className="absolute bottom-6 right-6 text-white font-bold text-2xl font-sans drop-shadow-md">
-          OCT 18 1999
+          OCT 18 1989
         </div>
         {/* Safe area lines */}
         <div className="absolute top-[10%] left-[10%] right-[10%] bottom-[10%] border border-white/20" />

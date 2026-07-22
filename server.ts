@@ -84,22 +84,22 @@ app.post("/api/referee/evaluate", async (req, res) => {
   }
 
   try {
-    const prompt = `Evalúa la respuesta de un usuario en un juego de trivia de skateboarding callejero (era 1999-2004).
-El truco correcto oficial es: "${correctTrick}".
-Los nombres alternativos válidos que ya conocemos son: ${JSON.stringify(alternatives)}.
-La respuesta dada por el usuario es: "${userAnswer}".
+    const prompt = `Evaluate a user's answer in a street skateboarding trivia game (1999-2004 era).
+The official correct trick is: "${correctTrick}".
+The valid alternative names we already know are: ${JSON.stringify(alternatives)}.
+The user's answer is: "${userAnswer}".
 
-Eres el "OG de la Plaza", un skater purista y veterano que graba con una VX1000. Eres estricto con los posers, pero respetas a los que saben de qué hablan:
-1. Acepta jerga core de la época (tre flip, half cab, frontside, fs, bs).
-2. Si el truco es correcto y lo han nombrado bien, felicítalos usando términos como "Bolts", "Banger", "Puro Steez", "Clean".
-3. Si el truco es incorrecto o confundieron un Smith con un Feeble, o un Tailslide con un Lipslide, castígalos llamándolos "Poser", "Sketchy", o diles que vuelvan a jugar al Tony Hawk.
-4. Tu veredicto debe ser muy corto (1-2 líneas máximo), agresivo pero divertido, como si gritaras detrás de la lente de la cámara.
+You are the "OG of the Plaza", a purist veteran skater who films with a VX1000. You are strict with posers, but respect those who know what they are talking about:
+1. Accept core slang from the era (tre flip, half cab, frontside, fs, bs).
+2. If the trick is correct and named properly, congratulate them using terms like "Bolts", "Banger", "Pure Steez", "Clean".
+3. If the trick is incorrect or they confused a Smith with a Feeble, or a Tailslide with a Lipslide, punish them by calling them "Poser", "Sketchy", or tell them to go back to playing Tony Hawk.
+4. Your verdict must be very short (1-2 lines maximum), aggressive but fun, like you're yelling from behind the camera lens.
 
-Devuelve un JSON estrictamente con la siguiente estructura:
+Return a JSON strictly with the following structure:
 {
   "isCorrect": boolean,
-  "matchedName": string (el nombre correcto que más se parece o el truco principal),
-  "scoreExplanation": string (tu veredicto como OG de la plaza, con jerga de finales de los 90).
+  "matchedName": string (the correct name that matches closest or the main trick),
+  "scoreExplanation": string (your verdict as the OG of the plaza, with late 90s slang).
 }`;
 
     const response = await ai.models.generateContent({
@@ -116,7 +116,7 @@ Devuelve un JSON estrictamente con la siguiente estructura:
           },
           required: ["isCorrect", "matchedName", "scoreExplanation"]
         },
-        systemInstruction: "Eres un OG del skate de los 2000, experto en trucos, estilo y jerga callejera."
+        systemInstruction: "You are an OG skater from the 2000s, an expert in tricks, style, and street slang."
       }
     });
 
@@ -134,10 +134,10 @@ Devuelve un JSON estrictamente con la siguiente estructura:
 
     res.json({
       isCorrect: isMatch,
-      matchedName: isMatch ? correctTrick : "Incorrecto",
+      matchedName: isMatch ? correctTrick : "Incorrect",
       scoreExplanation: isMatch 
-        ? "¡Acierto aprobado en modo local! Buen ojo para el pop."
-        : "Veredicto local: El truco popeado no coincide."
+        ? "Local match approved! Good eye for the pop."
+        : "Local verdict: The popped trick doesn't match."
     });
   }
 });
@@ -147,25 +147,25 @@ app.post("/api/referee/analyze-clip", async (req, res) => {
   const { skaterName, trickDescription, videoUrl } = req.body;
 
   try {
-    const prompt = `Genera una tarjeta de trivia para Skate-Stopper basándote en la siguiente información enviada para una "Sponsor Me Tape":
-- Skater: ${skaterName || "Skater Desconocido"}
-- Truco o descripción enviada: ${trickDescription || "Ollie"}
-- Video/Enlace: ${videoUrl || "https://www.youtube.com/embed/1U-cgn3cEGA"}
+    const prompt = `Generate a trivia card for Skate-Stopper based on the following information submitted for a "Sponsor Me Tape":
+- Skater: ${skaterName || "Unknown Skater"}
+- Submitted trick or description: ${trickDescription || "Ollie"}
+- Video/Link: ${videoUrl || "https://www.youtube.com/embed/1U-cgn3cEGA"}
 
-Actúa como el "OG de la Plaza", experto en cultura skate de 1999-2004, grabador de VX1000. Analiza la inercia, postura y colocación de los pies justo antes del pop. Considera el stance.
+Act as the "OG of the Plaza", an expert in 1999-2004 skate culture, VX1000 filmer. Analyze the momentum, stance, and foot placement right before the pop. Consider the stance.
 
-Devuelve un JSON con la estructura exacta de un TrickAnalysis:
+Return a JSON with the exact structure of a TrickAnalysis:
 {
-  "skater": string (nombre del skater),
-  "videoUrl": string (el enlace enviado o uno optimizado para embed, por ejemplo, convirtiendo youtube.com/watch?v=X a youtube.com/embed/X),
-  "videoTitle": string (un título con vibra VHS / 2000s / 411VM para la comunidad),
+  "skater": string (skater's name),
+  "videoUrl": string (the submitted link or an embed-optimized one, for example converting youtube.com/watch?v=X to youtube.com/embed/X),
+  "videoTitle": string (a title with VHS / 2000s / 411VM vibes for the community),
   "stance": "Regular" | "Goofy" | "Switch" | "Nollie" | "Fakie",
-  "truco_principal": string (nombre oficial del truco en inglés),
-  "nombres_alternativos_validos": array de strings (variaciones y abreviaciones válidas),
-  "opciones_falsas": array de exactamente 3 strings (trucos incorrectos plausibles, usa trucos que un poser confundiría fácilmente con el real, ej: si es bs lipslide, pon bs boardslide),
+  "truco_principal": string (official trick name in English),
+  "nombres_alternativos_validos": array of strings (valid variations and abbreviations),
+  "opciones_falsas": array of exactly 3 strings (plausible incorrect tricks, use tricks that a poser would easily confuse with the real one, e.g., if it's bs lipslide, put bs boardslide),
   "es_controvertido": boolean,
-  "explicacion_controversia": string (obligatorio si es_controvertido es true, explica debates como "heelflip indy vs varial heel indy"),
-  "analisis_biomecanico": string (comentario del OG sobre la postura y el pop con jerga skate pura, sin pistas, estilo "mirar esos hombros, se viene un banger")
+  "explicacion_controversia": string (mandatory if es_controvertido is true, explains debates like "heelflip indy vs varial heel indy"),
+  "analisis_biomecanico": string (comment from the OG about the stance and pop with pure skate slang, no hints, like "look at those shoulders, a banger is coming")
 }`;
 
     const response = await ai.models.generateContent({
@@ -196,7 +196,7 @@ Devuelve un JSON con la estructura exacta de un TrickAnalysis:
           },
           required: ["skater", "videoUrl", "videoTitle", "stance", "truco_principal", "nombres_alternativos_validos", "opciones_falsas", "es_controvertido", "analisis_biomecanico"]
         },
-        systemInstruction: "Eres el OG del Spot, experto en cultura skate de los 2000."
+        systemInstruction: "You are the OG of the Spot, an expert in 2000s skate culture."
       }
     });
 

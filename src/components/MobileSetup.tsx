@@ -154,7 +154,7 @@ export default function MobileSetup({ initialData, onVideoPlay, onVideoPause, on
             </div>
             
             <div className="space-y-1 w-1/2">
-              <label className="zine-badge-red mb-1">TÍTULO DEL CLIP</label>
+              <label className="zine-badge-red mb-1">CLIP TITLE</label>
               <input 
                 type="text" 
                 value={lineName}

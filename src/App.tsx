@@ -114,7 +114,7 @@ export default function App() {
   const pitchAnimRef = useRef<number | null>(null);
 
   const [lines, setLines] = useState<LineData[]>(() => {
-    const saved = localStorage.getItem("skate_stopper_lines");
+    const saved = localStorage.getItem("skate_stopper_lines_v2");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -130,7 +130,7 @@ export default function App() {
   const [editingLineIndex, setEditingLineIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("skate_stopper_lines", JSON.stringify(lines));
+    localStorage.setItem("skate_stopper_lines_v2", JSON.stringify(lines));
   }, [lines]);
 
   const [isMuted, setIsMuted] = useState(false);
@@ -273,14 +273,14 @@ export default function App() {
     try {
       const dataStr = JSON.stringify(lines);
       await navigator.clipboard.writeText(dataStr);
-      alert("Tape Stash copiado al portapapeles. ¡Pégalo para compartirlo!");
+      alert("Tape Stash copied to clipboard. Paste it to share it!");
     } catch (e) {
-      prompt("Copia este código de Stash:", JSON.stringify(lines));
+      prompt("Copy this Stash code:", JSON.stringify(lines));
     }
   };
 
   const handleImportStash = () => {
-    const text = prompt("Pega aquí el código del Tape Stash o clip que quieres importar:");
+    const text = prompt("Paste the Tape Stash or clip code you want to import here:");
     if (!text) return;
     try {
       let raw = JSON.parse(text);
@@ -292,17 +292,17 @@ export default function App() {
             imp => !prev.some(p => p.videoId === imp.videoId && p.clipStartTime === imp.clipStartTime)
           );
           if (newUnique.length === 0) {
-            alert("Los clips importados ya existen en tu alijo.");
+            alert("Imported clips already exist in your stash.");
             return prev;
           }
-          alert(`¡${newUnique.length} clip(s) añadido(s) a tu alijo con éxito!`);
+          alert(`${newUnique.length} clip(s) successfully added to your stash!`);
           return [...prev, ...newUnique];
         });
       } else {
         throw new Error("Invalid format");
       }
     } catch (e) {
-      alert("Error al importar. Asegúrate de haber pegado un código de clip válido.");
+      alert("Failed to import. Make sure you pasted a valid clip code.");
     }
   };
 
@@ -312,9 +312,13 @@ export default function App() {
 
   return (
     <div 
-      className="w-full h-[100dvh] bg-black flex justify-center items-start overflow-hidden font-sans selection:bg-orange-500 selection:text-black"
+      className="w-full h-[100dvh] bg-black flex justify-center items-start overflow-hidden font-sans selection:bg-orange-500 selection:text-black relative"
       onClick={handleGlobalClick}
     >
+      <div className="absolute top-4 left-4 z-0 hidden lg:flex flex-col items-start select-none pointer-events-none opacity-40">
+        <span className="text-[12px] text-black font-bold tracking-widest bg-white px-2 py-0.5 uppercase">EST. 1989</span>
+        <span className="text-white font-sans font-bold text-[10px] tracking-[0.3em] uppercase mt-1">THE PURE SKATEBOARDING GAME</span>
+      </div>
       <audio 
         ref={audioRef} 
         src={playlist[currentSongIndex]} 
@@ -371,7 +375,7 @@ export default function App() {
               setAppState("EDITOR");
             }}
             onDelete={(index) => {
-              if (confirm("¿Seguro que quieres borrar este clip?")) {
+              if (confirm("Are you sure you want to delete this clip?")) {
                 const newLines = [...lines];
                 newLines.splice(index, 1);
                 setLines(newLines);

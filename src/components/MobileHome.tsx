@@ -83,7 +83,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
               onToggleMute();
             }}
             className="absolute top-3 right-3 z-50 p-2 bg-black/90 border-2 border-white text-white hover:bg-white hover:text-black transition-transform active:scale-95 shadow-[3px_3px_0px_#000] flex items-center justify-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider cursor-pointer"
-            title={isMuted ? "Activar música" : "Desactivar música"}
+            title={isMuted ? "Enable music" : "Disable music"}
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4 text-green-400" />}
             <span>{isMuted ? "MUTED" : "MUSIC"}</span>
@@ -96,7 +96,7 @@ export default function MobileHome({ showWelcomePopup, onPopupComplete, onPlayCl
           {/* Magazine Header - Transworld Aesthetic */}
           <div className="w-full text-center mt-2 border-b-4 border-white pb-2">
             <div className="flex justify-between items-end px-1 mb-1">
-              <span className="text-[9px] text-black font-bold tracking-widest bg-white px-1 uppercase">EST. 1999</span>
+              <span className="text-[9px] text-black font-bold tracking-widest bg-white px-1 uppercase">EST. 1989</span>
               <span className="text-[9px] text-black font-bold tracking-widest bg-white px-1 uppercase">ISSUE #1</span>
             </div>
             <h1 

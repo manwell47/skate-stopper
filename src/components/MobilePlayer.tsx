@@ -517,38 +517,103 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           </div>
         ) : gameState === "guessing" ? (
           <div className="flex-1 flex flex-col justify-around py-2">
-            {/* Player Name + Slow Mo Controls Row */}
-            <div className="flex items-center justify-between bg-black/80 border-2 border-white px-3 py-2 shadow-[3px_3px_0px_#000]">
-              <span className="text-2xl font-display text-white tracking-widest uppercase glitch-text truncate max-w-[170px]" data-text={players[currentPlayerGuessingIndex].name}>
-                {players[currentPlayerGuessingIndex].name}
-              </span>
-              
-              <div className="flex gap-2">
-                {[0.5, 0.25].map(speed => (
-                  <button 
-                    key={speed}
-                    onClick={() => {
-                       const nextSpeed = loopSpeed === speed ? 0 : speed;
-                       setLoopSpeed(nextSpeed);
-                       if (nextSpeed > 0 && playerRef.current) {
-                          playerRef.current.setPlaybackRate(nextSpeed);
-                          playerRef.current.setVolume(5);
-                          playerRef.current.seekTo(stateRef.current.trickStartTime, true);
-                          playerRef.current.playVideo();
-                       } else if (nextSpeed === 0 && playerRef.current) {
-                          playerRef.current.setPlaybackRate(1.0);
-                          playerRef.current.setVolume(100);
-                          playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
-                          playerRef.current.pauseVideo();
-                       }
-                    }}
-                    className={`flex items-center justify-center gap-1 px-2.5 py-1 border border-white text-xs font-sans font-bold uppercase tracking-wider transition-all shadow-[2px_2px_0px_#000] ${loopSpeed === speed ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
-                  >
-                    <RotateCcw className={`w-3.5 h-3.5 ${loopSpeed === speed ? 'animate-spin' : ''}`} />
-                    {speed}X
-                  </button>
-                ))}
-              </div>
+            {/* Skateboard 3/4 View Pro Model (Replaces Player Name + Slow Mo Row) */}
+            <div className="flex justify-center mb-1 mt-0">
+              <svg viewBox="0 0 200 240" className="w-full max-w-[170px] sm:max-w-[200px] mx-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] overflow-visible">
+                <defs>
+                  <path id="noseCurve" d="M 30, 80 Q 100, 10 170, 80" fill="transparent" />
+                  <pattern id="wood" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect width="100" height="100" fill="#d4a373"/>
+                    <path d="M0,20 Q50,30 100,10 M0,50 Q50,70 100,40 M0,80 Q50,100 100,70" stroke="#b5835a" strokeWidth="2" fill="none" opacity="0.6"/>
+                  </pattern>
+                  <filter id="shadow">
+                    <feDropShadow dx="0" dy="5" stdDeviation="4" floodOpacity="0.5" />
+                  </filter>
+                </defs>
+                
+                {/* Deck Shape (Cut off at the bottom for 3/4 view) */}
+                <path d="M 20, 100 C 20, 20 60, 0 100, 0 C 140, 0 180, 20 180, 100 L 180, 240 L 20, 240 Z" fill="url(#wood)" stroke="#5c3a21" strokeWidth="3" />
+                
+                {/* Grip tape edge detail */}
+                <path d="M 23, 100 C 23, 23 63, 3 100, 3 C 137, 3 177, 23 177, 100 L 177, 240 L 23, 240 Z" fill="transparent" stroke="#222" strokeWidth="1" opacity="0.3" />
+
+                {/* Bolts */}
+                <circle cx="80" cy="140" r="2" fill="#222" />
+                <circle cx="120" cy="140" r="2" fill="#222" />
+                <circle cx="80" cy="170" r="2" fill="#222" />
+                <circle cx="120" cy="170" r="2" fill="#222" />
+
+                {/* Pro Model Text */}
+                <text fill="#111" fontSize="24" fontWeight="900" fontFamily="sans-serif" letterSpacing="1">
+                  <textPath href="#noseCurve" startOffset="50%" textAnchor="middle">
+                    {players[currentPlayerGuessingIndex].name.toUpperCase()}
+                  </textPath>
+                </text>
+                
+                <text x="100" y="105" fill="#fff" fontSize="10" textAnchor="middle" opacity="0.8" fontWeight="bold" fontFamily="sans-serif" letterSpacing="2">
+                  PRO MODEL
+                </text>
+
+                {/* Truck Baseplate */}
+                <rect x="75" y="145" width="50" height="20" fill="#222" rx="2" />
+                
+                {/* Truck Hanger & Axle */}
+                <path d="M 65,160 L 80, 145 L 120, 145 L 135, 160 Z" fill="#777" />
+                <rect x="35" y="155" width="130" height="8" fill="#aaa" rx="2" filter="url(#shadow)" />
+                
+                {/* Foreign Object for Wheels (Speed Buttons) */}
+                <foreignObject x="0" y="141" width="200" height="50">
+                  <div className="w-[200px] h-[50px] flex justify-between items-center px-[22px]">
+                    {/* Wheel 1: x0.5 */}
+                    <button 
+                      onClick={() => {
+                        const speed = 0.5;
+                        const nextSpeed = loopSpeed === speed ? 0 : speed;
+                        setLoopSpeed(nextSpeed);
+                        if (nextSpeed > 0 && playerRef.current) {
+                            playerRef.current.setPlaybackRate(nextSpeed);
+                            playerRef.current.setVolume(5);
+                            playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                            playerRef.current.playVideo();
+                        } else if (nextSpeed === 0 && playerRef.current) {
+                            playerRef.current.setPlaybackRate(1.0);
+                            playerRef.current.setVolume(100);
+                            playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                            playerRef.current.pauseVideo();
+                        }
+                      }}
+                      className={`w-[36px] h-[36px] rounded-full border-4 border-zinc-200 flex flex-col items-center justify-center font-bold font-sans transition-transform hover:scale-110 shadow-lg cursor-pointer ${loopSpeed === 0.5 ? 'bg-red-500 text-white' : 'bg-white text-black'}`}
+                      style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)' }}
+                    >
+                      <span className="text-[10px] leading-none">x0.5</span>
+                    </button>
+                    
+                    {/* Wheel 2: x0.25 */}
+                    <button 
+                      onClick={() => {
+                        const speed = 0.25;
+                        const nextSpeed = loopSpeed === speed ? 0 : speed;
+                        setLoopSpeed(nextSpeed);
+                        if (nextSpeed > 0 && playerRef.current) {
+                            playerRef.current.setPlaybackRate(nextSpeed);
+                            playerRef.current.setVolume(5);
+                            playerRef.current.seekTo(stateRef.current.trickStartTime, true);
+                            playerRef.current.playVideo();
+                        } else if (nextSpeed === 0 && playerRef.current) {
+                            playerRef.current.setPlaybackRate(1.0);
+                            playerRef.current.setVolume(100);
+                            playerRef.current.seekTo(stateRef.current.marker.pauseTime, true);
+                            playerRef.current.pauseVideo();
+                        }
+                      }}
+                      className={`w-[36px] h-[36px] rounded-full border-4 border-zinc-200 flex flex-col items-center justify-center font-bold font-sans transition-transform hover:scale-110 shadow-lg cursor-pointer ${loopSpeed === 0.25 ? 'bg-red-500 text-white' : 'bg-white text-black'}`}
+                      style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)' }}
+                    >
+                      <span className="text-[9px] leading-none">x0.25</span>
+                    </button>
+                  </div>
+                </foreignObject>
+              </svg>
             </div>
 
             {/* Meme Quote */}
@@ -667,7 +732,7 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
           <div className="flex-1 flex flex-col p-2 space-y-4 overflow-y-auto">
              <div className="text-center mb-2">
                <h3 className="text-3xl font-display text-white glitch-text tracking-widest" data-text="EL JURADO">EL JURADO</h3>
-               <p className="text-sm font-sans text-white/70 mt-1 uppercase">Resolución de disputas</p>
+               <p className="text-sm font-sans text-white/70 mt-1 uppercase">Dispute Resolution</p>
              </div>
              <div className="space-y-4 flex-1">
                {challenges.map((c, i) => (

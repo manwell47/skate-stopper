@@ -167,7 +167,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
   const FrameAdjuster = ({ field }: { field: "clipStartTime" | "clipEndTime" | "pauseTime" }) => (
     <div className="flex flex-col mt-2 w-full">
-      <p className="text-[8px] text-zinc-400 font-sans uppercase tracking-widest text-center mb-1">Ajuste Fino por Fotogramas (60fps)</p>
+      <p className="text-[8px] text-zinc-400 font-sans uppercase tracking-widest text-center mb-1">Fine tune by frames (60fps)</p>
       <div className="flex w-full border-2 border-zinc-700 bg-black shadow-[2px_2px_0_0_rgba(255,255,255,0.2)]">
         {[-10, -5, -2, -1].map((f, i) => (
           <button 
@@ -313,7 +313,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
       }
     }
     
-    if (t === "Caída") return "Caída";
+    if (t === "Bail") return "Bail";
     if (en !== "None") parts.push(en);
     
     return parts.join(" ") || "Ollie";
@@ -334,7 +334,11 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
     // Trick variants with the same stance to be credible
     for (const f of flips) {
-      if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      if (trickType === "Grind/Slide" || trickType === "Manual") {
+        if (f !== flipIn) options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, f, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      } else {
+        if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+      }
     }
     if (trickType === "Grind/Slide") {
       for (const g of grinds) {
@@ -412,7 +416,11 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
       // Trick variants with the same stance to be credible
       for (const f of flips) {
-        if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        if (trickType === "Grind/Slide" || trickType === "Manual") {
+          if (f !== flipIn) options.add(buildTrick(stance, direction, rotation, trickType, pressure, flip, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, f, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        } else {
+          if (f !== flip) options.add(buildTrick(stance, direction, rotation, trickType, pressure, f, lateFlip, grind, grind2, manual, manual2, grab, stall, wall, flipIn, stanceMid, dirMid, rotMid, flipMid, stanceOut, dirOut, rotOut, flipOut, ending));
+        }
       }
       if (trickType === "Grind/Slide") {
         for (const g of grinds) {
@@ -545,7 +553,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         <div className="text-center ">
           <h2 className="text-xl font-display text-white drop-">{data.title}</h2>
           <p className="text-sm text-white bg-red-600 px-1 uppercase tracking-widest font-sans font-bold">
-            Paso {step === "clip_bounds" ? "1" : step === "done" ? "4" : step === "trick_time" ? "2" : "3"}
+            Step {step === "clip_bounds" ? "1" : step === "done" ? "4" : step === "trick_time" ? "2" : "3"}
           </p>
         </div>
         <div className="w-8" />
@@ -574,7 +582,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               onClick={() => setStep("clip_bounds")}
               className="w-full bg-red-600 text-black p-3 font-display text-2xl border-2 border-white hover:scale-[1.02] transition-transform uppercase"
             >
-              Límites del Clip
+              Clip Bounds
             </button>
             <div className="grid grid-cols-2 gap-3 mt-4">
               {Array.from({ length: data.trickCount }).map((_, i) => {
@@ -601,7 +609,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                   >
                     <span className="font-display text-2xl text-red-600">TRICK {i + 1}</span>
                     <span className="text-[10px] uppercase font-sans font-bold text-zinc-400 mt-1">
-                      {marker ? "EDITAR" : "PENDIENTE"}
+                      {marker ? "EDIT" : "PENDING"}
                     </span>
                   </button>
                 );
@@ -614,7 +622,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                   onClick={() => setStep("done")}
                   className="w-full bg-white text-black p-3 font-display text-3xl hover:bg-red-600 hover:text-white transition-colors uppercase border-2 border-black"
                 >
-                  Finalizar
+                  Finish
                 </button>
               </div>
             )}
@@ -624,21 +632,21 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         {step === "clip_bounds" && (
           <div className="space-y-2 flex-1 flex flex-col">
             <div className="text-center space-y-1">
-              <h3 className="text-xl font-display text-red-600 drop-">Límites del Clip</h3>
-              <p className="text-[10px] text-white font-sans font-bold bg-red-600 px-2 inline-block rounded-none uppercase tracking-widest">Establece el inicio y el final del clip</p>
+              <h3 className="text-xl font-display text-red-600 drop-">Clip Bounds</h3>
+              <p className="text-[10px] text-white font-sans font-bold bg-red-600 px-2 inline-block rounded-none uppercase tracking-widest">Set clip start and end</p>
             </div>
             
             <div className="flex flex-col gap-4">
               <div className="flex flex-col">
                 <button onClick={() => setTimeFor("clipStartTime")} className="w-full bg-black/90 border-2 border-white p-3 text-center hover:border-orange-500 rounded-none transition-all flex flex-col items-center">
-                  <span className="block text-[10px] text-white bg-red-600 px-2 py-1 uppercase tracking-widest font-sans font-bold mb-1">Inicio Clip</span>
+                  <span className="block text-[10px] text-white bg-red-600 px-2 py-1 uppercase tracking-widest font-sans font-bold mb-1">Clip Start</span>
                   <span className="block text-3xl font-display text-white drop-">{data.clipStartTime?.toFixed(2) || "0.00"}s</span>
                 </button>
                 <FrameAdjuster field="clipStartTime" />
               </div>
               <div className="flex flex-col">
                 <button onClick={() => setTimeFor("clipEndTime")} className="w-full bg-black/90 border-2 border-white p-3 text-center hover:border-orange-500 rounded-none transition-all flex flex-col items-center">
-                  <span className="block text-[10px] text-white bg-red-600 px-2 py-1 uppercase tracking-widest font-sans font-bold mb-1">Fin Clip</span>
+                  <span className="block text-[10px] text-white bg-red-600 px-2 py-1 uppercase tracking-widest font-sans font-bold mb-1">Clip End</span>
                   <span className="block text-3xl font-display text-white drop-">{data.clipEndTime?.toFixed(2) || "0.00"}s</span>
                 </button>
                 <FrameAdjuster field="clipEndTime" />
@@ -649,7 +657,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               onClick={() => playRange(data.clipStartTime || 0, data.clipEndTime || 0)} 
               className="bg-black/90 border-2 border-white p-2 text-sm font-sans font-bold text-white border-2 border-white flex items-center justify-center gap-2  rounded-none transform hover:scale-105 transition-transform"
             >
-              <Play className="w-4 h-4 fill-current" /> Probar Rango
+              <Play className="w-4 h-4 fill-current" /> Test Range
             </button>
 
             <div className="mt-auto pt-2">
@@ -664,7 +672,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 disabled={!data.clipEndTime || data.clipEndTime <= (data.clipStartTime || 0)}
                 className="w-full bg-red-600 text-black p-2 font-display text-xl border-2 border-white  rounded-none disabled:opacity-50 disabled:grayscale transform hover:scale-105 transition-transform"
               >
-                {data.markers.length > 0 ? "Volver al Resumen" : "Siguiente: Truco 1"}
+                {data.markers.length > 0 ? "Back to Summary" : "Next: Trick 1"}
               </button>
             </div>
           </div>
@@ -673,8 +681,8 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         {step === "trick_time" && (
           <div className="space-y-2 flex-1 flex flex-col">
             <div className="text-center space-y-1 ">
-              <h3 className="text-xl font-display text-red-600 drop-">Truco {currentTrickIndex + 1} de {data.trickCount}</h3>
-              <p className="text-[10px] text-zinc-300 font-sans font-bold bg-black px-2 inline-block rounded-none">Pausa el vídeo justo antes del pop.</p>
+              <h3 className="text-xl font-display text-red-600 drop-">Trick {currentTrickIndex + 1} de {data.trickCount}</h3>
+              <p className="text-[10px] text-zinc-300 font-sans font-bold bg-black px-2 inline-block rounded-none">Pause video right before pop.</p>
             </div>
 
             <div className="flex flex-col">
@@ -696,7 +704,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 }} 
                 className="flex-1 bg-black/90 border-2 border-white p-2 text-[10px] font-sans font-bold text-white flex items-center justify-center gap-1 rounded-none hover:scale-105 transition-transform"
               >
-                <Play className="w-3 h-3 fill-current" /> Ver Aproximación
+                <Play className="w-3 h-3 fill-current" /> View Approach
               </button>
 
               <button 
@@ -708,7 +716,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 }} 
                 className="flex-1 bg-black/90 border-2 border-white p-2 text-[10px] font-sans font-bold text-white flex items-center justify-center gap-1 rounded-none hover:scale-105 transition-transform"
               >
-                <Play className="w-3 h-3 fill-current" /> Ver Aterrizaje
+                <Play className="w-3 h-3 fill-current" /> View Landing
               </button>
             </div>
 
@@ -717,7 +725,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 onClick={() => setStep("trick_labels")}
                 className="w-full bg-red-600 text-black p-2 font-display text-xl border-2 border-white  rounded-none  hover:scale-105 transition-transform"
               >
-                Etiquetar Opciones
+                Label Options
               </button>
             </div>
           </div>
@@ -726,14 +734,14 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
         {step === "trick_labels" && (
           <div className="space-y-1 flex-1 flex flex-col overflow-hidden">
             <div className="text-center ">
-              <h3 className="text-lg font-display text-red-600 drop-">Opciones: Truco {currentTrickIndex + 1}</h3>
+              <h3 className="text-lg font-display text-red-600 drop-">Options: Trick {currentTrickIndex + 1}</h3>
             </div>
             
             <div className="grid grid-cols-2 gap-1.5 pb-1 overflow-y-auto">
               <div className="space-y-0.5 col-span-2">
-                <label className="zine-badge-red mb-1">Categoría</label>
+                <label className="zine-badge-red mb-1">Category</label>
                 <select value={trickType} onChange={e => setTrickType(e.target.value)} className="zine-select">
-                  <option>Fliptrick</option><option>Grind/Slide</option><option>Manual</option><option>Grab</option><option>Stall</option><option>Wallride/Other</option><option>Caída</option>
+                  <option>Fliptrick</option><option>Grind/Slide</option><option>Manual</option><option>Grab</option><option>Stall</option><option>Wallride/Other</option><option>Bail</option>
                 </select>
               </div>
 
@@ -745,7 +753,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               </div>
 
               <div className="space-y-0.5">
-                <label className="zine-badge-red mb-1">Rotación</label>
+                <label className="zine-badge-red mb-1">Rotation</label>
                 <select value={rotation} onChange={e => setRotation(e.target.value)} className="zine-select">
                   <option>None</option><option>FS 180</option><option>BS 180</option><option>FS 360</option><option>BS 360</option><option>FS 540</option><option>BS 540</option><option>FS 720</option><option>FS Shifty</option><option>BS Shifty</option>
                 </select>
@@ -910,7 +918,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
               {trickType === "Wallride/Other" && (
                 <div className="space-y-0.5">
-                  <label className="zine-badge-red mb-1">Truco</label>
+                  <label className="zine-badge-red mb-1">Trick</label>
                   <select value={wall} onChange={e => setWall(e.target.value)} className="zine-select">
                     <option>None</option><option>Wallride</option><option>Wallie</option><option>No-Comply</option><option>Boneless</option><option>Fastplant</option>
                   </select>
@@ -925,12 +933,12 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
               </div>
 
               <div className="space-y-0.5 col-span-2 mt-1">
-                <label className="zine-badge-green mb-1">O texto libre</label>
+                <label className="zine-badge-green mb-1">Or custom text</label>
                 <input 
                   type="text" 
                   value={customTrick}
                   onChange={e => setCustomTrick(e.target.value)}
-                  placeholder="ej. BS 5-0 mid kickflip BS 5-0"
+                  placeholder="e.g. BS 5-0 mid kickflip BS 5-0"
                   className="zine-input"
                 />
                 <div className="flex items-center gap-2 mt-2">
@@ -949,15 +957,15 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
 
               <div className="space-y-0.5 col-span-2 mt-1 mb-1">
                 <div className="flex justify-between items-end mb-1">
-                  <label className="zine-badge-red">Trucos falsos (opcional)</label>
+                  <label className="zine-badge-red">Tricks falsos (opcional)</label>
                   <button onClick={autoGenerateFalseTricks} className="zine-badge-yellow hover:scale-105 transition-transform cursor-pointer">
-                    ⚡ Generar Similares
+                    ⚡ Generate Fakes
                   </button>
                 </div>
                 <div className="flex gap-1">
-                  <input type="text" value={false1} onChange={e => setFalse1(e.target.value)} placeholder="Falso 1" className="w-1/3 zine-input" />
-                  <input type="text" value={false2} onChange={e => setFalse2(e.target.value)} placeholder="Falso 2" className="w-1/3 zine-input" />
-                  <input type="text" value={false3} onChange={e => setFalse3(e.target.value)} placeholder="Falso 3" className="w-1/3 zine-input" />
+                  <input type="text" value={false1} onChange={e => setFalse1(e.target.value)} placeholder="Fake 1" className="w-1/3 zine-input" />
+                  <input type="text" value={false2} onChange={e => setFalse2(e.target.value)} placeholder="Fake 2" className="w-1/3 zine-input" />
+                  <input type="text" value={false3} onChange={e => setFalse3(e.target.value)} placeholder="Fake 3" className="w-1/3 zine-input" />
                 </div>
               </div>
             </div>
@@ -967,13 +975,13 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 onClick={() => goToTrickTime(currentTrickIndex)}
                 className="flex-1 bg-black/90 border-2 border-white text-white p-3 font-display text-xl border-2 border-white  rounded-none  hover:scale-105 transition-transform"
               >
-                Volver
+                Back
               </button>
               <button 
                 onClick={saveTrick}
                 className="flex-1 bg-green-500 text-black p-3 font-display text-xl border-2 border-white  rounded-none hover:scale-105 transition-transform"
               >
-                Guardar
+                Save
               </button>
             </div>
           </div>
@@ -983,14 +991,14 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
           <div className="space-y-4 flex-1 flex flex-col items-center justify-start text-center py-2 overflow-y-auto">
             <Check className="w-16 h-16 text-green-500 mb-2  drop- shrink-0" strokeWidth={3} />
             <h3 className="text-3xl font-display text-red-600 drop- shrink-0">
-              {data.markers.length >= data.trickCount ? "¡Línea Creada!" : "Progreso de Cinta"}
+              {data.markers.length >= data.trickCount ? "Line Created!" : "Tape Progress"}
             </h3>
             
             <div className="w-full space-y-2 mt-4 text-left px-1 pb-4">
               <div className="flex justify-between items-center mb-2 px-1">
-                 <h4 className="font-display text-white text-lg drop-">Marcadores ({data.markers.length})</h4>
+                 <h4 className="font-display text-white text-lg drop-">Markers ({data.markers.length})</h4>
                  <button onClick={() => setStep("overview")} className="text-xs bg-black/90 border-2 border-white border-2 border-black text-white bg-red-600 px-1 uppercase tracking-widest px-3 py-1.5 font-sans font-bold rounded-none hover:scale-105 transition-transform">
-                   Cuadrícula
+                   Grid
                  </button>
               </div>
               {data.markers.map((m, i) => (
@@ -1034,7 +1042,7 @@ export default function MobileEditor({ lineData, onFinish, onVideoPlay, onVideoP
                 disabled={data.markers.length === 0}
                 className="w-full bg-white text-black p-3 font-display text-2xl flex items-center justify-center gap-2 border-2 border-white  rounded-none disabled:opacity-50 disabled:grayscale  hover:scale-105 transition-transform"
               >
-                Guardar Clip
+                Save Clip
               </button>
             </div>
           </div>

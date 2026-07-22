@@ -61,7 +61,7 @@ export default function MobileMenu({ lines, onPlay, onBack }: Props) {
                         ? "bg-yellow-400 text-black border-black"
                         : "bg-black/80 text-white/50 border-white/30"
                     }`}
-                    title="Ver Ranking del Clip"
+                    title="View Clip Ranking"
                   >
                     <Trophy className="w-3.5 h-3.5" />
                     <span>PODIUM</span>
@@ -117,7 +117,7 @@ export default function MobileMenu({ lines, onPlay, onBack }: Props) {
               <div className="flex justify-center mb-1">
                 <Trophy className="w-10 h-10 text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]" />
               </div>
-              <span className="zine-badge-yellow mb-1">PODIUM DEL CLIP</span>
+              <span className="zine-badge-yellow mb-1">CLIP PODIUM</span>
               <h3 className="text-2xl font-display text-white truncate uppercase tracking-widest">{activeRankingLine.skater}</h3>
               <p className="text-xs font-sans font-bold text-green-400 uppercase tracking-widest">{activeRankingLine.lineName}</p>
             </div>
@@ -128,8 +128,8 @@ export default function MobileMenu({ lines, onPlay, onBack }: Props) {
                 if (ranking.length === 0) {
                   return (
                     <div className="border-2 border-dashed border-white/20 p-6 text-center">
-                      <p className="text-lg font-display text-white/50 uppercase tracking-widest">SIN PARTIDAS</p>
-                      <p className="text-xs font-sans text-white/30 uppercase mt-1">¡Juega este vídeo para estrenar el podio!</p>
+                      <p className="text-lg font-display text-white/50 uppercase tracking-widest">NO GAMES YET</p>
+                      <p className="text-xs font-sans text-white/30 uppercase mt-1">Play this video to claim the podium!</p>
                     </div>
                   );
                 }
