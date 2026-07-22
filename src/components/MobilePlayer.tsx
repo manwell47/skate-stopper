@@ -645,74 +645,66 @@ export default function MobilePlayer({ lineData, onBack }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-full flex flex-col space-y-5">
-                        {/* Organic Sticker Bomb Composition with 4 distinct rectangular shapes */}
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-5 w-full">
-                          {shuffledOptions.map((opt, i) => {
-                            // 4 distinct sticker styles and layouts
-                            const stickerConfigs = [
-                              // Sticker 0: Wide Slap Tag banner
-                              {
-                                container: "col-span-2 max-w-[94%] mx-auto rotate-[-2deg] hover:rotate-[0deg]",
-                                outer: "bg-white border-2 border-zinc-300 shadow-[10px_12px_20px_rgba(0,0,0,0.7)] rounded-sm overflow-hidden w-full",
-                                inner: "bg-white text-zinc-950 px-4 py-3 font-marker text-3xl md:text-4xl min-h-[110px]",
-                                badge: "bg-red-600 text-white text-base font-bold text-center uppercase tracking-widest py-0.5 font-sans border-b border-red-700"
-                              },
-                              // Sticker 1: Compact Yellow Hazard Badge
-                              {
-                                container: "col-span-1 rotate-[4deg] hover:rotate-[-1deg]",
-                                outer: "bg-yellow-400 border-3 border-black shadow-[10px_10px_20px_rgba(0,0,0,0.8)] rounded-md overflow-hidden w-full",
-                                inner: "bg-yellow-400 text-black p-3 font-graffiti text-2xl md:text-3xl min-h-[140px]",
-                                badge: null
-                              },
-                              // Sticker 2: Red/White Thrasher Box Sticker
-                              {
-                                container: "col-span-1 rotate-[-4deg] hover:rotate-[1deg]",
-                                outer: "bg-red-700 border-3 border-white shadow-[10px_10px_20px_rgba(0,0,0,0.85)] torn-edge overflow-hidden w-full",
-                                inner: "bg-red-700 text-white p-3 font-graffiti text-2xl md:text-3xl min-h-[140px]",
-                                badge: null
-                              },
-                              // Sticker 3: Horizontal Duct Tape Strip
-                              {
-                                container: "col-span-2 max-w-[88%] mx-auto rotate-[3deg] hover:rotate-[-1deg] mt-1",
-                                outer: "bg-amber-100 border-2 border-dashed border-zinc-700 shadow-[10px_10px_20px_rgba(0,0,0,0.75)] rounded-xs overflow-hidden w-full",
-                                inner: "bg-amber-100 text-zinc-900 px-4 py-3 font-rock text-2xl md:text-3xl min-h-[110px]",
-                                badge: null
-                              }
-                            ];
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-6 w-full max-w-[90%] mx-auto">
+                        {shuffledOptions.map((opt, i) => {
+                          // 4 iconic, similar-sized vinyl sticker designs (inspired by real skate/band stickers)
+                          const stickerConfigs = [
+                            // Sticker 0: Dark Vinyl Circle Badge
+                            {
+                              outer: "bg-zinc-950 text-white border-4 border-zinc-300 shadow-[10px_12px_22px_rgba(0,0,0,0.85)] rounded-[2rem] rotate-[-4deg] hover:rotate-[1deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
+                              inner: "font-marker text-2xl md:text-3xl text-yellow-300 text-center leading-tight tracking-wide break-words max-w-[95%]",
+                              badge: "text-xs font-mono font-bold text-red-500 uppercase tracking-widest mb-1 border-b border-red-500/40 pb-0.5"
+                            },
+                            // Sticker 1: Acid Green / Yellow Vinyl Badge
+                            {
+                              outer: "bg-lime-400 text-black border-4 border-black shadow-[12px_10px_22px_rgba(0,0,0,0.85)] rounded-[2rem] rotate-[5deg] hover:rotate-[-1deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
+                              inner: "font-graffiti text-2xl md:text-3xl text-black text-center leading-tight tracking-tight break-words max-w-[95%]",
+                              badge: null
+                            },
+                            // Sticker 2: Black & White Vintage Stamp Badge
+                            {
+                              outer: "bg-zinc-100 text-black border-4 border-zinc-950 shadow-[10px_14px_22px_rgba(0,0,0,0.85)] rounded-3xl rotate-[3deg] hover:rotate-[-2deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
+                              inner: "font-rock text-xl md:text-2xl text-zinc-950 text-center leading-tight tracking-normal break-words max-w-[95%]",
+                              badge: "text-xs font-sans font-black text-zinc-600 uppercase tracking-widest mb-1 border-b-2 border-zinc-900/30 pb-0.5"
+                            },
+                            // Sticker 3: Bold Red Skate Vinyl Badge
+                            {
+                              outer: "bg-red-600 text-white border-4 border-white shadow-[12px_12px_22px_rgba(0,0,0,0.85)] rounded-3xl rotate-[-5deg] hover:rotate-[2deg] aspect-square flex flex-col justify-center items-center p-4 w-full",
+                              inner: "font-graffiti text-2xl md:text-3xl text-white text-center leading-tight tracking-wide break-words max-w-[95%]",
+                              badge: null
+                            }
+                          ];
 
-                            const cfg = stickerConfigs[i % stickerConfigs.length];
-                            
-                            return (
-                              <div key={i} className={`w-full ${cfg.container}`}>
-                                <button
-                                  disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
-                                  onClick={() => handleGuess(opt)}
-                                  className={`
-                                    w-full group transition-transform cursor-pointer block
-                                    ${cfg.outer}
-                                    ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
-                                    ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
-                                    ${!!selectedOption ? 'opacity-90' : ''}
-                                  `}
-                                >
-                                  {cfg.badge && (
-                                    <div className={cfg.badge}>SKATE TRICK</div>
-                                  )}
-                                  <div className={`
-                                    w-full flex items-center justify-center text-center uppercase transition-colors leading-tight
-                                    ${cfg.inner}
-                                    ${!selectedOption ? 'group-hover:brightness-110' : ''}
-                                    ${selectedOption && opt === marker.correctTrick ? '!bg-green-500 !text-black' : ''}
-                                    ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!bg-red-600 !text-white' : ''}
-                                  `}>
-                                    {opt}
-                                  </div>
-                                </button>
+                          const cfg = stickerConfigs[i % stickerConfigs.length];
+                          
+                          return (
+                            <button
+                              key={i}
+                              disabled={!!selectedOption && currentPlayerGuessingIndex >= players.length - 1}
+                              onClick={() => handleGuess(opt)}
+                              className={`
+                                group transition-transform cursor-pointer block
+                                ${cfg.outer}
+                                ${selectedOption && opt === marker.correctTrick ? 'ring-8 ring-green-500 scale-105 !z-30' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? 'ring-8 ring-red-500 opacity-60' : ''}
+                                ${!!selectedOption ? 'opacity-90' : ''}
+                              `}
+                            >
+                              {cfg.badge && (
+                                <div className={cfg.badge}>SKATE TRICK</div>
+                              )}
+                              <div className={`
+                                flex items-center justify-center text-center uppercase transition-colors
+                                ${cfg.inner}
+                                ${!selectedOption ? 'group-hover:brightness-110' : ''}
+                                ${selectedOption && opt === marker.correctTrick ? '!text-green-400' : ''}
+                                ${selectedOption && opt === currentTrickGuesses[currentPlayerGuessingIndex] && opt !== marker.correctTrick ? '!text-red-300' : ''}
+                              `}>
+                                {opt}
                               </div>
-                            );
-                          })}
-                        </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
